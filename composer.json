@@ -4,7 +4,9 @@
     "homepage": "https://github.com/kafoso/tools",
     "keywords": [
         "php",
-        "tools"
+        "tools",
+        "dump",
+        "json"
     ],
     "license": "BSD-3-Clause",
     "authors": [
