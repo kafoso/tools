@@ -1,0 +1,10 @@
+stdClass Object &SPL_OBJECT_HASH
+{
+  public $classB = stdClass Object &SPL_OBJECT_HASH
+  {
+    public $classA = stdClass Object &SPL_OBJECT_HASH
+    {
+      *RECURSION*
+    }
+  }
+}

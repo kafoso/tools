@@ -1,0 +1,36 @@
+stdClass Object &SPL_OBJECT_HASH
+{
+  public $anArray = array(2) {
+    [0] => stdClass Object &SPL_OBJECT_HASH
+    {
+    },
+    [1] => stdClass Object &SPL_OBJECT_HASH
+    {
+    },
+  }
+  public $classA = stdClass Object &SPL_OBJECT_HASH
+  {
+    *RECURSION*
+  }
+  public $classA_1 = stdClass Object &SPL_OBJECT_HASH
+  {
+    public $classA_1 = stdClass Object &SPL_OBJECT_HASH
+    {
+      *RECURSION*
+    }
+  }
+  public $classA_2 = stdClass Object &SPL_OBJECT_HASH
+  {
+    public $classA_2_1 = stdClass Object &SPL_OBJECT_HASH
+    {
+      public $aBoolean = bool(true);
+      public $anArray = array(1) {
+        (Array value omitted)
+      }
+      public $classA_2_1_1 = stdClass Object &SPL_OBJECT_HASH
+      {
+        (Object value omitted)
+      }
+    }
+  }
+}

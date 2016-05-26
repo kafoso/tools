@@ -1,0 +1,7 @@
+stdClass Object &SPL_OBJECT_HASH
+{
+  public $classB = stdClass Object &SPL_OBJECT_HASH
+  {
+    (Object value omitted)
+  }
+}

@@ -1,0 +1,19 @@
+{
+    "name": "kafoso/tools",
+    "description": "Various PHP tools.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kafoso",
+            "email": "soefritz@gmail.com"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "^5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kafoso\\Tools\\": "src/Kafoso/Tools"
+        }
+    }
+}
