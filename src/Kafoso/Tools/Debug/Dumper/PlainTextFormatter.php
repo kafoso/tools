@@ -9,6 +9,15 @@ class PlainTextFormatter
         array $previousSplObjectHashes)
     {
         if (is_array($var) || is_object($var)) {
+            if (is_object($var)) {
+                $hash = spl_object_hash($var);
+                if ($isTruncatingRecursion) {
+                    if (in_array($hash, $previousSplObjectHashes)) {
+                        return self::produceHumanReadableOutputForRecursedObject($var, $level);
+                    }
+                    $previousSplObjectHashes[] = $hash;
+                }
+            }
             if ($depth <= 0) {
                 if (is_object($var)) {
                     return self::produceHumanReadableOutputForOmittedObject($var, $level);
@@ -17,13 +26,6 @@ class PlainTextFormatter
                 }
             } else {
                 if (is_object($var)) {
-                    $hash = spl_object_hash($var);
-                    if ($isTruncatingRecursion) {
-                        if (in_array($hash, $previousSplObjectHashes)) {
-                            return self::produceHumanReadableOutputForRecursedObject($var, $level);
-                        }
-                        $previousSplObjectHashes[] = $hash;
-                    }
                     return self::produceHumanReadableOutputForObject($var, $depth, $isTruncatingRecursion, $level,
                         $previousSplObjectHashes);
                 } else {
