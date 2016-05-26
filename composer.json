@@ -1,15 +1,28 @@
 {
     "name": "kafoso/tools",
     "description": "Various PHP tools.",
-    "license": "MIT",
+    "homepage": "https://github.com/kafoso/tools",
+    "keywords": [
+        "php",
+        "tools"
+    ],
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Kafoso",
             "email": "soefritz@gmail.com"
         }
     ],
-    "require": {
+    "support": {
+        "issues": "https://github.com/kafoso/tools/issues"
+    },
+    "require-dev": {
         "phpunit/phpunit": "^5.3"
+    },
+    "config": {
+        "platform": {
+            "php": "5.5.0"
+        }
     },
     "autoload": {
         "psr-4": {
