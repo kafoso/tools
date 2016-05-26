@@ -111,6 +111,59 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $prepared);
     }
 
+    public function testJsonCanDumpSimpleArray()
+    {
+        $array = [
+            "foo" => "bar",
+        ];
+        $prepared = trim(Dumper::prepareJson($array));
+        $expected = $this->normalizeEOL(trim($this->getResource("testJsonCanDumpSimpleArray.json")));
+        $this->assertSame($expected, $prepared);
+    }
+
+    public function testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected()
+    {
+        require_once("{$this->dumperTestResourceDirectory}/testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected.php");
+        $array = [
+            "foo" => new testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected,
+        ];
+        $prepared = trim(Dumper::prepareJson($array));
+        $expected = $this->normalizeEOL(trim($this->getResource("testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected.json")));
+        $this->assertSame($expected, $prepared);
+    }
+
+    public function testJsonObjectRecursionIsTruncated()
+    {
+        $classA = new stdClass;
+        $classB = new stdClass;
+        $classA->classB = $classB;
+        $classB->classA = $classA;
+        $prepared = $this->replaceSqlHashesWithGenericIdentifier(trim(Dumper::prepareJson($classA)));
+        $expected = $this->normalizeEOL(trim($this->getResource("testJsonObjectRecursionIsTruncated.json")));
+        $this->assertSame($expected, $prepared);
+    }
+
+    public function testJsonDepthExceededWillOmitArrayAndObjectValues()
+    {
+        $classA = new stdClass;
+        $classA->arrayA = [
+            "classB" => new stdClass,
+            "arrayB" => [
+                "this should be omitted"
+            ]
+        ];
+        $prepared = $this->replaceSqlHashesWithGenericIdentifier(trim(Dumper::prepareJson($classA, 2)));
+        $expected = $this->normalizeEOL(trim($this->getResource("testJsonDepthExceededWillOmitArrayAndObjectValues.json")));
+        $this->assertSame($expected, $prepared);
+    }
+
+    protected function normalizeEOL($str)
+    {
+        $str = str_replace("\r\n", "\n", $str);
+        $str = str_replace("\r", "\n", $str);
+        return $str;
+    }
+
     /**
      * Since object hashes change for every object instantion, the snowflake hashes are converted to a static value
      * so that asserting expectations becomes possible.

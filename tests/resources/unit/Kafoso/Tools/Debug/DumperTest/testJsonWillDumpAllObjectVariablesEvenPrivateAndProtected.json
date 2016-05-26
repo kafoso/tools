@@ -1,0 +1,7 @@
+{
+    "foo": {
+        "aPrivateVariable": 2,
+        "aProtectedVariable": 42.2,
+        "aPublicVariable": "bar"
+    }
+}

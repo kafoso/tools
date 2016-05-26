@@ -1,11 +1,11 @@
 <?php
 namespace Kafoso\Tools\Debug\Dumper;
 
-class PlainTextFormatter implements FormatterInterface
+class PlainTextFormatter
 {
     const INDENTATION_CHARACTERS = "  ";
 
-    public static function prepareRecursively($var, $depth, $isTrucatingRecursion, $level,
+    public static function prepareRecursively($var, $depth, $isTruncatingRecursion, $level,
         array $previousSplObjectHashes)
     {
         if (is_array($var) || is_object($var)) {
@@ -18,16 +18,16 @@ class PlainTextFormatter implements FormatterInterface
             } else {
                 if (is_object($var)) {
                     $hash = spl_object_hash($var);
-                    if ($isTrucatingRecursion) {
+                    if ($isTruncatingRecursion) {
                         if (in_array($hash, $previousSplObjectHashes)) {
                             return self::produceHumanReadableOutputForRecursedObject($var, $level);
                         }
                         $previousSplObjectHashes[] = $hash;
                     }
-                    return self::produceHumanReadableOutputForObject($var, $depth, $isTrucatingRecursion, $level,
+                    return self::produceHumanReadableOutputForObject($var, $depth, $isTruncatingRecursion, $level,
                         $previousSplObjectHashes);
                 } else {
-                    return self::produceHumanReadableOutputForArray($var, $depth, $isTrucatingRecursion, $level,
+                    return self::produceHumanReadableOutputForArray($var, $depth, $isTruncatingRecursion, $level,
                         $previousSplObjectHashes);
                 }
             }
@@ -40,7 +40,7 @@ class PlainTextFormatter implements FormatterInterface
         return str_repeat(self::INDENTATION_CHARACTERS, $level) . $var . PHP_EOL;
     }
 
-    public static function produceHumanReadableOutputForArray(array $array, $depth, $isTrucatingRecursion, $level,
+    public static function produceHumanReadableOutputForArray(array $array, $depth, $isTruncatingRecursion, $level,
         array $previousSplObjectHashes)
     {
         $arrayAsString = "";
@@ -48,7 +48,7 @@ class PlainTextFormatter implements FormatterInterface
             $replacementValue = self::prepareRecursively(
                 $v,
                 ($depth - 1),
-                $isTrucatingRecursion,
+                $isTruncatingRecursion,
                 ($level + 1),
                 $previousSplObjectHashes
             );
@@ -69,7 +69,7 @@ class PlainTextFormatter implements FormatterInterface
         return implode(PHP_EOL, $array);
     }
 
-    public static function produceHumanReadableOutputForObject($object, $depth, $isTrucatingRecursion, $level,
+    public static function produceHumanReadableOutputForObject($object, $depth, $isTruncatingRecursion, $level,
         array $previousSplObjectHashes)
     {
         if (false == is_object($object)) {
@@ -88,7 +88,7 @@ class PlainTextFormatter implements FormatterInterface
             $replacementValue = self::prepareRecursively(
                 $propertyValue,
                 ($depth - 1),
-                $isTrucatingRecursion,
+                $isTruncatingRecursion,
                 ($level + 1),
                 $previousSplObjectHashes
             );
