@@ -19,6 +19,15 @@ class Dumper
     }
 
     /**
+     * Dumps the input variable in a HTML format with styling and minimal Javascript functionality to expand child
+     * arrays and objects. Recursive truncation is enforced to avoid the HTML tree from expanding endlessly.
+     */
+    public static function dumpHtml($var, $depth = 3)
+    {
+        echo(self::prepareHtml($var, $depth));
+    }
+
+    /**
      * Dumps the input variable in a JSON format. Recursive truncation is enforced, because this is a means of working
      * around the json_encode error "recursion detected".
      */
@@ -35,6 +44,12 @@ class Dumper
     public static function prepare($var, $depth = 3, $isTruncatingRecursion = true)
     {
         return PlainTextFormatter::prepareRecursively($var, $depth, $isTruncatingRecursion, 0, []);
+    }
+
+    public static function prepareHtml($var, $depth = 3)
+    {
+        $htmlFormatter = new HtmlFormatter($var, $depth);
+        return $htmlFormatter->render();
     }
 
     public static function prepareJson($var, $depth = 3, $prettyPrint = true)
