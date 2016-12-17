@@ -1,10 +1,20 @@
 <?php
 namespace Kafoso\Tools\Debug\Dumper;
 
+use Ramsey\Uuid\Uuid;
+
 class HtmlFormatter extends AbstractFormatter
 {
     const INDENTATION_CHARACTER = "·";
     const PSR_2_SOFT_CHARACTER_LIMIT = 120;
+
+    private $idUuid;
+
+    public function __construct($var, $depth = null)
+    {
+        parent::__construct($var, $depth);
+        $this->idUuid = str_replace('-', '_', Uuid::uuid1()->toString());
+    }
 
     public function generateIndentationForLevel($level)
     {
@@ -17,37 +27,15 @@ class HtmlFormatter extends AbstractFormatter
 
     public function render()
     {
-        $styleDivWrapper = [
-            "background-color" => "rgb(40,44,52)",
-            "color" => "#abb2bf",
-            "font-family" => "Menlo,Consolas,'DejaVu Sans Mono',monospace",
-            "overflow" => "auto",
-            "padding" => "10px",
-            "position" => "relative",
-        ];
-        $styleDivPsr2SoftCharacterLimitLine = [
-            "border-right" => "1px solid rgba(171, 178, 191, 0.15)",
-            "color" => "transparent",
-            "margin" => "0 0 0 -1px",
-            "position" => "absolute",
-            "top" => "10px",
-            "bottom" => "10px",
-            "z-index" => 1,
-        ];
-        $stylePre = [
-            "background-color" => "inherit",
-            "margin" => "0",
-            "padding" => "0",
-        ];
         return sprintf(
-            '<div style="%s">'
-                . '<pre style="%s">'
-                . '<div style="%s">%s</div>'
+            '<div id="%s">'
+                . '<style type="text/css">%s</style>'
+                . '<pre>'
+                . '<div id="wrap-guide">%s</div>'
                 . '<div style="%s">%s</div>'
                 . '</pre></div>',
-            $this->styleArrayToString($styleDivWrapper),
-            $this->styleArrayToString($stylePre),
-            $this->styleArrayToString($styleDivPsr2SoftCharacterLimitLine),
+            "Kafoso_Tools_Debug_Dumper_{$this->idUuid}",
+            htmlentities($this->getCss()),
             str_repeat(" ", self::PSR_2_SOFT_CHARACTER_LIMIT),
             $this->styleArrayToString([
                 "position" => "relative",
@@ -60,6 +48,18 @@ class HtmlFormatter extends AbstractFormatter
     public function renderInner()
     {
         return $this->prepareRecursively($this->var, $this->depth, 0, []);
+    }
+
+    public function getCss()
+    {
+        $baseDirectory = realpath(__DIR__ . str_repeat("/..", 5));
+        $css = file_get_contents($baseDirectory . "/resources/Kafoso/Tools/Debug/Dumper/HtmlFormatter/theme/dark-one-ui.css");
+        $css = str_replace(
+            "#Kafoso_Tools_Debug_Dumper",
+            "#Kafoso_Tools_Debug_Dumper_{$this->idUuid}",
+            $css
+        );
+        return $css;
     }
 
     private function prepareRecursively(

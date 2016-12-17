@@ -26,5 +26,8 @@
         "psr-4": {
             "Kafoso\\Tools\\": "src/Kafoso/Tools"
         }
+    },
+    "require": {
+        "ramsey/uuid": "^3.5"
     }
 }

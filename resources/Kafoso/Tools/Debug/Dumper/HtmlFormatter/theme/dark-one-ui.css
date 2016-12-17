@@ -1,59 +1,81 @@
-a[href],
-a:link,
-a:visited {
+#Kafoso_Tools_Debug_Dumper {
+    background-color:rgb(40,44,52);
+    color:#abb2bf;
+    font-family:Menlo,Consolas,'DejaVu Sans Mono',monospace;
+    overflow:auto;
+    padding:10px;
+    position:relative;
+}
+#Kafoso_Tools_Debug_Dumper pre {
+    background-color: inherit;
+    margin: 0;
+    padding: 0;
+}
+#Kafoso_Tools_Debug_Dumper #wrap-guide {
+    border-right: 1px solid rgba(171, 178, 191, 0.15);
+    color: transparent;
+    margin: 0 0 0 -1px;
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    z-index: 1;
+}
+#Kafoso_Tools_Debug_Dumper a[href],
+#Kafoso_Tools_Debug_Dumper a:link,
+#Kafoso_Tools_Debug_Dumper a:visited {
     color:#d6941a;
     text-decoration:underline;
 }
-.comment {
+#Kafoso_Tools_Debug_Dumper .comment {
     color:#5c6370;
     font-style:italic;
 }
-.constant {
+#Kafoso_Tools_Debug_Dumper .constant {
     color:#d19a66;
 }
-.constant.numeric {
+#Kafoso_Tools_Debug_Dumper .constant.numeric {
     color:#d19a66;
 }
-.entity.name.type {
+#Kafoso_Tools_Debug_Dumper .entity.name.type {
     color:#e5c07b;
 }
-.entity.name.class,
-.entity.name.type.class {
+#Kafoso_Tools_Debug_Dumper .entity.name.class,
+#Kafoso_Tools_Debug_Dumper .entity.name.type.class {
     color:#e5c07b;
 }
-.entity.name.function {
+#Kafoso_Tools_Debug_Dumper .entity.name.function {
     color:#61afef;
 }
-.entity.other.inherited-class {
+#Kafoso_Tools_Debug_Dumper .entity.other.inherited-class {
     color:#98c379;
 }
-.indent-guide,
-.invisible-character {
+#Kafoso_Tools_Debug_Dumper .indent-guide,
+#Kafoso_Tools_Debug_Dumper .invisible-character {
     color:rgba(171, 178, 191, 0.15);
 }
-.indent-guide {
+#Kafoso_Tools_Debug_Dumper .indent-guide {
     display:inline-block;
     box-shadow:inset 1px 0;
 }
-.invisible-character {
+#Kafoso_Tools_Debug_Dumper .invisible-character {
     font-weight:normal !important;
     font-style:normal !important;
 }
-.keyword {
+#Kafoso_Tools_Debug_Dumper .keyword {
     color:#c678dd;
 }
-.line {
+#Kafoso_Tools_Debug_Dumper .line {
     white-space:pre;
 }
-.storage {
+#Kafoso_Tools_Debug_Dumper .storage {
     color:#c678dd;
 }
-.string {
+#Kafoso_Tools_Debug_Dumper .string {
     color:#98c379;
 }
-.support.class {
+#Kafoso_Tools_Debug_Dumper .support.class {
     color:#e5c07b;
 }
-.variable {
+#Kafoso_Tools_Debug_Dumper .variable {
     color:#e06c75;
 }
