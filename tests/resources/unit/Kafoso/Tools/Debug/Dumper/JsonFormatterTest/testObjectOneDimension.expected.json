@@ -1,0 +1,10 @@
+{
+    "Kafoso\\Tools\\Debug\\Dumper|CLASS": "Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectOneDimension_b0559f888359b081714fdea9d26c65b7 Object &00000000601efc6800000001175dcc10",
+    "aNull": null,
+    "aBoolean": false,
+    "aString": "lorem",
+    "aResource": "Resource #1 (Type: curl)",
+    "anInheritedVariable": null,
+    "aTraitVariable": null,
+    "foo": "bar"
+}

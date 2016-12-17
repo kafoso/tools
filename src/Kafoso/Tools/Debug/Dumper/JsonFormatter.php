@@ -1,44 +1,54 @@
 <?php
 namespace Kafoso\Tools\Debug\Dumper;
 
-class JsonFormatter
+class JsonFormatter extends AbstractFormatter
 {
-    public static function prepareRecursively($var, $depth, array $previousSplObjectHashes)
+    private $options;
+
+    public function __construct($var, $depth = null, $options = 0)
     {
-        if (is_array($var) || is_object($var)) {
-            if (is_object($var)) {
-                $hash = spl_object_hash($var);
-                if (in_array($hash, $previousSplObjectHashes)) {
-                    return self::produceHumanReadableOutputForRecursedObject($var);
-                }
-                $previousSplObjectHashes[] = $hash;
+        parent::__construct($var, $depth);
+        $this->options = $options;
+    }
+
+    public function render()
+    {
+        return json_encode($this->prepareRecursively($this->var, $this->depth, []), $this->options);
+    }
+
+    private function prepareRecursively($var, $depth, array $previousSplObjectHashes)
+    {
+        if (is_object($var)) {
+            $hash = spl_object_hash($var);
+            if (in_array($hash, $previousSplObjectHashes)) {
+                return $this->renderObjectRecursion($var);
             }
+            $previousSplObjectHashes[] = $hash;
             if ($depth <= 0) {
-                if (is_object($var)) {
-                    return self::produceHumanReadableOutputForOmittedObject($var);
-                } else {
-                    return self::produceHumanReadableOutputForOmittedArray($var);
-                }
+                return $this->renderObjectOmitted($var);
             } else {
-                if (is_object($var)) {
-                    return self::produceHumanReadableOutputForObject($var, $depth, $previousSplObjectHashes);
-                } else {
-                    return self::produceHumanReadableOutputForArray($var, $depth, $previousSplObjectHashes);
-                }
+                return $this->renderObject($var, $depth, $previousSplObjectHashes);
             }
+        } elseif (is_array($var)) {
+            if ($depth <= 0) {
+                return $this->renderArrayOmitted($var);
+            }
+            return $this->renderArray($var, $depth, $previousSplObjectHashes);
+        } elseif (is_resource($var)) {
+            return $this->renderResource($var);
         }
         return $var;
     }
 
-    public static function produceHumanReadableOutputForArray(array $array, $depth, array $previousSplObjectHashes)
+    private function renderArray(array $array, $depth, array $previousSplObjectHashes)
     {
         foreach ($array as $k => $v) {
-            $array[$k] = self::prepareRecursively($v, ($depth-1), $previousSplObjectHashes);
+            $array[$k] = $this->prepareRecursively($v, ($depth-1), $previousSplObjectHashes);
         }
         return $array;
     }
 
-    public static function produceHumanReadableOutputForObject($object, $depth, array $previousSplObjectHashes)
+    private function renderObject($object, $depth, array $previousSplObjectHashes)
     {
         $hash = spl_object_hash($object);
         $reflection = new \ReflectionObject($object);
@@ -48,7 +58,7 @@ class JsonFormatter
         ];
         foreach ($properties as $property) {
             $property->setAccessible(true);
-            $array[$property->getName()] = self::prepareRecursively(
+            $array[$property->getName()] = $this->prepareRecursively(
                 $property->getValue($object),
                 ($depth-1),
                 $previousSplObjectHashes
@@ -57,7 +67,7 @@ class JsonFormatter
         return $array;
     }
 
-    public static function produceHumanReadableOutputForOmittedObject($object)
+    private function renderObjectOmitted($object)
     {
         $hash = spl_object_hash($object);
         return [
@@ -66,7 +76,7 @@ class JsonFormatter
         ];
     }
 
-    public static function produceHumanReadableOutputForOmittedArray(array $array, $level = 0)
+    private function renderArrayOmitted(array $array, $level = 0)
     {
         $arraySize = count($array);
         return [
@@ -74,12 +84,21 @@ class JsonFormatter
         ];
     }
 
-    public static function produceHumanReadableOutputForRecursedObject($object, $level = 0)
+    private function renderObjectRecursion($object, $level = 0)
     {
         $hash = spl_object_hash($object);
         return [
             __NAMESPACE__ . "|CLASS" => get_class($object) . " Object &{$hash}",
             __NAMESPACE__ . "|RECURSION" => "*RECURSION*",
         ];
+    }
+
+    private function renderResource($resource)
+    {
+        return sprintf(
+            'Resource #%d (Type: %s)',
+            intval($resource),
+            get_resource_type($resource)
+        );
     }
 }

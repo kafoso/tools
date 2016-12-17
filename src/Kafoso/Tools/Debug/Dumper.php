@@ -1,6 +1,7 @@
 <?php
 namespace Kafoso\Tools\Debug;
 
+use Kafoso\Tools\Debug\Dumper\HtmlFormatter;
 use Kafoso\Tools\Debug\Dumper\JsonFormatter;
 use Kafoso\Tools\Debug\Dumper\PlainTextFormatter;
 
@@ -33,7 +34,7 @@ class Dumper
      */
     public static function dumpJson($var, $depth = 3, $prettyPrint = true)
     {
-        echo(self::prepareJson($var, $depth));
+        echo(self::prepareJson($var, $depth, $prettyPrint));
     }
 
     public static function dumpPre($var, $depth = 3, $isTruncatingRecursion = true)
@@ -43,7 +44,8 @@ class Dumper
 
     public static function prepare($var, $depth = 3, $isTruncatingRecursion = true)
     {
-        return PlainTextFormatter::prepareRecursively($var, $depth, $isTruncatingRecursion, 0, []);
+        $plainTextFormatter = new PlainTextFormatter($var, $depth, $isTruncatingRecursion);
+        return $plainTextFormatter->render();
     }
 
     public static function prepareHtml($var, $depth = 3)
@@ -58,6 +60,7 @@ class Dumper
         if ($prettyPrint) {
             $options |= JSON_PRETTY_PRINT;
         }
-        return json_encode(JsonFormatter::prepareRecursively($var, $depth, []), $options);
+        $jsonFormatter = new JsonFormatter($var, $depth, $options);
+        return $jsonFormatter->render();
     }
 }

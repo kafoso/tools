@@ -1,0 +1,59 @@
+a[href],
+a:link,
+a:visited {
+    color:#d6941a;
+    text-decoration:underline;
+}
+.comment {
+    color:#5c6370;
+    font-style:italic;
+}
+.constant {
+    color:#d19a66;
+}
+.constant.numeric {
+    color:#d19a66;
+}
+.entity.name.type {
+    color:#e5c07b;
+}
+.entity.name.class,
+.entity.name.type.class {
+    color:#e5c07b;
+}
+.entity.name.function {
+    color:#61afef;
+}
+.entity.other.inherited-class {
+    color:#98c379;
+}
+.indent-guide,
+.invisible-character {
+    color:rgba(171, 178, 191, 0.15);
+}
+.indent-guide {
+    display:inline-block;
+    box-shadow:inset 1px 0;
+}
+.invisible-character {
+    font-weight:normal !important;
+    font-style:normal !important;
+}
+.keyword {
+    color:#c678dd;
+}
+.line {
+    white-space:pre;
+}
+.storage {
+    color:#c678dd;
+}
+.string {
+    color:#98c379;
+}
+.support.class {
+    color:#e5c07b;
+}
+.variable {
+    color:#e06c75;
+}

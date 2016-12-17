@@ -3,19 +3,56 @@ namespace Kafoso\Tools\Debug\Dumper;
 
 class HtmlFormatter extends AbstractFormatter
 {
+    const INDENTATION_CHARACTER = "·";
+    const PSR_2_SOFT_CHARACTER_LIMIT = 120;
+
+    public function generateIndentationForLevel($level)
+    {
+        $indentationCharacters = $this->getIndentationCharacters();
+        return str_repeat(sprintf(
+            '<span class="invisible-character leading-whitespace indent-guide">%s</span>',
+            $indentationCharacters
+        ), $level);
+    }
+
     public function render()
     {
-        $style = [
+        $styleDivWrapper = [
             "background-color" => "rgb(40,44,52)",
             "color" => "#abb2bf",
             "font-family" => "Menlo,Consolas,'DejaVu Sans Mono',monospace",
-            "overflow" => "hidden",
+            "overflow" => "auto",
             "padding" => "10px",
             "position" => "relative",
         ];
+        $styleDivPsr2SoftCharacterLimitLine = [
+            "border-right" => "1px solid rgba(171, 178, 191, 0.15)",
+            "color" => "transparent",
+            "margin" => "0 0 0 -1px",
+            "position" => "absolute",
+            "top" => "10px",
+            "bottom" => "10px",
+            "z-index" => 1,
+        ];
+        $stylePre = [
+            "background-color" => "inherit",
+            "margin" => "0",
+            "padding" => "0",
+        ];
         return sprintf(
-            '<div style="%s">%s</div>',
-            $this->styleArrayToString($style),
+            '<div style="%s">'
+                . '<pre style="%s">'
+                . '<div style="%s">%s</div>'
+                . '<div style="%s">%s</div>'
+                . '</pre></div>',
+            $this->styleArrayToString($styleDivWrapper),
+            $this->styleArrayToString($stylePre),
+            $this->styleArrayToString($styleDivPsr2SoftCharacterLimitLine),
+            str_repeat(" ", self::PSR_2_SOFT_CHARACTER_LIMIT),
+            $this->styleArrayToString([
+                "position" => "relative",
+                "z-index" => 2,
+            ]),
             $this->renderInner()
         );
     }
@@ -25,9 +62,18 @@ class HtmlFormatter extends AbstractFormatter
         return $this->prepareRecursively($this->var, $this->depth, 0, []);
     }
 
-    private function prepareRecursively($var, $depth, $level, array $previousSplObjectHashes)
+    private function prepareRecursively(
+        $var,
+        $depth,
+        $level,
+        array $previousSplObjectHashes,
+        $doPrependWhitespace = true
+    )
     {
-        $indentation = str_repeat(self::INDENTATION_CHARACTERS, $level);
+        $indentation = "";
+        if ($doPrependWhitespace) {
+            $indentation = $this->generateIndentationForLevel($level);
+        }
         if (is_object($var)) {
             if ($depth <= 0) {
                 return $indentation . $this->renderObjectOmitted($var);
@@ -42,25 +88,34 @@ class HtmlFormatter extends AbstractFormatter
             if ($depth <= 0) {
                 return $indentation . $this->renderArrayOmitted($var);
             }
-            return $this->renderArray($var, $depth, $level, $previousSplObjectHashes);
+            return $this->renderArray($var, $depth, $level, $previousSplObjectHashes, $doPrependWhitespace);
         } elseif (is_resource($var)) {
             return $indentation . $this->renderResource($var);
         }
         return $indentation . $this->renderDefault($var);
     }
 
-    public function renderArray(array $array, $depth, $level, array $previousSplObjectHashes)
+    public function renderArray(
+        array $array,
+        $depth,
+        $level,
+        array $previousSplObjectHashes,
+        $doPrependWhitespace = true
+    )
     {
         if ($array) {
-            $indentation = str_repeat(self::INDENTATION_CHARACTERS, $level);
+            $indentation = $this->generateIndentationForLevel($level);
+            $indentationInner = $this->generateIndentationForLevel($level+1);
             $html = $indentation . '[' . PHP_EOL;
-            $level += 1;
-            $indentationInner = str_repeat(self::INDENTATION_CHARACTERS, $level);
+            if (false == $doPrependWhitespace) {
+                $html = '[' . PHP_EOL;
+            }
             foreach ($array as $k => $v) {
                 $html .= $indentationInner;
                 $html .= $this->renderDefault($k);
                 $html .= ' => ';
-                $html .= $this->prepareRecursively($v, ($depth-1), 0, $previousSplObjectHashes);
+                $html .= $this->prepareRecursively($v, ($depth-1), ($level+1), $previousSplObjectHashes, false);
+                $html .= ",";
                 $html .= PHP_EOL;
             }
             $html .= $indentation . ']';
@@ -77,11 +132,15 @@ class HtmlFormatter extends AbstractFormatter
 
     private function renderDefault($value)
     {
-        $style = [];
-        if (is_bool($value) || is_null($value) || is_numeric($value)) {
-            $style["color"] = "#d19a66";
+        $commentHtml = null;
+        $class = [];
+        if (is_bool($value) || is_null($value) || is_float($value) || is_int($value)) {
+            $class[] = "constant";
+            if (is_float($value) || is_int($value)) {
+                $class[] = "numeric";
+            }
         } elseif (is_string($value)) {
-            $style["color"] = "#98c379";
+            $class[] = "string";
             $value = '"' . $value . '"';
         }
         if (is_null($value)) {
@@ -92,27 +151,134 @@ class HtmlFormatter extends AbstractFormatter
             $value = strval($value);
         }
         return sprintf(
-            '<span style="%s">%s</span>',
-            htmlentities($this->styleArrayToString($style)),
+            '<span class="%s">%s</span>',
+            htmlentities(implode(" ", $class)),
             htmlentities($value)
         );
     }
 
     private function renderObject($object, $depth, $level, array $previousSplObjectHashes)
     {
+        $self = $this;
         $hash = spl_object_hash($object);
-        $reflection = new \ReflectionObject($object);
-        $indentation = str_repeat(self::INDENTATION_CHARACTERS, ($level+1));
-        $innerHtml = [];
-        $properties = $reflection->getProperties();
+        $reflectionObject = new \ReflectionObject($object);
+        $indentation = $this->generateIndentationForLevel($level);
+        $indentationInner = $this->generateIndentationForLevel($level+1);
         $className = get_class($object);
-        if ($properties) {
-            $innerHtml[] = $indentation . sprintf(
-                '<span style="%s">%s</span>',
-                $this->styleArrayToString(["color" => "#5c6370"]),
-                "// Variables"
+
+        $entity = [];
+        if ($reflectionObject->isFinal()) {
+            $entity[] = "final";
+        }
+        if ($reflectionObject->isAbstract()) {
+            $entity[] = "abstract";
+        }
+        if ($reflectionObject->isTrait()) {
+            $entity[] = "trait";
+        } else {
+            $entity[] = "class";
+        }
+        $entityBlockHtml = '';
+        $entity = implode(" ", $entity);
+        $entityBlockHtml .= sprintf(
+            '<span class="storage">%s</span> <a title="%s" name="%s"><span class="entity name class">\\%s</span></a>',
+            $entity,
+            htmlentities("Object #{$hash}"),
+            "Object_{$hash}",
+            $className
+        );
+        $entityBlockText = "{$indentation}{$entity} {$className}";
+        if ($reflectionObject->getParentClass()) {
+            $extendsText = " extends " . $reflectionObject->getParentClass()->getName();
+            $substrLength = mb_strlen($entityBlockText)+mb_strlen($extendsText)+strlen(" {");
+            if ($substrLength > self::PSR_2_SOFT_CHARACTER_LIMIT) {
+                $entityBlockText .= PHP_EOL . $indentationInner;
+                $entityBlockHtml .= PHP_EOL . $indentationInner;
+            } else {
+                $entityBlockText .= " ";
+                $entityBlockHtml .= " ";
+            }
+            $entityBlockText .= "extends " . $reflectionObject->getParentClass()->getName();
+            $entityBlockHtml .= sprintf(
+                '<span class="storage">extends</span> <span class="entity other inherited-class php">\\%s</span>',
+                htmlentities($reflectionObject->getParentClass()->getName())
             );
-            foreach ($properties as $property) {
+        }
+        if ($reflectionObject->getInterfaces()) {
+            $interfaceNamesText = [];
+            $interfaceNamesHtml = [];
+            foreach ($reflectionObject->getInterfaces() as $interface) {
+                $interfaceNamesText[] = $interface->getName();
+                $interfaceNamesHtml[] = sprintf(
+                    '<span class="entity other inherited-class php">\\%s</span>',
+                    htmlentities($interface->getName())
+                );
+            }
+            $entityBlockTextArray = explode(PHP_EOL, $entityBlockText);
+            $entityBlockTextLastLine = end($entityBlockTextArray);
+            $implementsText = " implements " . implode(", ", $interfaceNamesText);
+            $substrLength = mb_strlen($entityBlockTextLastLine)+mb_strlen($implementsText)+strlen(" {");
+            if ($substrLength > self::PSR_2_SOFT_CHARACTER_LIMIT) {
+                $entityBlockText .= PHP_EOL . $indentationInner;
+                $entityBlockHtml .= PHP_EOL . $indentationInner;
+            } else {
+                $entityBlockText .= " ";
+                $entityBlockHtml .= " ";
+            }
+            $entityBlockText .= "implements " . $interface->getName();
+            $entityBlockHtml .= sprintf(
+                '<span class="storage">implements</span> %s',
+                implode(", ", $interfaceNamesHtml)
+            );
+        }
+        $entityBlockHtml .= ' {' . PHP_EOL;
+
+        $innerHtml = [];
+
+        // Traits
+        if ($reflectionObject->getTraits()) {
+            $innerHtml[] = $indentationInner . sprintf(
+                '<span class="comment line double-slash php">%s</span>',
+                "// Traits"
+            );
+            foreach ($reflectionObject->getTraits() as $trait) {
+                $innerHtml[] = $indentationInner . sprintf(
+                    '<span class="keyword other use php">use</span> <span class="support other namespace use php">\\%s</span>;',
+                    htmlentities($trait->getName())
+                );
+            }
+        }
+
+        // Constants
+        $constants = $reflectionObject->getConstants();
+        if ($constants) {
+            $innerHtml[] = $indentationInner . sprintf(
+                '<span class="comment line double-slash php">%s</span>',
+                "// Constants"
+            );
+            foreach ($constants as $k => $v) {
+                $commentHtml = null;
+                if (is_string($v)) {
+                    $commentHtml = sprintf(
+                        ' <span class="comment line double-slash php">// Length: %d</span>',
+                        mb_strlen($v)
+                    );
+                }
+                $innerHtml[] = $indentationInner . sprintf(
+                    '<span class="storage">const</span> <span class="constant">%s</span> = %s;',
+                    htmlentities($k),
+                    $this->renderDefault($v)
+                ) . $commentHtml;
+            }
+        }
+
+        // Variables
+        $properties = $reflectionObject->getProperties();
+        if ($properties) {
+            $propertiesDeclaredInClass = [];
+            $propertiesDeclaredAtRuntime = [];
+            $propertiesInherited = [];
+            $renderProperty = function(\ReflectionProperty $property) use (&$self, $indentationInner, $object, $depth, $level, $previousSplObjectHashes){
                 $property->setAccessible(true);
                 $storage = [];
                 if ($property->isPrivate()) {
@@ -127,31 +293,81 @@ class HtmlFormatter extends AbstractFormatter
                 }
                 $storage = implode(' ', $storage);
                 $html = '';
-                $html .= $indentation;
+                $html .= $indentationInner;
                 $html .= sprintf(
-                    '<span style="%s">%s</span> <span style="%s">$%s</span>',
-                    $this->styleArrayToString(["color" => "#c678dd"]),
+                    '<span class="storage">%s</span> <span class="variable">$%s</span>',
                     $storage,
-                    $this->styleArrayToString(["color" => "#e06c75"]),
                     $property->getName()
                 );
                 $html .= " = ";
-                $html .= ltrim($this->prepareRecursively(
+                $html .= $this->prepareRecursively(
                     $property->getValue($object),
                     ($depth-1),
                     ($level+1),
-                    $previousSplObjectHashes
-                ));
-                $html .= ";";
-                $innerHtml[] = $html;
+                    $previousSplObjectHashes,
+                    false
+                );
+                if (false == is_resource($property->getValue($object))) {
+                    $html .= ";";
+                }
+                if (is_string($property->getValue($object))) {
+                    $html .= sprintf(
+                        ' <span class="comment line double-slash php">// Length: %d</span>',
+                        mb_strlen($property->getValue($object))
+                    );
+                }
+                return $html;
+            };
+            foreach ($properties as $property) {
+                if ($className == $property->getDeclaringClass()->getName()) {
+                    if ($property->isDefault()) {
+                        $propertiesDeclaredInClass[] = $property;
+                    } else {
+                        $propertiesDeclaredAtRuntime[] = $property;
+                    }
+                } else {
+                    $propertiesInherited[] = $property;
+                }
+            }
+            if ($propertiesDeclaredInClass) {
+                $innerHtml[] = $indentationInner . sprintf(
+                    '<span class="comment line double-slash php">%s</span>',
+                    "// Variables - declared in class"
+                );
+                foreach ($propertiesDeclaredInClass as $property) {
+                    $innerHtml[] = $renderProperty($property);
+                }
+            }
+            if ($propertiesInherited) {
+                $innerHtml[] = $indentationInner . sprintf(
+                    '<span class="comment line double-slash php">%s</span>',
+                    "// Variables - inherited"
+                );
+                foreach ($propertiesInherited as $property) {
+                    $inheritHtml = sprintf(
+                        ' <span class="comment line double-slash php">// <span class="keyword">@inherit</span> \\%s</span>',
+                        $property->getDeclaringClass()->getName()
+                    );
+                    $innerHtml[] = $renderProperty($property) . $inheritHtml;
+                }
+            }
+            if ($propertiesDeclaredAtRuntime) {
+                $innerHtml[] = $indentationInner . sprintf(
+                    '<span class="comment line double-slash php">%s</span>',
+                    "// Variables - declared at runtime (injected)"
+                );
+                foreach ($propertiesDeclaredAtRuntime as $property) {
+                    $innerHtml[] = $renderProperty($property);
+                }
             }
         }
-        $methods = $reflection->getMethods();
+
+        // Methods
+        $methods = $reflectionObject->getMethods();
         if ($methods) {
             $methodsDeclaredInClass = [];
             $methodsInherited = [];
-            $self = $this;
-            $renderMethod = function(\ReflectionMethod $method) use (&$self, $indentation){
+            $renderMethod = function(\ReflectionMethod $method) use (&$self, $level, $indentationInner){
                 $method->setAccessible(true);
                 $storage = [];
                 if ($method->isFinal()) {
@@ -173,30 +389,46 @@ class HtmlFormatter extends AbstractFormatter
                 }
                 $storage[] = "function";
                 $storage = implode(' ', $storage);
+                $parametersText = [];
                 $parametersHtml = [];
                 if ($method->getParameters()) {
                     foreach ($method->getParameters() as $parameter) {
-                        $h = '';
-                        if ($parameter->hasType()) {
-                            $h .= sprintf(
-                                '<span style="%s">\\%s</span>',
-                                $self->styleArrayToString(["color" => "#e5c07b"]),
-                                htmlentities((string)$parameter->getType())
+                        $text = '';
+                        $html = '';
+                        if ($parameter->isCallable() || $parameter->isArray()) {
+                            $type = "array";
+                            if ($parameter->isCallable()) {
+                                $type = "callable";
+                            }
+                            $text .= $type;
+                            $html .= sprintf(
+                                '<span class="storage">%s</span>',
+                                $type
                             );
+                        } else {
+                            preg_match('/([\w][\w\\\\]+) \$\w+ \]/', (string)$parameter, $match);
+                            if ($match) {
+                                $text .= $match[1];
+                                $html .= sprintf(
+                                    '<span class="support class">\\%s</span>',
+                                    htmlentities($match[1])
+                                );
+                            }
                         }
+                        $text .= ' ';
+                        $html .= ' ';
                         if ($parameter->isPassedByReference()) {
-                            $h .= sprintf(
-                                '<span style="%s">&amp;</span>',
-                                $self->styleArrayToString(["color" => "#c678dd"])
-                            );
+                            $text .= "&";
+                            $html .= '<span class="storage">&amp;</span>';
                         }
-                        $h .= sprintf(
-                            '<span style="%s">$%s</span>',
-                            $self->styleArrayToString(["color" => "#e06c75"]),
+                        $text .= $parameter->getName();
+                        $html .= sprintf(
+                            '<span class="variable">$%s</span>',
                             htmlentities($parameter->getName())
                         );
                         if ($parameter->isDefaultValueAvailable()) {
-                            $h .= " = ";
+                            $text .= ' = ';
+                            $html .= ' = ';
                             if ($parameter->isDefaultValueConstant()) {
                                 @list($class, $constant) = @explode('::', $parameter->getDefaultValueConstantName());
                                 if (!$constant) {
@@ -204,42 +436,58 @@ class HtmlFormatter extends AbstractFormatter
                                     $class = null;
                                 }
                                 if ($class) {
-                                    $h .= sprintf(
-                                        '<span style="%s">%s</span>::',
-                                        $self->styleArrayToString(["color" => "#e5c07b"]),
+                                    $text .= "\\{$class}";
+                                    $html .= sprintf(
+                                        '<span class="support class">\\%s</span>::',
                                         htmlentities($class)
                                     );
                                 }
-                                $h .= sprintf(
-                                    '<span style="%s">%s</span>',
-                                    $self->styleArrayToString(["color" => "#d19a66"]),
+                                $text .= $constant;
+                                $html .= sprintf(
+                                    '<span class="constant">%s</span>',
                                     htmlentities($constant)
                                 );
                             } else {
-                                $h .= $self->renderDefault($parameter->getDefaultValue());
+                                $text .= $parameter->getDefaultValue();
+                                $html .= $self->renderDefault($parameter->getDefaultValue());
                             }
                         }
-                        $parametersHtml[] = $h;
+                        $parametersText[] = $text;
+                        $parametersHtml[] = ltrim($html);
                     }
                 }
-                $parametersHtml = implode(", ", $parametersHtml);
-                $commentHtml = '';
-                /*
-                XXX Check if method overrides inherited method
-                if (false) {
-                    $commentHtml = sprintf(
-                        '<span style="%s">// @override</span>',
-                        $self->styleArrayToString(["color" => "#5c6370"])
-                    );
+                $indentationInnerText = static::INDENTATION_CHARACTER_COUNT * ($level + 1);
+                $substrText = $indentationInnerText . $storage . " " . implode(", ", $parametersText);
+                if (mb_strlen($substrText) > self::PSR_2_SOFT_CHARACTER_LIMIT) {
+                    $parametersHtml = PHP_EOL . implode("," . PHP_EOL, array_map(function($html) use ($indentationInner){
+                        return $indentationInner . $this->generateIndentationForLevel(1) . ltrim($html);
+                    }, $parametersHtml)) . PHP_EOL . $indentationInner;
+                } else {
+                    $parametersHtml = implode(", ", $parametersHtml);
                 }
-                */
+                $commentHtml = '';
+                $parentReflectionObject = $method->getDeclaringClass()->getParentClass();
+                while ($parentReflectionObject) {
+                    if ($parentReflectionObject->hasMethod($method->getName())) {
+                        $overriddenMethodHtml = sprintf(
+                            '\\%s%s%s()',
+                            $parentReflectionObject->getName(),
+                            ($method->isStatic() ? "::" : "->"),
+                            $method->getName()
+                        );
+                        $commentHtml = sprintf(
+                            ' <span class="comment line double-slash php">// <span class="keyword">@override</span> %s</span>',
+                            $overriddenMethodHtml
+                        );
+                        break;
+                    }
+                    $parentReflectionObject = $parentReflectionObject->getParentClass();
+                }
                 $html = '';
-                $html .= $indentation;
+                $html .= $indentationInner;
                 $html .= sprintf(
-                    '<span style="%s">%s</span> <span style="%s">%s</span>(%s);%s',
-                    $self->styleArrayToString(["color" => "#c678dd"]),
+                    '<span class="storage">%s</span> <span class="entity name function">%s</span>(%s);%s',
                     $storage,
-                    $self->styleArrayToString(["color" => "#e06c75"]),
                     $method->getName(),
                     $parametersHtml,
                     $commentHtml
@@ -248,17 +496,16 @@ class HtmlFormatter extends AbstractFormatter
             };
             foreach ($methods as $method) {
                 $method->setAccessible(true);
-                $reflectionDeclaringClass = $method->getDeclaringClass();
-                if ($reflectionDeclaringClass && $className == $reflectionDeclaringClass->getName()) {
+                $reflectionObjectDeclaringClass = $method->getDeclaringClass();
+                if ($reflectionObjectDeclaringClass && $className == $reflectionObjectDeclaringClass->getName()) {
                     $methodsDeclaredInClass[] = $method;
                 } else {
                     $methodsInherited[] = $method;
                 }
             }
             if ($methodsDeclaredInClass) {
-                $innerHtml[] = $indentation . sprintf(
-                    '<span style="%s">%s</span>',
-                    $this->styleArrayToString(["color" => "#5c6370"]),
+                $innerHtml[] = $indentationInner . sprintf(
+                    '<span class="comment line double-slash php">%s</span>',
                     "// Methods - declared in class"
                 );
                 foreach ($methodsDeclaredInClass as $method) {
@@ -266,58 +513,26 @@ class HtmlFormatter extends AbstractFormatter
                 }
             }
             if ($methodsInherited) {
-                $innerHtml[] = $indentation . sprintf(
-                    '<span style="%s">%s</span>',
-                    $this->styleArrayToString(["color" => "#5c6370"]),
+                $innerHtml[] = $indentationInner . sprintf(
+                    '<span class="comment line double-slash php">%s</span>',
                     "// Methods - Inherited"
                 );
                 foreach ($methodsInherited as $method) {
-                    $tmpHtml = '';
-                    $tmpHtml .= $renderMethod($method);
-                    $tmpHtml .= sprintf(
-                        '<span style="%s">// Inherited from: \\%s</span>',
-                        $this->styleArrayToString(["color" => "#5c6370"]),
+                    $inheritHtml = sprintf(
+                        ' <span class="comment line double-slash php">// <span class="keyword">@inherit</span> \\%s</span>',
                         $method->getDeclaringClass()->getName()
                     );
-                    $innerHtml[] = $tmpHtml;
+                    $innerHtml[] = $renderMethod($method) . $inheritHtml;
                 }
             }
         }
         $innerHtml = implode(PHP_EOL, $innerHtml);
-        $entity = [];
-        if ($reflection->isFinal()) {
-            $entity[] = "final";
-        }
-        if ($reflection->isAbstract()) {
-            $entity[] = "abstract";
-        }
-        if ($reflection->isTrait()) {
-            $entity[] = "trait";
-        } else {
-            $entity[] = "class";
-        }
-        $entityBlockHtml = '';
-        $entity = implode(" ", $entity);
-        $entityBlockHtml .= sprintf(
-            '<div><span style="%s">%s</span> <span style="%s">\\%s</span> {</div>',
-            $this->styleArrayToString(["color" => "#c678dd"]),
-            $entity,
-            $this->styleArrayToString(["color" => "#e5c07b"]),
-            $className
-        );
-        return '<div>'
-            . PHP_EOL
-            . $entityBlockHtml
-            . PHP_EOL
-            . '<div>'
-            . PHP_EOL
-            . $innerHtml
-            . PHP_EOL
-            . '</div>'
-            . PHP_EOL
-            . '<div>}</div>'
-            . PHP_EOL
-            . '</div>';
+        return '<span>'
+            . '<span>' . $entityBlockHtml . '</span>'
+            . '<span>' . $innerHtml . '</span>'
+            . PHP_EOL . $indentation
+            . '<span>}</span>'
+            . '</span>';
     }
 
     private function renderObjectOmitted($object)
@@ -328,14 +543,18 @@ class HtmlFormatter extends AbstractFormatter
     private function renderObjectRecursion($object, $level = 0)
     {
         $hash = spl_object_hash($object);
+        return sprintf(
+            '<a href="#%s"><strong>**RECURSION**</strong> Object #%s</a>',
+            "Object_{$hash}",
+            htmlentities($hash)
+        );
     }
 
     private function renderResource($resource)
     {
         return sprintf(
-            'Resource #%d <span style="%s">(type: %s)</span>',
+            'Resource #%d; <span class="comment line double-slash php">// Type: %s</span>',
             intval($resource),
-            $this->styleArrayToString(["color" => "#5c6370"]),
             get_resource_type($resource)
         );
     }

@@ -1,0 +1,10 @@
+{
+    "Kafoso\\Tools\\Debug\\Dumper|CLASS": "Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730 Object &000000001ab935830000000106ddf29d",
+    "parent": {
+        "Kafoso\\Tools\\Debug\\Dumper|CLASS": "Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730 Object &000000001ab9358a0000000106ddf29d",
+        "parent": {
+            "Kafoso\\Tools\\Debug\\Dumper|CLASS": "Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730 Object &000000001ab9358b0000000106ddf29d",
+            "parent": null
+        }
+    }
+}
