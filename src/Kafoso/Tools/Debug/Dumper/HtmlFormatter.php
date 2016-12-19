@@ -1,20 +1,10 @@
 <?php
 namespace Kafoso\Tools\Debug\Dumper;
 
-use Ramsey\Uuid\Uuid;
-
 class HtmlFormatter extends AbstractFormatter
 {
     const INDENTATION_CHARACTER = "·";
     const PSR_2_SOFT_CHARACTER_LIMIT = 120;
-
-    private $idUuid;
-
-    public function __construct($var, $depth = null)
-    {
-        parent::__construct($var, $depth);
-        $this->idUuid = str_replace('-', '_', Uuid::uuid1()->toString());
-    }
 
     public function generateIndentationForLevel($level)
     {
@@ -27,21 +17,35 @@ class HtmlFormatter extends AbstractFormatter
 
     public function render()
     {
+        $optionsHtml = ''
+            . '<div class="optionsButton"></div>'
+            . '<div class="options">'
+                . '<dl>'
+                    . '<dt>Collapse level:</dt>'
+                    . '<dd>'
+                        . '<input type="number" placeholder="Default: None" class="collapseLevel">'
+                    . '</dd>'
+                . '</dl>'
+            . '</div>';
         return sprintf(
             '<div id="%s">'
                 . '<style type="text/css">%s</style>'
+                . $optionsHtml
                 . '<pre>'
-                . '<div id="wrap-guide">%s</div>'
+                . '<div class="wrap-guide">%s</div>'
                 . '<div style="%s">%s</div>'
-                . '</pre></div>',
-            "Kafoso_Tools_Debug_Dumper_{$this->idUuid}",
+                . '</pre>'
+                . '<script type="text/javascript">%s</script>'
+                . '</div>',
+            "Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27",
             htmlentities($this->getCss()),
             str_repeat(" ", self::PSR_2_SOFT_CHARACTER_LIMIT),
             $this->styleArrayToString([
                 "position" => "relative",
                 "z-index" => 2,
             ]),
-            $this->renderInner()
+            $this->renderInner(),
+            $this->getJavascript()
         );
     }
 
@@ -54,12 +58,14 @@ class HtmlFormatter extends AbstractFormatter
     {
         $baseDirectory = realpath(__DIR__ . str_repeat("/..", 5));
         $css = file_get_contents($baseDirectory . "/resources/Kafoso/Tools/Debug/Dumper/HtmlFormatter/theme/dark-one-ui.css");
-        $css = str_replace(
-            "#Kafoso_Tools_Debug_Dumper",
-            "#Kafoso_Tools_Debug_Dumper_{$this->idUuid}",
-            $css
-        );
         return $css;
+    }
+
+    public function getJavascript()
+    {
+        $baseDirectory = realpath(__DIR__ . str_repeat("/..", 5));
+        $js = file_get_contents($baseDirectory . "/resources/Kafoso/Tools/Debug/Dumper/HtmlFormatter/js/main.js");
+        return $js;
     }
 
     private function prepareRecursively(
@@ -127,8 +133,10 @@ class HtmlFormatter extends AbstractFormatter
 
     public function renderArrayOmitted(array $array, $level = 0)
     {
-        $arraySize = count($array);
-        // XXX
+        return sprintf(
+            "(Array(%d); omitted)",
+            count($array)
+        );
     }
 
     private function renderDefault($value)
@@ -253,23 +261,26 @@ class HtmlFormatter extends AbstractFormatter
         // Constants
         $constants = $reflectionObject->getConstants();
         if ($constants) {
+            $renderConstant = function($name, $value) use ($self, $indentationInner){
+                $commentHtml = null;
+                if (is_string($value)) {
+                    $commentHtml = sprintf(
+                        ' <span class="comment line double-slash php">// Length: %d</span>',
+                        mb_strlen($value)
+                    );
+                }
+                return $indentationInner . sprintf(
+                    '<span class="storage">const</span> <span class="constant">%s</span> = %s;',
+                    htmlentities($name),
+                    $this->renderDefault($value)
+                ) . $commentHtml;
+            };
             $innerHtml[] = $indentationInner . sprintf(
                 '<span class="comment line double-slash php">%s</span>',
                 "// Constants"
             );
             foreach ($constants as $k => $v) {
-                $commentHtml = null;
-                if (is_string($v)) {
-                    $commentHtml = sprintf(
-                        ' <span class="comment line double-slash php">// Length: %d</span>',
-                        mb_strlen($v)
-                    );
-                }
-                $innerHtml[] = $indentationInner . sprintf(
-                    '<span class="storage">const</span> <span class="constant">%s</span> = %s;',
-                    htmlentities($k),
-                    $this->renderDefault($v)
-                ) . $commentHtml;
+                $innerHtml[] = $renderConstant($k, $v);
             }
         }
 
@@ -311,10 +322,35 @@ class HtmlFormatter extends AbstractFormatter
                 if (false == is_resource($property->getValue($object))) {
                     $html .= ";";
                 }
+                $commentHtmlInner = null;
                 if (is_string($property->getValue($object))) {
+                    $commentHtmlInner = "Length: " . mb_strlen($property->getValue($object));
+                }
+                $parentReflectionObject = $property->getDeclaringClass()->getParentClass();
+                while ($parentReflectionObject) {
+                    if ($parentReflectionObject->hasProperty($property->getName())) {
+                        $overriddenMethodHtml = sprintf(
+                            '\\%s%s$%s',
+                            $parentReflectionObject->getName(),
+                            ($property->isStatic() ? "::" : "->"),
+                            $property->getName()
+                        );
+                        if (!$commentHtmlInner) {
+                            $commentHtmlInner = "";
+                        }
+                        $commentHtmlInner .= " ";
+                        $commentHtmlInner .= sprintf(
+                            '<span class="keyword">@override</span> %s',
+                            $overriddenMethodHtml
+                        );
+                        break;
+                    }
+                    $parentReflectionObject = $parentReflectionObject->getParentClass();
+                }
+                if ($commentHtmlInner) {
                     $html .= sprintf(
-                        ' <span class="comment line double-slash php">// Length: %d</span>',
-                        mb_strlen($property->getValue($object))
+                        ' <span class="comment line double-slash php">// %s</span>',
+                        $commentHtmlInner
                     );
                 }
                 return $html;
@@ -429,7 +465,7 @@ class HtmlFormatter extends AbstractFormatter
                         );
                         if ($parameter->isDefaultValueAvailable()) {
                             $text .= ' = ';
-                            $html .= ' = ';
+                            $html .= ' <span class="keyword operator">=</span> ';
                             if ($parameter->isDefaultValueConstant()) {
                                 @list($class, $constant) = @explode('::', $parameter->getDefaultValueConstantName());
                                 if (!$constant) {
@@ -528,21 +564,22 @@ class HtmlFormatter extends AbstractFormatter
             }
         }
         $innerHtml = implode(PHP_EOL, $innerHtml);
-        return '<span>'
+        $html = '<span>'
             . '<span>' . $entityBlockHtml . '</span>'
             . '<span>' . $innerHtml . '</span>'
             . PHP_EOL . $indentation
             . '<span>}</span>'
             . '</span>';
+        $html = '<span class="expanded">' . $html . '</span>';
+        return $html;
     }
 
     private function renderObjectOmitted($object)
     {
         $hash = spl_object_hash($object);
-        // XXX Impl test for this + omitted array
         return sprintf(
-            '<span title="%s">(Object #%s; value omitted)</span>',
-            "Object #{$hash}",
+            '<span title="Object #%s">(Object #%s; omitted)</span>',
+            $hash,
             $hash
         );
     }

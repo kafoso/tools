@@ -4,6 +4,7 @@
     "aBoolean": false,
     "aString": "lorem",
     "aResource": "Resource #1 (Type: curl)",
+    "anOverriddenVariable": "foo",
     "anInheritedVariable": null,
     "aTraitVariable": null,
     "foo": "bar"

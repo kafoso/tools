@@ -1,81 +1,162 @@
-#Kafoso_Tools_Debug_Dumper {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 {
     background-color:rgb(40,44,52);
     color:#abb2bf;
     font-family:Menlo,Consolas,'DejaVu Sans Mono',monospace;
     overflow:auto;
     padding:10px;
     position:relative;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
 }
-#Kafoso_Tools_Debug_Dumper pre {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.optionsButton {
+    display:block;
+    position:absolute;
+    z-index:3;
+    top:4px;
+    right:4px;
+    width:24px;
+    height:24px;
+    background:red;
+    overflow:hidden;
+}
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.optionsButton::before {
+    content: "___";
+    display: block;
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    color: #fff;
+    font-weight: bold;
+    word-break: break-all;
+    line-height: 7px;
+}
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options {
+    display:none;
+    background-color:#21252b;
+    height:24px;
+    margin:0 0 10px 0;
+    padding:4px 6px;
+    overflow:hidden;
+    list-style:none;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    font-family:Verdana,sans-serif;
+    font-size:12px;
+    line-height:25px;
+}
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options input {
+    background-color:#1e2127;
+    border:none;
+    -webkit-border-radius:2px;
+    -moz-border-radius:2px;
+    border-radius:2px;
+    height:20px;
+    width:100px;
+    color:#abb2bf;
+    padding:0 7px;
+}
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options input::-webkit-input-placeholder {
+    color:#525761;
+    opacity:1;
+}
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 pre {
     background-color: inherit;
     margin: 0;
     padding: 0;
 }
-#Kafoso_Tools_Debug_Dumper #wrap-guide {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .wrap-guide {
     border-right: 1px solid rgba(171, 178, 191, 0.15);
     color: transparent;
     margin: 0 0 0 -1px;
     position: absolute;
-    top: 10px;
+    top: 52px;
     bottom: 10px;
     z-index: 1;
 }
-#Kafoso_Tools_Debug_Dumper a[href],
-#Kafoso_Tools_Debug_Dumper a:link,
-#Kafoso_Tools_Debug_Dumper a:visited {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 a[href],
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 a:link,
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 a:visited {
     color:#d6941a;
     text-decoration:underline;
 }
-#Kafoso_Tools_Debug_Dumper .comment {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .collapsed {
+    display:none;
+}
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .comment {
     color:#5c6370;
     font-style:italic;
 }
-#Kafoso_Tools_Debug_Dumper .constant {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .constant {
     color:#d19a66;
 }
-#Kafoso_Tools_Debug_Dumper .constant.numeric {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .constant.numeric {
     color:#d19a66;
 }
-#Kafoso_Tools_Debug_Dumper .entity.name.type {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.type {
     color:#e5c07b;
 }
-#Kafoso_Tools_Debug_Dumper .entity.name.class,
-#Kafoso_Tools_Debug_Dumper .entity.name.type.class {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.class,
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.type.class {
     color:#e5c07b;
 }
-#Kafoso_Tools_Debug_Dumper .entity.name.function {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.function {
     color:#61afef;
 }
-#Kafoso_Tools_Debug_Dumper .entity.other.inherited-class {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.other.inherited-class {
     color:#98c379;
 }
-#Kafoso_Tools_Debug_Dumper .indent-guide,
-#Kafoso_Tools_Debug_Dumper .invisible-character {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .fold-marker {
+    color: rgb(40,44,52);
+    background-color: #abb2bf;
+    height: 8px;
+    line-height: 2px;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    padding: 0 2px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    cursor:pointer;
+}
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide,
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .invisible-character {
     color:rgba(171, 178, 191, 0.15);
 }
-#Kafoso_Tools_Debug_Dumper .indent-guide {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide {
     display:inline-block;
     box-shadow:inset 1px 0;
 }
-#Kafoso_Tools_Debug_Dumper .invisible-character {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .invisible-character {
     font-weight:normal !important;
     font-style:normal !important;
 }
-#Kafoso_Tools_Debug_Dumper .keyword {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .keyword {
     color:#c678dd;
 }
-#Kafoso_Tools_Debug_Dumper .line {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .keyword.operator {
+    color:#abb2bf;
+}
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .line {
     white-space:pre;
 }
-#Kafoso_Tools_Debug_Dumper .storage {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .storage {
     color:#c678dd;
 }
-#Kafoso_Tools_Debug_Dumper .string {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .string {
     color:#98c379;
 }
-#Kafoso_Tools_Debug_Dumper .support.class {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .support.class {
     color:#e5c07b;
 }
-#Kafoso_Tools_Debug_Dumper .variable {
+#Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .variable {
     color:#e06c75;
 }

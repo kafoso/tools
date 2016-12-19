@@ -12,6 +12,7 @@ interface Interface_Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectO
 abstract class Abstract_Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectOneDimension_b0559f888359b081714fdea9d26c65b7
 {
     protected $anInheritedVariable;
+    protected $anOverriddenVariable;
     protected function aProtectedMethod(){}
     protected static function aProtectedStaticMethod(){}
     protected function anInheritedMethod(){}
@@ -23,12 +24,13 @@ final class Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectOneDimens
 {
     use \Trait_Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
 
-    const A_CONSTANT = "I'M A CONSTANT!";
+    const A_CONSTANT = "I'M A CONSTANT DECLARED IN CLASS!";
 
     private static $aNull = null;
     protected $aBoolean = false;
     private $aString = "";
     private $aResource;
+    protected $anOverriddenVariable = "foo";
 
     public function __construct()
     {

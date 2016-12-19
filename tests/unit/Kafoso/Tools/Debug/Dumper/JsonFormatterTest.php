@@ -37,7 +37,7 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $baseDirectory = realpath(__DIR__ . str_repeat('/..', 5));
         $jsonFormatter = new JsonFormatter(["foo" => "bar"], null, JSON_PRETTY_PRINT);
-        $expected = trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testArrayOneDimension.expected.json"));
+        $expected = $this->normalizeEOL(trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testArrayOneDimension.expected.json")));
         $this->assertSame($expected, $jsonFormatter->render());
     }
 
@@ -56,7 +56,7 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
         $class = new Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
         $class->foo = "bar";
         $jsonFormatter = new JsonFormatter($class, null, JSON_PRETTY_PRINT);
-        $expected = trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectOneDimension.expected.json"));
+        $expected = $this->normalizeEOL(trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectOneDimension.expected.json")));
         $expected = preg_replace('/Object &[a-f0-9]+/', 'Object &', $expected);
         $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
         $found = $jsonFormatter->render();
@@ -76,7 +76,7 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ], null, JSON_PRETTY_PRINT);
-        $expected = trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testArrayMultipleDimensions.expected.json"));
+        $expected = $this->normalizeEOL(trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testArrayMultipleDimensions.expected.json")));
         $this->assertSame($expected, $jsonFormatter->render());
     }
 
@@ -90,7 +90,7 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
         $classB->setParent($classA);
         $classC->setParent($classB);
         $jsonFormatter = new JsonFormatter($classC, null, JSON_PRETTY_PRINT);
-        $expected = trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectMultipleLevelsWithoutRecursion.expected.json"));
+        $expected = $this->normalizeEOL(trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectMultipleLevelsWithoutRecursion.expected.json")));
         $expected = preg_replace('/Object &[a-f0-9]+/', 'Object &', $expected);
         $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
         $found = $jsonFormatter->render();
@@ -108,12 +108,19 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
         $classB->setParent($classA);
         $classA->setParent($classB);
         $jsonFormatter = new JsonFormatter($classA, null, JSON_PRETTY_PRINT);
-        $expected = trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectWithRecursion.expected.json"));
+        $expected = $this->normalizeEOL(trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectWithRecursion.expected.json")));
         $expected = preg_replace('/Object &[a-f0-9]+/', 'Object &', $expected);
         $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
         $found = $jsonFormatter->render();
         $found = preg_replace('/Object &[a-f0-9]+/', 'Object &', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame($expected, $found);
+    }
+
+    protected function normalizeEOL($str)
+    {
+        $str = str_replace("\r\n", "\n", $str);
+        $str = str_replace("\r", "\n", $str);
+        return $str;
     }
 }
