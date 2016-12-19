@@ -128,6 +128,7 @@ class HtmlFormatter extends AbstractFormatter
     public function renderArrayOmitted(array $array, $level = 0)
     {
         $arraySize = count($array);
+        // XXX
     }
 
     private function renderDefault($value)
@@ -538,6 +539,12 @@ class HtmlFormatter extends AbstractFormatter
     private function renderObjectOmitted($object)
     {
         $hash = spl_object_hash($object);
+        // XXX Impl test for this + omitted array
+        return sprintf(
+            '<span title="%s">(Object #%s; value omitted)</span>',
+            "Object #{$hash}",
+            $hash
+        );
     }
 
     private function renderObjectRecursion($object, $level = 0)
