@@ -28,7 +28,7 @@ class HtmlFormatter extends AbstractFormatter
                 . '</dl>'
             . '</div>';
         return sprintf(
-            '<div id="%s">'
+            '<div class="%s">'
                 . '<style type="text/css">%s</style>'
                 . $optionsHtml
                 . '<pre>'
