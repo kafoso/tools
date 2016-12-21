@@ -13,8 +13,8 @@
     display:block;
     position:absolute;
     z-index:4;
-    top:4px;
-    right:4px;
+    top:14px;
+    right:12px;
     width:16px;
     height:16px;
     background:#1e2127;
@@ -67,9 +67,25 @@
     color:#abb2bf;
     padding:0 7px;
 }
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .origin {
+    background-color:#1e2127;
+    border:none;
+    -webkit-border-radius:2px;
+    -moz-border-radius:2px;
+    border-radius:2px;
+    min-height:18px;
+    line-height:18px;
+    color:#abb2bf;
+    padding:4px 24px 4px 7px;
+    margin:0 0 10px;
+    font-size:13px;
+}
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options input::-webkit-input-placeholder {
     color:#525761;
     opacity:1;
+}
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .output {
+    position:relative;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 pre {
     background-color: inherit;
@@ -81,8 +97,8 @@
     color: transparent;
     margin: 0 0 0 -1px;
     position: absolute;
-    top: 52px;
-    bottom: 10px;
+    top: 0;
+    bottom: 0;
     z-index: 1;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 a[href],

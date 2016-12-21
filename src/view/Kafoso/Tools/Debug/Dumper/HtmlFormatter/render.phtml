@@ -1,0 +1,8 @@
+<div class="Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27">
+    <style type="text/css"><?=$this->css?></style>
+    <div class="optionsButton"></div>
+    <?=$this->render("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render/origin.phtml")?>
+    <?=$this->render("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render/options.phtml")?>
+    <div class="output"><pre><div style="position:relative;z-index:2;"><?=$this->innerHtml?></div><div class="wrap-guide"><?=str_repeat(" ", $this->PSR_2_SOFT_CHARACTER_LIMIT)?></div></pre></div>
+    <?=$this->render("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render/javascript.phtml")?>
+</div>

@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Kafoso\\Tools\\": "src/Kafoso/Tools"
+            "Kafoso\\Tools\\": "src/lib/Kafoso/Tools"
         }
     },
     "require": {

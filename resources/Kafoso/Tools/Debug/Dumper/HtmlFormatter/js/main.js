@@ -89,10 +89,11 @@
         }
         each(main.getElementsByClassName('optionsButton'), function(optionsButton){
             optionsButton.onclick = function(){
-                if (null === optionsButton.nextSibling.offsetParent) {
-                    optionsButton.nextSibling.style.display = "block";
+                var options = this.parentNode.getElementsByClassName('options')[0];
+                if (null === options.offsetParent) {
+                    options.style.display = "block";
                 } else {
-                    optionsButton.nextSibling.style.display = "none";
+                    options.style.display = "none";
                 }
             };
         });

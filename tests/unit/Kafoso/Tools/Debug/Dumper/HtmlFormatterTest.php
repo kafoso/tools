@@ -54,17 +54,6 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp($expected, $htmlFormatter->renderInner());
     }
 
-    public function testRender()
-    {
-        $baseDirectory = realpath(__DIR__ . str_repeat('/..', 5));
-        $htmlFormatter = new HtmlFormatter("foo");
-        $expected = trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testRender.expected.html"));
-        $expected = preg_replace('/Kafoso_Tools_Debug_Dumper_[0-9a-f_]+/', 'Kafoso_Tools_Debug_Dumper_', $expected);
-        $found = $htmlFormatter->render();
-        $found = preg_replace('/Kafoso_Tools_Debug_Dumper_[0-9a-f_]+/', 'Kafoso_Tools_Debug_Dumper_', $found);
-        $this->assertSame($expected, $found);
-    }
-
     public function testObjectOneDimension()
     {
         $baseDirectory = realpath(__DIR__ . str_repeat('/..', 5));

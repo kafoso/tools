@@ -1,6 +1,9 @@
 <?php
 namespace Kafoso\Tools\Debug\Dumper;
 
+use Kafoso\Tools\Debug\Dumper;
+use Kafoso\Tools\HTML\ViewRenderer;
+
 class HtmlFormatter extends AbstractFormatter
 {
     const INDENTATION_CHARACTER = "·";
@@ -17,36 +20,16 @@ class HtmlFormatter extends AbstractFormatter
 
     public function render()
     {
-        $optionsHtml = ''
-            . '<div class="optionsButton"></div>'
-            . '<div class="options">'
-                . '<dl>'
-                    . '<dt>Collapse level:</dt>'
-                    . '<dd>'
-                        . '<input type="number" placeholder="Default: None" class="collapseLevel">'
-                    . '</dd>'
-                . '</dl>'
-            . '</div>';
-        return sprintf(
-            '<div class="%s">'
-                . '<style type="text/css">%s</style>'
-                . $optionsHtml
-                . '<pre>'
-                . '<div class="wrap-guide">%s</div>'
-                . '<div style="%s">%s</div>'
-                . '</pre>'
-                . '<script type="text/javascript">%s</script>'
-                . '</div>',
-            "Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27",
-            htmlentities($this->getCss()),
-            str_repeat(" ", self::PSR_2_SOFT_CHARACTER_LIMIT),
-            $this->styleArrayToString([
-                "position" => "relative",
-                "z-index" => 2,
-            ]),
-            $this->renderInner(),
-            $this->getJavascript()
-        );
+        $origin = $this->getOrigin();
+        $viewRenderer = new ViewRenderer("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render.phtml", [
+            'PSR_2_SOFT_CHARACTER_LIMIT' => self::PSR_2_SOFT_CHARACTER_LIMIT,
+            'css' => $this->getcss(),
+            'innerHtml' => $this->renderInner(),
+            'javascript' => $this->getJavascript(),
+            'origin' => $origin,
+        ]);
+        $viewRenderer->setBaseDirectory(realpath(__DIR__ . str_repeat("/..", 5)) . "/view");
+        return $viewRenderer->render();
     }
 
     public function renderInner()
@@ -56,16 +39,40 @@ class HtmlFormatter extends AbstractFormatter
 
     public function getCss()
     {
-        $baseDirectory = realpath(__DIR__ . str_repeat("/..", 5));
+        $baseDirectory = realpath(__DIR__ . str_repeat("/..", 6));
         $css = file_get_contents($baseDirectory . "/resources/Kafoso/Tools/Debug/Dumper/HtmlFormatter/theme/dark-one-ui.css");
         return $css;
     }
 
     public function getJavascript()
     {
-        $baseDirectory = realpath(__DIR__ . str_repeat("/..", 5));
+        $baseDirectory = realpath(__DIR__ . str_repeat("/..", 6));
         $js = file_get_contents($baseDirectory . "/resources/Kafoso/Tools/Debug/Dumper/HtmlFormatter/js/main.js");
         return $js;
+    }
+
+    /**
+     * Looks back through the debug_backtrace to determine from where the output originated.
+     * @return ?array
+     */
+    public function getOrigin()
+    {
+        $calledFrom = null;
+        $ignoredFiles = [
+            "src/" . str_replace('\\', '/', HtmlFormatter::class) . ".php",
+            "src/" . str_replace('\\', '/', Dumper::class) . ".php",
+        ];
+        $rootDirectory = realpath(__DIR__ . str_repeat("/..", 5));
+        foreach (debug_backtrace() as $v) {
+            $file = substr($v['file'], mb_strlen($rootDirectory . "/"));
+            $file = str_replace('\\', '/', $file); // Windows love
+            if (!$file || in_array($file, $ignoredFiles)) {
+                continue;
+            }
+            $calledFrom = $v;
+            break;
+        }
+        return $calledFrom;
     }
 
     private function prepareRecursively(
