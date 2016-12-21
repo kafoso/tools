@@ -79,6 +79,7 @@
     padding:4px 24px 4px 7px;
     margin:0 0 10px;
     font-size:13px;
+    word-break:break-all;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options input::-webkit-input-placeholder {
     color:#525761;
