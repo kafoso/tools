@@ -109,6 +109,34 @@ However, the `Dumper` is for debugging purposes, after all, and should be used a
 }
 ```
 
+### As HTML
+
+Usage:
+
+```php
+<?php
+Kafoso\Tools\Debug\Dumper::dumpJson($myLittleClass)
+```
+
+The HTML dumper is great for showing variables in a nice, highlighted fashion.
+
+Classes are displayed as psudo-objects with interfaces to inheritance, traits, constants, variables, and methods; "pseudo-object" means the values are displayed with a snapshot of what the object currently contains.
+
+By default, child classes beyond 2 levels are hidden. This, however, may be changed in the options menu (three vertical bars at the top right corner). This value is stored in a cookie and will be remembered next time an object is rendered.
+
+Do notice, that a maximum depth restriction is enforced, which by default is 3. This number can be changed by passing it as the 2nd variable, e.g.:
+
+```php
+<?php
+Kafoso\Tools\Debug\Dumper::dumpJson($myLittleClass, 10)
+```
+
+This behavior is identical to the plain text and JSON rendering methods.
+
+**Sample output:**
+
+![HtmlFormatter-dump-example.jpg](assets/HtmlFormatter-dump-example.jpg)
+
 # Footnotes
 
 <a name="footnotes-vertigo"></a>
