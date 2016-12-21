@@ -1,6 +1,7 @@
 <?php
 namespace Kafoso\Tools\Debug;
 
+use Kafoso\Tools\Debug\Dumper\HtmlFormatter;
 use Kafoso\Tools\Debug\Dumper\JsonFormatter;
 use Kafoso\Tools\Debug\Dumper\PlainTextFormatter;
 
@@ -19,12 +20,21 @@ class Dumper
     }
 
     /**
+     * Dumps the input variable in a HTML format with styling and minimal Javascript functionality to expand child
+     * arrays and objects. Recursive truncation is enforced to avoid the HTML tree from expanding endlessly.
+     */
+    public static function dumpHtml($var, $depth = 3)
+    {
+        echo(self::prepareHtml($var, $depth));
+    }
+
+    /**
      * Dumps the input variable in a JSON format. Recursive truncation is enforced, because this is a means of working
      * around the json_encode error "recursion detected".
      */
     public static function dumpJson($var, $depth = 3, $prettyPrint = true)
     {
-        echo(self::prepareJson($var, $depth));
+        echo(self::prepareJson($var, $depth, $prettyPrint));
     }
 
     public static function dumpPre($var, $depth = 3, $isTruncatingRecursion = true)
@@ -34,7 +44,14 @@ class Dumper
 
     public static function prepare($var, $depth = 3, $isTruncatingRecursion = true)
     {
-        return PlainTextFormatter::prepareRecursively($var, $depth, $isTruncatingRecursion, 0, []);
+        $plainTextFormatter = new PlainTextFormatter($var, $depth, $isTruncatingRecursion);
+        return $plainTextFormatter->render();
+    }
+
+    public static function prepareHtml($var, $depth = 3)
+    {
+        $htmlFormatter = new HtmlFormatter($var, $depth);
+        return $htmlFormatter->render();
     }
 
     public static function prepareJson($var, $depth = 3, $prettyPrint = true)
@@ -43,6 +60,7 @@ class Dumper
         if ($prettyPrint) {
             $options |= JSON_PRETTY_PRINT;
         }
-        return json_encode(JsonFormatter::prepareRecursively($var, $depth, []), $options);
+        $jsonFormatter = new JsonFormatter($var, $depth, $options);
+        return $jsonFormatter->render();
     }
 }

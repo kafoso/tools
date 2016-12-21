@@ -1,5 +1,10 @@
 {
+    "Kafoso\\Tools\\Debug\\Dumper|CLASS": "stdClass Object &SPL_OBJECT_HASH",
     "classB": {
-        "classA": "*RECURSION* stdClass Object &SPL_OBJECT_HASH"
+        "Kafoso\\Tools\\Debug\\Dumper|CLASS": "stdClass Object &SPL_OBJECT_HASH",
+        "classA": {
+            "Kafoso\\Tools\\Debug\\Dumper|CLASS": "stdClass Object &SPL_OBJECT_HASH",
+            "Kafoso\\Tools\\Debug\\Dumper|RECURSION": "*RECURSION*"
+        }
     }
 }

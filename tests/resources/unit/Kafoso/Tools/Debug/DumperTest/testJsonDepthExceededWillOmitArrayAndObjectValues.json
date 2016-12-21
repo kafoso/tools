@@ -1,6 +1,12 @@
 {
+    "Kafoso\\Tools\\Debug\\Dumper|CLASS": "stdClass Object &SPL_OBJECT_HASH",
     "arrayA": {
-        "classB": "(Object value omitted; stdClass Object &SPL_OBJECT_HASH)",
-        "arrayB": "(Array value omitted; array(1))"
+        "classB": {
+            "Kafoso\\Tools\\Debug\\Dumper|CLASS": "stdClass Object &SPL_OBJECT_HASH",
+            "Kafoso\\Tools\\Debug\\Dumper|OBJECT_VALUE_OMITTED": "(Object value omitted)"
+        },
+        "arrayB": {
+            "Kafoso\\Tools\\Debug\\Dumper|ARRAY_VALUE_OMITTED": "(Array value omitted; array(1))"
+        }
     }
 }

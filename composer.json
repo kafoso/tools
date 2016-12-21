@@ -19,16 +19,16 @@
         "issues": "https://github.com/kafoso/tools/issues"
     },
     "require-dev": {
+        "php": ">=5.5.0",
         "phpunit/phpunit": "^5.3"
-    },
-    "config": {
-        "platform": {
-            "php": "5.5.0"
-        }
     },
     "autoload": {
         "psr-4": {
-            "Kafoso\\Tools\\": "src/Kafoso/Tools"
+            "Kafoso\\Tools\\": "src/lib/Kafoso/Tools"
         }
+    },
+    "require": {
+        "ramsey/uuid": "^3.5",
+        "moontoast/math": "^1.1"
     }
 }

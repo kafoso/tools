@@ -1,0 +1,7 @@
+<div class="origin" style="<?=($this->origin ? "" : "color:#808080;")?>">
+    <?php if ($this->origin) { ?>
+        <?=$this->origin['file'] . ':' . $this->origin['line']?>
+    <?php } else { ?>
+        (Unknown origin)
+    <?php } ?>
+</div>

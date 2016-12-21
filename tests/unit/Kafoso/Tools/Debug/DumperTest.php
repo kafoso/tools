@@ -17,8 +17,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
     public function testEmptyObjectIsPreparable()
     {
         $classA = new stdClass;
-        $expected = $this->getResource("testEmptyObjectIsPreparable.txt");
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA));
+        $expected = $this->normalizeEOL(trim($this->getResource("testEmptyObjectIsPreparable.txt")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -30,8 +30,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $classA->anInteger = 42;
         $classA->aString = "foo";
         $classA->justNull = null;
-        $expected = $this->getResource("testScalarTypesAndNullAreFormattedNicely.txt");
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA));
+        $expected = $this->normalizeEOL(trim($this->getResource("testScalarTypesAndNullAreFormattedNicely.txt")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -42,8 +42,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
             "37" => "b",
             3
         ];
-        $expected = $this->getResource("testIndexedArraysAreFormattedNicely.txt");
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($anArray));
+        $expected = $this->normalizeEOL(trim($this->getResource("testIndexedArraysAreFormattedNicely.txt")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($anArray)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -58,8 +58,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
                 "c" => "3",
             ]
         ];
-        $expected = $this->getResource("testAssociativeArraysAreFormattedNicely.txt");
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA));
+        $expected = $this->normalizeEOL(trim($this->getResource("testAssociativeArraysAreFormattedNicely.txt")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -68,8 +68,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $classA = new stdClass;
         $classB = new stdClass;
         $classA->classB = $classB;
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA, 1));
-        $expected = $this->getResource("testDepthRestrictionWorks.txt");
+        $expected = $this->normalizeEOL(trim($this->getResource("testDepthRestrictionWorks.txt")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA, 1)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -79,8 +79,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $classB = new stdClass;
         $classA->classB = $classB;
         $classB->classA = $classA;
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA));
-        $expected = $this->getResource("testRecursionIndicatorIsApplied.txt");
+        $expected = $this->normalizeEOL(trim($this->getResource("testRecursionIndicatorIsApplied.txt")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -106,8 +106,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $classA->classA_2->classA_2_1 = $classA_2_1;
         $classA->classA_2->classA_2_1->classA_2_1_1 = $classA_2_1_1;
         $classA->classA_2->classA_2_1->classA_2_1_1->classA = $classA; // Omitted
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA));
-        $expected = $this->getResource("testALargeAndComplexObjectIsFormattedCorrectly.txt");
+        $expected = $this->normalizeEOL(trim($this->getResource("testALargeAndComplexObjectIsFormattedCorrectly.txt")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepare($classA)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -116,8 +116,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $array = [
             "foo" => "bar",
         ];
-        $prepared = trim(Dumper::prepareJson($array));
         $expected = $this->normalizeEOL(trim($this->getResource("testJsonCanDumpSimpleArray.json")));
+        $prepared = trim(Dumper::prepareJson($array));
         $this->assertSame($expected, $prepared);
     }
 
@@ -127,8 +127,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $array = [
             "foo" => new testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected,
         ];
-        $prepared = trim(Dumper::prepareJson($array));
         $expected = $this->normalizeEOL(trim($this->getResource("testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected.json")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepareJson($array)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -138,22 +138,22 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $classB = new stdClass;
         $classA->classB = $classB;
         $classB->classA = $classA;
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(trim(Dumper::prepareJson($classA)));
         $expected = $this->normalizeEOL(trim($this->getResource("testJsonObjectRecursionIsTruncated.json")));
+        $prepared = $this->replaceSqlHashesWithGenericIdentifier(trim(Dumper::prepareJson($classA)));
         $this->assertSame($expected, $prepared);
     }
 
     public function testJsonDepthExceededWillOmitArrayAndObjectValues()
     {
-        $classA = new stdClass;
+        $classA = new \stdClass;
         $classA->arrayA = [
-            "classB" => new stdClass,
+            "classB" => new \stdClass,
             "arrayB" => [
                 "this should be omitted"
             ]
         ];
-        $prepared = $this->replaceSqlHashesWithGenericIdentifier(trim(Dumper::prepareJson($classA, 2)));
         $expected = $this->normalizeEOL(trim($this->getResource("testJsonDepthExceededWillOmitArrayAndObjectValues.json")));
+        $prepared = $this->normalizeEOL($this->replaceSqlHashesWithGenericIdentifier(Dumper::prepareJson($classA, 2)));
         $this->assertSame($expected, $prepared);
     }
 
