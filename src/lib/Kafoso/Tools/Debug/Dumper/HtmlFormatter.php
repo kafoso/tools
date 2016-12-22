@@ -519,8 +519,14 @@ class HtmlFormatter extends AbstractFormatter
                             ($method->isStatic() ? "::" : "->"),
                             $method->getName()
                         );
+                        $parentMethod = $parentReflectionObject->getMethod($method->getName());
+                        $keyword = "@override";
+                        if ($parentMethod->isAbstract()) {
+                            $keyword = "@abstract";
+                        }
                         $commentHtml = sprintf(
-                            ' <span class="comment line double-slash php">// <span class="keyword">@override</span> %s</span>',
+                            ' <span class="comment line double-slash php">// <span class="keyword">%s</span> %s</span>',
+                            $keyword,
                             $overriddenMethodHtml
                         );
                         break;
