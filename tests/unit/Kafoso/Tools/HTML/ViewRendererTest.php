@@ -119,7 +119,7 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase {
     public function testCanRenderOtherViewFilesInternally(){
         $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/HTML/ViewRendererTest/testCanRenderOtherViewFilesInternally.phtml");
         $viewRenderer->setBaseDirectory(__DIR__ . str_repeat("/..", 4) . "/resources");
-        $this->assertSame("parent\r\nchild", trim($viewRenderer->render()));
+        $this->assertSame("parent\nchild", preg_replace('/\r?\n/', "\n", trim($viewRenderer->render())));
     }
 
     /**
