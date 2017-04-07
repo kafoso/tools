@@ -15,7 +15,7 @@ Especially useful for dumping very large objects and arrays containing redundant
 A simple class, with an id, a parent/child relationship, and a static variable `$list`.
 
 - **Fully quantified class names and SPL hashes**<br>
-Each class gets printed with its unique SQL hash identifier. Useful to find recursion, which incidentally is denoted by `*RECURSION*`.
+Each class gets printed with its unique SPL hash identifier. Useful to find recursion, which incidentally is denoted by `*RECURSION*`.
 - **\*RECURSION\***<br>
 Notice that the Object instance `000000005e85475000007fd972cdb06b` under the parent is not reprinted, as it is the same as the very first class.
 - **(Array value omitted)**<br>
