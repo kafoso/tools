@@ -115,7 +115,7 @@ Usage:
 
 ```php
 <?php
-Kafoso\Tools\Debug\Dumper::dumpJson($myLittleClass)
+Kafoso\Tools\Debug\Dumper::dumpHtml($myLittleClass)
 ```
 
 The HTML dumper is great for showing variables in a nice, highlighted fashion.
@@ -128,7 +128,7 @@ Do notice, that a maximum depth restriction is enforced, which by default is 3. 
 
 ```php
 <?php
-Kafoso\Tools\Debug\Dumper::dumpJson($myLittleClass, 10)
+Kafoso\Tools\Debug\Dumper::dumpHtml($myLittleClass, 10)
 ```
 
 This behavior is identical to the plain text and JSON rendering methods.
