@@ -6,7 +6,6 @@ use Kafoso\Tools\HTML\ViewRenderer;
 
 class HtmlFormatter extends AbstractFormatter
 {
-    const INDENTATION_CHARACTER = "·";
     const PSR_2_SOFT_CHARACTER_LIMIT = 120;
 
     public function generateIndentationForLevel($level)

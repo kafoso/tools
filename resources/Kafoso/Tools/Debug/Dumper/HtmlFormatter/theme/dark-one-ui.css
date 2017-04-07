@@ -153,7 +153,18 @@
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide,
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .invisible-character {
+    position:relative;
+    color:transparent;
+}
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide:before,
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .invisible-character:before {
+    content:"····";
+    position:absolute;
     color:rgba(171, 178, 191, 0.15);
+    user-select:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide {
     display:inline-block;
