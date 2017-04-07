@@ -13,6 +13,7 @@ class Little_Class
             "baz"
         ]
     ];
+    public $html = '<b>foo</b>';
 
     public function getId()
     {
