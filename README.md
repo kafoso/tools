@@ -137,6 +137,8 @@ This behavior is identical to the plain text and JSON rendering methods.
 
 ![HtmlFormatter-dump-example.jpg](assets/HtmlFormatter-dump-example.jpg)
 
+The theme, "dark-one-ui", is courtesy of the [Atom Editor](https://atom.io/).
+
 # Footnotes
 
 <a name="footnotes-vertigo"></a>
