@@ -1,197 +1,197 @@
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 {
-    background-color:rgb(40,44,52);
-    color:#abb2bf;
-    font-family:Menlo,Consolas,'DejaVu Sans Mono',monospace;
-    overflow:auto;
-    padding:10px;
-    position:relative;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
+    background-color:rgb(40,44,52) !important;
+    color:#abb2bf !important;
+    font-family:Menlo,Consolas,'DejaVu Sans Mono',monospace !important;
+    overflow:auto !important;
+    padding:10px !important;
+    position:relative !important;
+    -webkit-border-radius:3px !important;
+    -moz-border-radius:3px !important;
+    border-radius:3px !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.optionsButton {
-    display:block;
-    position:absolute;
-    z-index:4;
-    top:14px;
-    right:12px;
-    width:16px;
-    height:16px;
-    background:#1e2127;
-    overflow:hidden;
-    border:1px solid #abb2bf;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
-    cursor:pointer;
-    box-shadow:0 0 10px #000;
+    display:block !important;
+    position:absolute !important;
+    z-index:4 !important;
+    top:14px !important;
+    right:12px !important;
+    width:16px !important;
+    height:16px !important;
+    background:#1e2127 !important;
+    overflow:hidden !important;
+    border:1px solid #abb2bf !important;
+    -webkit-border-radius:3px !important;
+    -moz-border-radius:3px !important;
+    border-radius:3px !important;
+    cursor:pointer !important;
+    box-shadow:0 0 10px #000 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.optionsButton::before {
-    content: '___';
-    display: block;
-    position: absolute;
-    top: -6px;
-    right: -3px;
-    width: 16px;
-    height: 16px;
-    font-size: 17px;
-    color: #abb2bf;
-    font-weight: bold;
-    word-break: break-all;
-    line-height: 4px;
+    content: '___' !important;
+    display: block !important;
+    position: absolute !important;
+    top: -6px !important;
+    right: -3px !important;
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 17px !important;
+    color: #abb2bf !important;
+    font-weight: bold !important;
+    word-break: break-all !important;
+    line-height: 4px !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options {
-    display:none;
-    position:relative;
-    z-index:3;
-    background-color:#21252b;
-    margin:0 0 10px 0;
-    padding:4px 6px;
-    overflow:hidden;
-    list-style:none;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
-    font-family:Verdana,sans-serif;
-    font-size:12px;
-    line-height:25px;
+    display:none !important;
+    position:relative !important;
+    z-index:3 !important;
+    background-color:#21252b !important;
+    margin:0 0 10px 0 !important;
+    padding:4px 6px !important;
+    overflow:hidden !important;
+    list-style:none !important;
+    -webkit-border-radius:3px !important;
+    -moz-border-radius:3px !important;
+    border-radius:3px !important;
+    font-family:Verdana,sans-serif !important;
+    font-size:12px !important;
+    line-height:25px !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options input {
-    background-color:#1e2127;
-    border:none;
-    -webkit-border-radius:2px;
-    -moz-border-radius:2px;
-    border-radius:2px;
-    height:20px;
-    width:100px;
-    color:#abb2bf;
-    padding:0 7px;
+    background-color:#1e2127 !important;
+    border:none !important;
+    -webkit-border-radius:2px !important;
+    -moz-border-radius:2px !important;
+    border-radius:2px !important;
+    height:20px !important;
+    width:100px !important;
+    color:#abb2bf !important;
+    padding:0 7px !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .origin {
-    background-color:#1e2127;
-    border:none;
-    -webkit-border-radius:2px;
-    -moz-border-radius:2px;
-    border-radius:2px;
-    min-height:18px;
-    line-height:18px;
-    color:#abb2bf;
-    padding:4px 24px 4px 7px;
-    margin:0 0 10px;
-    font-size:13px;
-    word-break:break-all;
+    background-color:#1e2127 !important;
+    border:none !important;
+    -webkit-border-radius:2px !important;
+    -moz-border-radius:2px !important;
+    border-radius:2px !important;
+    min-height:18px !important;
+    line-height:18px !important;
+    color:#abb2bf !important;
+    padding:4px 24px 4px 7px !important;
+    margin:0 0 10px !important;
+    font-size:13px !important;
+    word-break:break-all !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options input::-webkit-input-placeholder {
-    color:#525761;
-    opacity:1;
+    color:#525761 !important;
+    opacity:1 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .output {
-    position:relative;
+    position:relative !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 pre {
-    background-color: inherit;
-    margin: 0;
-    padding: 0;
+    background-color: inherit !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .wrap-guide {
-    border-right: 1px solid rgba(171, 178, 191, 0.15);
-    color: transparent;
-    margin: 0 0 0 -1px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    z-index: 1;
+    border-right: 1px solid rgba(171, 178, 191, 0.15) !important;
+    color: transparent !important;
+    margin: 0 0 0 -1px !important;
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    z-index: 1 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 a[href],
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 a:link,
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 a:visited {
-    color:#d6941a;
-    text-decoration:underline;
+    color:#d6941a !important;
+    text-decoration:underline !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .collapsed {
-    display:none;
+    display:none !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .comment {
-    color:#5c6370;
-    font-style:italic;
+    color:#5c6370 !important;
+    font-style:italic !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .constant {
-    color:#d19a66;
+    color:#d19a66 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .constant.numeric {
-    color:#d19a66;
+    color:#d19a66 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.type {
-    color:#e5c07b;
+    color:#e5c07b !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.class,
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.type.class {
-    color:#e5c07b;
+    color:#e5c07b !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.function {
-    color:#61afef;
+    color:#61afef !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.other.inherited-class {
-    color:#98c379;
+    color:#98c379 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .fold-marker {
-    color: rgb(40,44,52);
-    background-color: #abb2bf;
-    height: 8px;
-    line-height: 2px;
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
-    vertical-align: middle;
-    position: relative;
-    top: -1px;
-    padding: 0 2px;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
-    cursor:pointer;
+    color: rgb(40,44,52) !important;
+    background-color: #abb2bf !important;
+    height: 8px !important;
+    line-height: 2px !important;
+    display: inline-block !important;
+    *display: inline !important;
+    zoom: 1 !important;
+    vertical-align: middle !important;
+    position: relative !important;
+    top: -1px !important;
+    padding: 0 2px !important;
+    -webkit-border-radius:3px !important;
+    -moz-border-radius:3px !important;
+    border-radius:3px !important;
+    cursor:pointer !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide,
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .invisible-character {
-    position:relative;
-    color:transparent;
+    position:relative !important;
+    color:transparent !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide:before,
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .invisible-character:before {
-    content:"····";
-    position:absolute;
-    color:rgba(171, 178, 191, 0.15);
-    user-select:none;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
+    content:"····" !important;
+    position:absolute !important;
+    color:rgba(171, 178, 191, 0.15) !important;
+    user-select:none !important;
+    -webkit-user-select:none !important;
+    -moz-user-select:none !important;
+    -ms-user-select:none !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide {
-    display:inline-block;
-    box-shadow:inset 1px 0;
+    display:inline-block !important;
+    box-shadow:inset 1px 0 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .invisible-character {
     font-weight:normal !important;
     font-style:normal !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .keyword {
-    color:#c678dd;
+    color:#c678dd !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .keyword.operator {
-    color:#abb2bf;
+    color:#abb2bf !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .line {
-    white-space:pre;
+    white-space:pre !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .storage {
-    color:#c678dd;
+    color:#c678dd !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .string {
-    color:#98c379;
+    color:#98c379 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .support.class {
-    color:#e5c07b;
+    color:#e5c07b !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .variable {
-    color:#e06c75;
+    color:#e06c75 !important;
 }
