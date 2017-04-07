@@ -57,15 +57,9 @@ class HtmlFormatter extends AbstractFormatter
     public function getOrigin()
     {
         $calledFrom = null;
-        $ignoredFiles = [
-            "src/" . str_replace('\\', '/', HtmlFormatter::class) . ".php",
-            "src/" . str_replace('\\', '/', Dumper::class) . ".php",
-        ];
         $rootDirectory = realpath(__DIR__ . str_repeat("/..", 5));
         foreach (debug_backtrace() as $v) {
-            $file = substr($v['file'], mb_strlen($rootDirectory . "/"));
-            $file = str_replace('\\', '/', $file); // Windows love
-            if (!$file || in_array($file, $ignoredFiles)) {
+            if (0 === stripos($v['file'], $rootDirectory)) {
                 continue;
             }
             $calledFrom = $v;
