@@ -27,7 +27,5 @@ $propertiesB["children"]->setValue($b, [
     $myLittleClass
 ]);
 
-echo "--- Plain text ------------------------------------" . PHP_EOL;
-\Kafoso\Tools\Debug\Dumper::dump($myLittleClass) . PHP_EOL;
-echo "--- JSON ------------------------------------------" . PHP_EOL;
-\Kafoso\Tools\Debug\Dumper::dumpJson($myLittleClass) . PHP_EOL;
+echo "--- HTML ------------------------------------------" . PHP_EOL;
+\Kafoso\Tools\Debug\Dumper::dumpHtml($myLittleClass) . PHP_EOL;
