@@ -129,6 +129,7 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase {
     public function testRenderThrowsExceptionWhenTryingToRenderItself(){
         $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/HTML/ViewRendererTest/testRenderThrowsExceptionWhenTryingToRenderItself.phtml");
         $viewRenderer->setBaseDirectory(__DIR__ . str_repeat("/..", 4) . "/resources");
+        $viewRenderer->setIsPrintingOutputBufferOnShutdown(false);
         $viewRenderer->render();
     }
 
