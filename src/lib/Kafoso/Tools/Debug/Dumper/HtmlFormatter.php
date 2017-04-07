@@ -199,7 +199,7 @@ class HtmlFormatter extends AbstractFormatter
         $entityBlockText = "{$indentation}{$entity} {$className}";
         if ($reflectionObject->getParentClass()) {
             $extendsText = " extends " . $reflectionObject->getParentClass()->getName();
-            $substrLength = mb_strlen($entityBlockText)+mb_strlen($extendsText)+strlen(" {");
+            $substrLength = mb_strlen($entityBlockText)+mb_strlen($extendsText);
             if ($substrLength > self::PSR_2_SOFT_CHARACTER_LIMIT) {
                 $entityBlockText .= PHP_EOL . $indentationInner;
                 $entityBlockHtml .= PHP_EOL . $indentationInner;
@@ -226,7 +226,7 @@ class HtmlFormatter extends AbstractFormatter
             $entityBlockTextArray = explode(PHP_EOL, $entityBlockText);
             $entityBlockTextLastLine = end($entityBlockTextArray);
             $implementsText = " implements " . implode(", ", $interfaceNamesText);
-            $substrLength = mb_strlen($entityBlockTextLastLine)+mb_strlen($implementsText)+strlen(" {");
+            $substrLength = mb_strlen($entityBlockTextLastLine)+mb_strlen($implementsText);
             if ($substrLength > self::PSR_2_SOFT_CHARACTER_LIMIT) {
                 $entityBlockText .= PHP_EOL . $indentationInner;
                 $entityBlockHtml .= PHP_EOL . $indentationInner;
@@ -240,7 +240,7 @@ class HtmlFormatter extends AbstractFormatter
                 implode(", ", $interfaceNamesHtml)
             );
         }
-        $entityBlockHtml .= ' {' . PHP_EOL;
+        $entityBlockHtml .= PHP_EOL . $indentation . '<span>{</span>' . PHP_EOL;
 
         $innerHtml = [];
 
