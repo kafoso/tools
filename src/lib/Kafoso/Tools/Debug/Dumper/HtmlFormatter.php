@@ -98,7 +98,7 @@ class HtmlFormatter extends AbstractFormatter
         } elseif (is_resource($var)) {
             return $indentation . $this->renderResource($var);
         }
-        return $indentation . $this->renderDefault($var);
+        return $indentation . $this->renderScalarOrNull($var);
     }
 
     public function renderArray(
@@ -118,7 +118,7 @@ class HtmlFormatter extends AbstractFormatter
             }
             foreach ($array as $k => $v) {
                 $html .= $indentationInner;
-                $html .= $this->renderDefault($k);
+                $html .= $this->renderScalarOrNull($k);
                 $html .= ' => ';
                 $html .= $this->prepareRecursively($v, ($depth-1), ($level+1), $previousSplObjectHashes, false);
                 $html .= ",";
@@ -139,18 +139,37 @@ class HtmlFormatter extends AbstractFormatter
         );
     }
 
-    private function renderDefault($value)
+    private function renderScalarOrNull($value)
     {
         $commentHtml = null;
-        $class = [];
+        $class = "";["syntax--language syntax--php"];
         if (is_bool($value) || is_null($value) || is_float($value) || is_int($value)) {
-            $class[] = "constant";
+            $class = "syntax--language syntax--php syntax--constant";
             if (is_float($value) || is_int($value)) {
-                $class[] = "numeric";
+                $class .= " syntax--numeric";
             }
         } elseif (is_string($value)) {
-            $class[] = "string";
-            $value = '"' . $value . '"';
+            $class = "syntax--language syntax--php syntax--string";
+            $value = addcslashes($value, '"\\$');
+            $split = preg_split('/(\\\\["|\$|\\\\])/', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            if (count($split) > 1) {
+                $value = "";
+                $i = 0;
+                foreach ($split as $segment) {
+                    if (0 == $i%2) {
+                        $value .= htmlentities($segment);
+                    } else {
+                        $value .= sprintf(
+                            '<span class="syntax--constant syntax--character syntax--escape syntax--php">%s</span>',
+                            htmlentities($segment)
+                        );
+                    }
+                    $i++;
+                }
+            } else {
+                $value = htmlentities($value);
+            }
+            $value = '&quot;' . $value . '&quot;';
         }
         if (is_null($value)) {
             $value = "null";
@@ -161,8 +180,8 @@ class HtmlFormatter extends AbstractFormatter
         }
         return sprintf(
             '<span class="%s">%s</span>',
-            htmlentities(implode(" ", $class)),
-            htmlentities($value)
+            htmlentities($class),
+            $value
         );
     }
 
@@ -190,7 +209,7 @@ class HtmlFormatter extends AbstractFormatter
         $entityBlockHtml = '';
         $entity = implode(" ", $entity);
         $entityBlockHtml .= sprintf(
-            '<span class="storage">%s</span> <a title="%s" name="%s"><span class="entity name class">\\%s</span></a>',
+            '<span class="syntax--storage syntax--type syntax--class syntax--php">%s</span> <a title="%s" name="%s"><span class="syntax--entity syntax--name syntax--class">\\%s</span></a>',
             $entity,
             htmlentities("Object #{$hash}"),
             "Object_{$hash}",
@@ -209,7 +228,7 @@ class HtmlFormatter extends AbstractFormatter
             }
             $entityBlockText .= "extends " . $reflectionObject->getParentClass()->getName();
             $entityBlockHtml .= sprintf(
-                '<span class="storage">extends</span> <span class="entity other inherited-class php">\\%s</span>',
+                '<span class="syntax--storage syntax--modifier syntax--extends syntax--php">extends</span> <span class="syntax--storage syntax--modifier syntax--extends syntax--php">\\%s</span>',
                 htmlentities($reflectionObject->getParentClass()->getName())
             );
         }
@@ -219,7 +238,7 @@ class HtmlFormatter extends AbstractFormatter
             foreach ($reflectionObject->getInterfaces() as $interface) {
                 $interfaceNamesText[] = $interface->getName();
                 $interfaceNamesHtml[] = sprintf(
-                    '<span class="entity other inherited-class php">\\%s</span>',
+                    '<span class="syntax--meta syntax--other syntax--inherited-class syntax--php"><span class="syntax--entity syntax--other syntax--inherited-class syntax--php">\\%s</span></span>',
                     htmlentities($interface->getName())
                 );
             }
@@ -236,7 +255,7 @@ class HtmlFormatter extends AbstractFormatter
             }
             $entityBlockText .= "implements " . $interface->getName();
             $entityBlockHtml .= sprintf(
-                '<span class="storage">implements</span> %s',
+                '<span class="syntax--storage syntax--modifier syntax--implements syntax--php">implements</span> %s',
                 implode(", ", $interfaceNamesHtml)
             );
         }
@@ -247,12 +266,12 @@ class HtmlFormatter extends AbstractFormatter
         // Traits
         if ($reflectionObject->getTraits()) {
             $innerHtml[] = $indentationInner . sprintf(
-                '<span class="comment line double-slash php">%s</span>',
+                '<span class="syntax--comment syntax--line syntax--double-slash syntax--php">%s</span>',
                 "// Traits"
             );
             foreach ($reflectionObject->getTraits() as $trait) {
                 $innerHtml[] = $indentationInner . sprintf(
-                    '<span class="keyword other use php">use</span> <span class="support other namespace use php">\\%s</span>;',
+                    '<span class="syntax--keyword syntax--other syntax--use syntax--php">use</span> <span class="syntax--support syntax--other syntax--namespace syntax--use syntax--php">\\%s</span>;',
                     htmlentities($trait->getName())
                 );
             }
@@ -265,18 +284,18 @@ class HtmlFormatter extends AbstractFormatter
                 $commentHtml = null;
                 if (is_string($value)) {
                     $commentHtml = sprintf(
-                        ' <span class="comment line double-slash php">// Length: %d</span>',
+                        ' <span class="syntax--comment syntax--line syntax--double-slash syntax--php">// Length: %d</span>',
                         mb_strlen($value)
                     );
                 }
                 return $indentationInner . sprintf(
-                    '<span class="storage">const</span> <span class="constant">%s</span> = %s;',
+                    '<span class="syntax--storage">const</span> <span class="syntax--constant">%s</span> = %s;',
                     htmlentities($name),
-                    $this->renderDefault($value)
+                    $self->renderScalarOrNull($value)
                 ) . $commentHtml;
             };
             $innerHtml[] = $indentationInner . sprintf(
-                '<span class="comment line double-slash php">%s</span>',
+                '<span class="syntax--comment syntax--line syntax--double-slash syntax--php">%s</span>',
                 "// Constants"
             );
             foreach ($constants as $k => $v) {
@@ -307,7 +326,7 @@ class HtmlFormatter extends AbstractFormatter
                 $html = '';
                 $html .= $indentationInner;
                 $html .= sprintf(
-                    '<span class="storage">%s</span> <span class="variable">$%s</span>',
+                    '<span class="syntax--storage syntax--modifier syntax--php">%s</span> <span class="syntax--variable">$%s</span>',
                     $storage,
                     $property->getName()
                 );
@@ -340,7 +359,7 @@ class HtmlFormatter extends AbstractFormatter
                         }
                         $commentHtmlInner .= " ";
                         $commentHtmlInner .= sprintf(
-                            '<span class="keyword">@override</span> %s',
+                            '<span class="syntax--keyword syntax--other syntax--phpdoc syntax--php">@override</span> %s',
                             $overriddenMethodHtml
                         );
                         break;
@@ -349,7 +368,7 @@ class HtmlFormatter extends AbstractFormatter
                 }
                 if ($commentHtmlInner) {
                     $html .= sprintf(
-                        ' <span class="comment line double-slash php">// %s</span>',
+                        ' <span class="syntax--comment syntax--line syntax--double-slash syntax--php">// %s</span>',
                         $commentHtmlInner
                     );
                 }
@@ -368,7 +387,7 @@ class HtmlFormatter extends AbstractFormatter
             }
             if ($propertiesDeclaredInClass) {
                 $innerHtml[] = $indentationInner . sprintf(
-                    '<span class="comment line double-slash php">%s</span>',
+                    '<span class="syntax--comment syntax--line syntax--double-slash syntax--php">%s</span>',
                     "// Variables - declared in class"
                 );
                 foreach ($propertiesDeclaredInClass as $property) {
@@ -377,12 +396,12 @@ class HtmlFormatter extends AbstractFormatter
             }
             if ($propertiesInherited) {
                 $innerHtml[] = $indentationInner . sprintf(
-                    '<span class="comment line double-slash php">%s</span>',
+                    '<span class="syntax--comment syntax--line syntax--double-slash syntax--php">%s</span>',
                     "// Variables - inherited"
                 );
                 foreach ($propertiesInherited as $property) {
                     $inheritHtml = sprintf(
-                        ' <span class="comment line double-slash php">// <span class="keyword">@inherit</span> \\%s</span>',
+                        ' <span class="syntax--comment syntax--line syntax--double-slash syntax--php">// <span class="syntax--keyword syntax--other syntax--phpdoc syntax--php">@inherit</span> \\%s</span>',
                         $property->getDeclaringClass()->getName()
                     );
                     $innerHtml[] = $renderProperty($property) . $inheritHtml;
@@ -390,7 +409,7 @@ class HtmlFormatter extends AbstractFormatter
             }
             if ($propertiesDeclaredAtRuntime) {
                 $innerHtml[] = $indentationInner . sprintf(
-                    '<span class="comment line double-slash php">%s</span>',
+                    '<span class="syntax--comment syntax--line syntax--double-slash syntax--php">%s</span>',
                     "// Variables - declared at runtime (injected)"
                 );
                 foreach ($propertiesDeclaredAtRuntime as $property) {
@@ -439,7 +458,7 @@ class HtmlFormatter extends AbstractFormatter
                             }
                             $text .= $type;
                             $html .= sprintf(
-                                '<span class="storage">%s</span>',
+                                '<span class="syntax--storage">%s</span>',
                                 $type
                             );
                         } else {
@@ -447,7 +466,7 @@ class HtmlFormatter extends AbstractFormatter
                             if ($match) {
                                 $text .= $match[1];
                                 $html .= sprintf(
-                                    '<span class="support class">\\%s</span>',
+                                    '<span class="syntax--support class">\\%s</span>',
                                     htmlentities($match[1])
                                 );
                             }
@@ -456,16 +475,16 @@ class HtmlFormatter extends AbstractFormatter
                         $html .= ' ';
                         if ($parameter->isPassedByReference()) {
                             $text .= "&";
-                            $html .= '<span class="storage">&amp;</span>';
+                            $html .= '<span class="syntax--storage">&amp;</span>';
                         }
                         $text .= $parameter->getName();
                         $html .= sprintf(
-                            '<span class="variable">$%s</span>',
+                            '<span class="syntax--variable">$%s</span>',
                             htmlentities($parameter->getName())
                         );
                         if ($parameter->isDefaultValueAvailable()) {
                             $text .= ' = ';
-                            $html .= ' <span class="keyword operator">=</span> ';
+                            $html .= ' <span class="syntax--keyword syntax--operator syntax--assignment syntax--php">=</span> ';
                             if ($parameter->isDefaultValueConstant()) {
                                 @list($class, $constant) = @explode('::', $parameter->getDefaultValueConstantName());
                                 if (!$constant) {
@@ -475,18 +494,18 @@ class HtmlFormatter extends AbstractFormatter
                                 if ($class) {
                                     $text .= "\\{$class}";
                                     $html .= sprintf(
-                                        '<span class="support class">\\%s</span>::',
+                                        '<span class="syntax--support syntax--class">\\%s</span>::',
                                         htmlentities($class)
                                     );
                                 }
                                 $text .= $constant;
                                 $html .= sprintf(
-                                    '<span class="constant">%s</span>',
+                                    '<span class="syntax--constant">%s</span>',
                                     htmlentities($constant)
                                 );
                             } else {
                                 $text .= $parameter->getDefaultValue();
-                                $html .= $self->renderDefault($parameter->getDefaultValue());
+                                $html .= $self->renderScalarOrNull($parameter->getDefaultValue());
                             }
                         }
                         $parametersText[] = $text;
@@ -513,7 +532,7 @@ class HtmlFormatter extends AbstractFormatter
                             $method->getName()
                         );
                         $commentHtml = sprintf(
-                            ' <span class="comment line double-slash php">// <span class="keyword">@override</span> %s</span>',
+                            ' <span class="syntax--comment syntax--line syntax--double-slash syntax--php">// <span class="syntax--keyword syntax--other syntax--phpdoc syntax--php">@override</span> %s</span>',
                             $overriddenMethodHtml
                         );
                         break;
@@ -523,7 +542,7 @@ class HtmlFormatter extends AbstractFormatter
                 $html = '';
                 $html .= $indentationInner;
                 $html .= sprintf(
-                    '<span class="storage">%s</span> <span class="entity name function">%s</span>(%s);%s',
+                    '<span class="syntax--storage">%s</span> <span class="syntax--entity syntax--name function">%s</span>(%s);%s',
                     $storage,
                     $method->getName(),
                     $parametersHtml,
@@ -542,7 +561,7 @@ class HtmlFormatter extends AbstractFormatter
             }
             if ($methodsDeclaredInClass) {
                 $innerHtml[] = $indentationInner . sprintf(
-                    '<span class="comment line double-slash php">%s</span>',
+                    '<span class="syntax--comment syntax--line syntax--double-slash syntax--php">%s</span>',
                     "// Methods - declared in class"
                 );
                 foreach ($methodsDeclaredInClass as $method) {
@@ -551,12 +570,12 @@ class HtmlFormatter extends AbstractFormatter
             }
             if ($methodsInherited) {
                 $innerHtml[] = $indentationInner . sprintf(
-                    '<span class="comment line double-slash php">%s</span>',
+                    '<span class="syntax--comment syntax--line syntax--double-slash syntax--php">%s</span>',
                     "// Methods - Inherited"
                 );
                 foreach ($methodsInherited as $method) {
                     $inheritHtml = sprintf(
-                        ' <span class="comment line double-slash php">// <span class="keyword">@inherit</span> \\%s</span>',
+                        ' <span class="syntax--comment syntax--line syntax--double-slash syntax--php">// <span class="syntax--keyword syntax--other syntax--phpdoc syntax--php">@inherit</span> \\%s</span>',
                         $method->getDeclaringClass()->getName()
                     );
                     $innerHtml[] = $renderMethod($method) . $inheritHtml;
@@ -597,7 +616,7 @@ class HtmlFormatter extends AbstractFormatter
     private function renderResource($resource)
     {
         return sprintf(
-            'Resource #%d; <span class="comment line double-slash php">// Type: %s</span>',
+            'Resource #%d; <span class="syntax--comment syntax--line syntax--double-slash syntax--php">// Type: %s</span>',
             intval($resource),
             get_resource_type($resource)
         );

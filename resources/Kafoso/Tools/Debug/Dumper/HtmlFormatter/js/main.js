@@ -91,9 +91,9 @@
             optionsButton.onclick = function(){
                 var options = this.parentNode.getElementsByClassName('options')[0];
                 if (null === options.offsetParent) {
-                    options.style.display = "block";
+                    options.setAttribute('class', 'options shown');
                 } else {
-                    options.style.display = "none";
+                    options.setAttribute('class', 'options');
                 }
             };
         });

@@ -6,35 +6,43 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
     public function testNull()
     {
         $htmlFormatter = new HtmlFormatter(null);
-        $expected = '<span class="constant">null</span>';
+        $expected = '<span class="syntax--language syntax--php syntax--constant">null</span>';
         $this->assertSame($expected, $htmlFormatter->renderInner());
     }
 
     public function testBoolean()
     {
         $htmlFormatter = new HtmlFormatter(true);
-        $expected = '<span class="constant">true</span>';
+        $expected = '<span class="syntax--language syntax--php syntax--constant">true</span>';
         $this->assertSame($expected, $htmlFormatter->renderInner());
     }
 
     public function testFloat()
     {
         $htmlFormatter = new HtmlFormatter(3.14);
-        $expected = '<span class="constant numeric">3.14</span>';
+        $expected = '<span class="syntax--language syntax--php syntax--constant syntax--numeric">3.14</span>';
         $this->assertSame($expected, $htmlFormatter->renderInner());
     }
 
     public function testInteger()
     {
         $htmlFormatter = new HtmlFormatter(42);
-        $expected = '<span class="constant numeric">42</span>';
+        $expected = '<span class="syntax--language syntax--php syntax--constant syntax--numeric">42</span>';
         $this->assertSame($expected, $htmlFormatter->renderInner());
     }
 
     public function testString()
     {
         $htmlFormatter = new HtmlFormatter("foo");
-        $expected = '<span class="string">&quot;foo&quot;</span>';
+        $expected = '<span class="syntax--language syntax--php syntax--string">&quot;foo&quot;</span>';
+        $this->assertSame($expected, $htmlFormatter->renderInner());
+    }
+
+    public function testStringIsEscapedProperly()
+    {
+        $baseDirectory = realpath(__DIR__ . str_repeat('/..', 5));
+        $htmlFormatter = new HtmlFormatter("foo\"bar\\baz\$bim");
+        $expected = trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testStringIsEscapedProperly.expected.html"));
         $this->assertSame($expected, $htmlFormatter->renderInner());
     }
 
@@ -50,7 +58,7 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $resource = curl_init('foo');
         $htmlFormatter = new HtmlFormatter($resource);
-        $expected = '/Resource \#\d+; ' . preg_quote('<span class="comment line double-slash php">// Type: curl</span>', '/') . '/';
+        $expected = '/Resource \#\d+; ' . preg_quote('<span class="syntax--comment syntax--line syntax--double-slash syntax--php">// Type: curl</span>', '/') . '/';
         $this->assertRegExp($expected, $htmlFormatter->renderInner());
     }
 

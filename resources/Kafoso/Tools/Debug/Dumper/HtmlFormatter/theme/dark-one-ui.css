@@ -1,4 +1,5 @@
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 {
+    display:block !important;
     background-color:rgb(40,44,52) !important;
     color:#abb2bf !important;
     font-family:Menlo,Consolas,'DejaVu Sans Mono',monospace !important;
@@ -56,6 +57,9 @@
     font-size:12px !important;
     line-height:25px !important;
 }
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options.shown {
+    display:block !important;
+}
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 div.options input {
     background-color:#1e2127 !important;
     border:none !important;
@@ -111,27 +115,27 @@
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .collapsed {
     display:none !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .comment {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--comment {
     color:#5c6370 !important;
     font-style:italic !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .constant {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--constant {
     color:#d19a66 !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .constant.numeric {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--constant.syntax--numeric {
     color:#d19a66 !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.type {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--entity.syntax--name.type {
     color:#e5c07b !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.class,
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.type.class {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--entity.syntax--name.syntax--class,
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--entity.syntax--name.type.syntax--class {
     color:#e5c07b !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.name.function {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--entity.syntax--name.function {
     color:#61afef !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .entity.other.inherited-class {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--entity.syntax--other.syntax--inherited-class {
     color:#98c379 !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .fold-marker {
@@ -174,24 +178,27 @@
     font-weight:normal !important;
     font-style:normal !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .keyword {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--keyword {
     color:#c678dd !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .keyword.operator {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--keyword.operator {
     color:#abb2bf !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .line {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--line {
     white-space:pre !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .storage {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--storage {
     color:#c678dd !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .string {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--string {
     color:#98c379 !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .support.class {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--support.syntax--class {
     color:#e5c07b !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .variable {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--variable {
     color:#e06c75 !important;
+}
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--constant.syntax--character.syntax--escape {
+    color:#56b6c2 !important;
 }
