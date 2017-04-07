@@ -13,4 +13,9 @@ class Little_Class
             "baz"
         ]
     ];
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }
