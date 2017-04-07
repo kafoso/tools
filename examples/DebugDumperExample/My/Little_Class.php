@@ -10,7 +10,7 @@ class Little_Class
         "foo",
         "bar",
         [
-            "baz"
+            "baz\"bim\\one\$two"
         ]
     ];
     public $html = '<b>foo</b>';
