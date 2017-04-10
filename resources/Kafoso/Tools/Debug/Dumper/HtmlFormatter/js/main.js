@@ -53,7 +53,7 @@
         foldMarkSpan.innerHTML = '&hellip;';
         foldMarkSpan.setAttribute('class', 'fold-marker');
         var clone;
-        var expandedNodes = main.getElementsByClassName('expanded');
+        var collapsibleNodes = main.getElementsByClassName('collapsible');
         var collapseLevel = readCookie("Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27_options_collapseLevel");
         if (collapseLevel) {
             collapseLevel = parseInt(collapseLevel, 10);
@@ -72,21 +72,27 @@
         inputNode.onkeydown = onchangeCallback;
         inputNode.onpaste = onchangeCallback;
         inputNode.onchange = onchangeCallback;
-        if (collapseLevel && collapseLevel > 0) {
-            each(expandedNodes, function(expandedNode){
-                if (expandedNode.parentNode) {
-                    if (getCountOfAllExpandedParents(expandedNode) > collapseLevel) {
-                        clone = foldMarkSpan.cloneNode(true);
-                        expandedNode.parentNode.insertBefore(clone, expandedNode);
-                        expandedNode.setAttribute('class', 'collapsed');
-                        clone.onclick = function(){
-                            this.nextSibling.setAttribute("class", "expanded");
-                            this.parentNode.removeChild(this);
-                        };
-                    }
+        each(collapsibleNodes, function(collapsibleNode){
+            if (collapsibleNode.parentNode) {
+                clone = foldMarkSpan.cloneNode(true);
+                collapsibleNode.parentNode.insertBefore(clone, collapsibleNode);
+                if (collapseLevel <= 0 || getCountOfAllExpandedParents(collapsibleNode) > collapseLevel) {
+                    collapsibleNode.setAttribute('class', 'collapsible collapsed');
+                } else {
+                    clone.setAttribute("class", "fold-marker isHidden");
                 }
-            });
-        }
+                clone.onclick = function(){
+                    var classes = this.nextSibling.getAttribute('class');
+                    if (classes && classes.length && classes.match(/(^|\s)expanded(\s|$)/)) {
+                        this.nextSibling.setAttribute("class", "collapsible collapsed");
+                        this.setAttribute("class", "fold-marker");
+                    } else {
+                        this.nextSibling.setAttribute("class", "collapsible expanded");
+                        this.setAttribute("class", "fold-marker isHidden");
+                    }
+                };
+            }
+        });
         each(main.getElementsByClassName('optionsButton'), function(optionsButton){
             optionsButton.onclick = function(){
                 var options = this.parentNode.getElementsByClassName('options')[0];

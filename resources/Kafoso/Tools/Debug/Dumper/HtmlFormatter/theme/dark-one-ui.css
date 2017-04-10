@@ -112,8 +112,11 @@
     color:#d6941a !important;
     text-decoration:underline !important;
 }
-.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .collapsed {
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .collapsible {
     display:none !important;
+}
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .collapsible.expanded {
+    display:inline !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .syntax--comment {
     color:#5c6370 !important;
@@ -154,6 +157,9 @@
     -moz-border-radius:3px !important;
     border-radius:3px !important;
     cursor:pointer !important;
+}
+.Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .fold-marker.isHidden {
+    display:none !important;
 }
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .indent-guide,
 .Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27 .invisible-character {

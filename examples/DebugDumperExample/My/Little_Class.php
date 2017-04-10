@@ -13,7 +13,7 @@ class Little_Class
             "baz\"bim\\one\$two"
         ]
     ];
-    public $html = '<b>foo</b>';
+    public $html = "<b>foo \x4 \t</b>";
 
     public function getId()
     {

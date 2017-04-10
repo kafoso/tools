@@ -128,6 +128,9 @@ class HtmlFormatter extends AbstractFormatter
         } else {
             $html = '[]';
         }
+        if ($level > 0 && '[]' != $html) {
+            $html = '<span class="collapsible expanded">' . $html . '</span>';
+        }
         return $html;
     }
 
@@ -145,38 +148,56 @@ class HtmlFormatter extends AbstractFormatter
         $class = "";["syntax--language syntax--php"];
         if (is_bool($value) || is_null($value) || is_float($value) || is_int($value)) {
             $class = "syntax--language syntax--php syntax--constant";
-            if (is_float($value) || is_int($value)) {
+            if (is_null($value)) {
+                $value = "null";
+            } elseif (is_bool($value)) {
+                $value = ($value ? "true" : "false");
+            } elseif (is_float($value) || is_int($value)) {
                 $class .= " syntax--numeric";
             }
-        } elseif (is_string($value)) {
+        } else {
             $class = "syntax--language syntax--php syntax--string";
-            $value = addcslashes($value, '"\\$');
-            $split = preg_split('/(\\\\["|\$|\\\\])/', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            $value = strval($value);
+            $regexAsciiCharacters = '[\x00-\x1F\x7F]';
+            $split = preg_split("/(\\$|\\\"|\\\\|$regexAsciiCharacters)/", $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
             if (count($split) > 1) {
                 $value = "";
                 $i = 0;
                 foreach ($split as $segment) {
+                    $subClass = "syntax--constant syntax--character syntax--escape syntax--php";
                     if (0 == $i%2) {
                         $value .= htmlentities($segment);
                     } else {
+                        if ("\e" === $segment) {
+                            $segment = "\\e";
+                        } elseif ("\n" === $segment) {
+                            $segment = "\\n";
+                        } elseif ("\r" === $segment) {
+                            $segment = "\\r";
+                        } elseif ("\t" === $segment) {
+                            $segment = "\\t";
+                        } else {
+                            preg_match("/$regexAsciiCharacters/", $segment, $match);
+                            if ($match) {
+                                $segment = "\\x" . bin2hex($match[0]);
+                                $subClass = "syntax--constant syntax--numeric syntax--octal syntax--php";
+                            } else {
+                                $segment = "\\" . $segment;
+                            }
+                        }
                         $value .= sprintf(
-                            '<span class="syntax--constant syntax--character syntax--escape syntax--php">%s</span>',
+                            '<span class="%s">%s</span>',
+                            $subClass,
                             htmlentities($segment)
                         );
                     }
                     $i++;
                 }
+                $quot = htmlentities('"');
+                $value = "{$quot}{$value}{$quot}";
             } else {
-                $value = htmlentities($value);
+                $value = htmlentities('"' . $value . '"');
             }
-            $value = '&quot;' . $value . '&quot;';
-        }
-        if (is_null($value)) {
-            $value = "null";
-        } elseif (is_bool($value)) {
-            $value = ($value ? "true" : "false");
-        } else {
-            $value = strval($value);
         }
         return sprintf(
             '<span class="%s">%s</span>',
@@ -589,7 +610,9 @@ class HtmlFormatter extends AbstractFormatter
             . PHP_EOL . $indentation
             . '<span>}</span>'
             . '</span>';
-        $html = '<span class="expanded">' . $html . '</span>';
+        if ($level > 0) {
+            $html = '<span class="collapsible expanded">' . $html . '</span>';
+        }
         return $html;
     }
 

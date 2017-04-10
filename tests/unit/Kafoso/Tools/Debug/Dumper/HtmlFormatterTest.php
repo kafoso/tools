@@ -38,12 +38,32 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $htmlFormatter->renderInner());
     }
 
-    public function testStringIsEscapedProperly()
+    /**
+     * @dataProvider    dataProvider_testStringIsEscapedProperly
+     */
+    public function testStringIsEscapedProperly($string, $expected)
     {
         $baseDirectory = realpath(__DIR__ . str_repeat('/..', 5));
-        $htmlFormatter = new HtmlFormatter("foo\"bar\\baz\$bim");
-        $expected = trim(file_get_contents($baseDirectory . "/resources/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testStringIsEscapedProperly.expected.html"));
+        $htmlFormatter = new HtmlFormatter($string);
+        $stringEncoded = htmlentities($string);
+        $expected = '<span class="syntax--language syntax--php syntax--string">&quot;' . $expected . '&quot;</span>';
         $this->assertSame($expected, $htmlFormatter->renderInner());
+    }
+
+    public function dataProvider_testStringIsEscapedProperly()
+    {
+        return [
+            ["foo\"bar", 'foo<span class="syntax--constant syntax--character syntax--escape syntax--php">\\&quot;</span>bar'],
+            ["foo\\bar", 'foo<span class="syntax--constant syntax--character syntax--escape syntax--php">\\\\</span>bar'],
+            ["foo\$bar", 'foo<span class="syntax--constant syntax--character syntax--escape syntax--php">\\$</span>bar'],
+            ["foo\ebar", 'foo<span class="syntax--constant syntax--character syntax--escape syntax--php">\\e</span>bar'],
+            ["foo\nbar", 'foo<span class="syntax--constant syntax--character syntax--escape syntax--php">\\n</span>bar'],
+            ["foo\rbar", 'foo<span class="syntax--constant syntax--character syntax--escape syntax--php">\\r</span>bar'],
+            ["foo\tbar", 'foo<span class="syntax--constant syntax--character syntax--escape syntax--php">\\t</span>bar'],
+            ["foo\x4 bar", 'foo<span class="syntax--constant syntax--numeric syntax--octal syntax--php">\\x04</span> bar'],
+            ["foo\x4bar", 'fooKar'], // ASCII character "K"
+            ["foo\4bar", 'foo<span class="syntax--constant syntax--numeric syntax--octal syntax--php">\\x04</span>bar'],
+        ];
     }
 
     public function testArrayOneDimension()
