@@ -19,13 +19,14 @@ class HtmlFormatter extends AbstractFormatter
     public function __construct($var, $depth = null)
     {
         parent::__construct($var, $depth);
-        $this->configuration = HtmlFormatter\Configuration::createFromSuperglobelCookie(); // Add to constructor
+        $this->configuration = HtmlFormatter\Configuration::createFromSuperglobalCookie(); // Add to constructor
     }
 
     public function render()
     {
         $origin = $this->getOrigin();
         $viewRenderer = new ViewRenderer("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render.phtml", [
+            'configuration' => $this->configuration,
             'PSR_2_SOFT_CHARACTER_LIMIT' => static::PSR_2_SOFT_CHARACTER_LIMIT,
             'css' => $this->getCss(),
             'innerHtml' => $this->renderInner(),

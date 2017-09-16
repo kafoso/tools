@@ -24,7 +24,7 @@ abstract class AbstractRenderer
         } elseif (is_scalar($value)) {
             return new Type\ScalarRenderer($this->configuration, $endingCharacter, $value);
         } elseif (is_array($value)) {
-            if (count($value) > 0 && is_int($level) && $level >= $this->configuration->getMaximumLevel()) {
+            if (count($value) > 0 && is_int($level) && $level >= $this->configuration->getCollapseLevel()) {
                 return new Type\ArrayRenderer\OmittedRenderer(
                     $this->configuration,
                     $endingCharacter,
@@ -52,7 +52,18 @@ abstract class AbstractRenderer
                     $level,
                     []
                 );
-            } elseif (is_int($level) && $level >= $this->configuration->getMaximumLevel()) {
+            } elseif ($this->configuration->getSuppressedClassNames()) {
+                if (in_array(get_class($value), $this->configuration->getSuppressedClassNames())) {
+                    $previousSplObjectHashes[] = $hash;
+                    return new Type\ObjectRenderer\SuppressedRenderer(
+                        $this->configuration,
+                        $endingCharacter,
+                        $value,
+                        $level,
+                        $previousSplObjectHashes
+                    );
+                }
+            } elseif (is_int($level) && $level >= $this->configuration->getCollapseLevel()) {
                 $previousSplObjectHashes[] = $hash;
                 return new Type\ObjectRenderer\OmittedRenderer(
                     $this->configuration,
