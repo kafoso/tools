@@ -18,9 +18,13 @@
     "support": {
         "issues": "https://github.com/kafoso/tools/issues"
     },
+    "platform": {
+        "php": ">=5.5"
+    },
     "require-dev": {
         "php": ">=5.5.0",
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^4.8",
+        "ramsey/uuid": "^3.7"
     },
     "autoload": {
         "psr-4": {

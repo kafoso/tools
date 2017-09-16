@@ -2,17 +2,18 @@
 namespace Kafoso\Tools\Debug\Dumper;
 
 use Kafoso\Tools\Debug\VariableDumper;
+use Ramsey\Uuid\Uuid;
 
 abstract class AbstractFormatter
 {
     const DEPTH_DEFAULT = 3;
-    const INDENTATION_CHARACTER = " ";
-    const INDENTATION_CHARACTER_COUNT = 4;
+    const PSR_2_SOFT_CHARACTER_LIMIT = 120;
+    const PSR_2_INDENTATION_CHARACTERS = "    ";
 
     protected $var;
     protected $depth;
 
-    private $indentationCharacters;
+    private $uuid;
 
     public function __construct($var, $depth = null)
     {
@@ -27,18 +28,26 @@ abstract class AbstractFormatter
             ));
         }
         $this->depth = $depth;
+        $this->uuid = (string)Uuid::uuid1();
     }
 
     abstract public function render();
 
-    public function getIndentationCharacters()
+    /**
+     * @return string
+     */
+    public function getUuid()
     {
-        if (!$this->indentationCharacters) {
-            $this->indentationCharacters = str_repeat(
-                static::INDENTATION_CHARACTER,
-                static::INDENTATION_CHARACTER_COUNT
-            );
-        }
-        return $this->indentationCharacters;
+        return $this->uuid;
+    }
+
+    public static function generateTextIndentationForLevel($level)
+    {
+        return str_repeat(static::getIndentationCharacters(), $level);
+    }
+
+    public static function getIndentationCharacters()
+    {
+        return static::PSR_2_INDENTATION_CHARACTERS;
     }
 }

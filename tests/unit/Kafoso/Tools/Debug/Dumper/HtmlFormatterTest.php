@@ -1,5 +1,6 @@
 <?php
 use Kafoso\Tools\Debug\Dumper\HtmlFormatter;
+use Kafoso\Tools\Generic\HTML;
 
 class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,7 +46,7 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $baseDirectory = realpath(__DIR__ . str_repeat('/..', 5));
         $htmlFormatter = new HtmlFormatter($string);
-        $stringEncoded = htmlentities($string);
+        $stringEncoded = HTML::encode($string);
         $expected = '<span class="syntax--language syntax--php syntax--string">&quot;' . $expected . '&quot;</span>';
         $this->assertSame($expected, $htmlFormatter->renderInner());
     }

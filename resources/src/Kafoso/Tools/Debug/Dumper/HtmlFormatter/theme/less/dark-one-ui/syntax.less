@@ -1,0 +1,120 @@
+.Kafoso_Tools_Debug_Dumper {
+    .syntax--comment {
+        color:#5c6370 !important;
+        font-style:italic !important;
+    }
+    .syntax--constant {
+        &,
+        &.syntax--numeric {
+            color:#d19a66 !important;
+        }
+        &.syntax--character {
+            &.syntax--escape {
+                color:#56b6c2 !important;
+            }
+        }
+    }
+    .syntax--entity {
+        &.syntax--name {
+            &.type {
+                color:#e5c07b !important;
+            }
+        }
+    }
+    .syntax--entity {
+        &.syntax--name {
+            &.syntax--class {
+                &,
+                &.type {
+                    color:#e5c07b !important;
+                }
+            }
+            &.syntax--function {
+                color:#61afef !important;
+            }
+        }
+        &.syntax--other {
+            &.syntax--inherited-class {
+                color:#98c379 !important;
+            }
+        }
+    }
+    .fold-marker {
+        color: rgb(40,44,52) !important;
+        background-color: #abb2bf !important;
+        height: 8px !important;
+        line-height: 2px !important;
+        display: inline-block !important;
+        *display: inline !important;
+        zoom: 1 !important;
+        vertical-align: middle !important;
+        position: relative !important;
+        top: -1px !important;
+        padding: 0 2px !important;
+        -webkit-border-radius:3px !important;
+        -moz-border-radius:3px !important;
+        border-radius:3px !important;
+        cursor:pointer !important;
+
+        &.isHidden {
+            display:none !important;
+        }
+    }
+    .indent-guide,
+    .invisible-character {
+        position:relative !important;
+        color:transparent !important;
+    }
+    .indent-guide:before,
+    .invisible-character:before {
+        content:"····" !important;
+        position:absolute !important;
+        color:rgba(171, 178, 191, 0.15) !important;
+        user-select:none !important;
+        -webkit-user-select:none !important;
+        -moz-user-select:none !important;
+        -ms-user-select:none !important;
+    }
+    .indent-guide {
+        display:inline-block !important;
+        box-shadow:inset 1px 0 !important;
+    }
+    .invisible-character {
+        font-weight:normal !important;
+        font-style:normal !important;
+    }
+    .syntax--keyword {
+        color:#c678dd !important;
+
+        &.syntax--operator {
+            color:#abb2bf !important;
+        }
+    }
+    .syntax--line {
+        white-space:pre !important;
+    }
+    .syntax--storage {
+        color:#c678dd !important;
+    }
+    .syntax--string {
+        color:#98c379 !important;
+    }
+    .syntax--support {
+        &.syntax--class {
+            color:#e5c07b !important;
+        }
+        &.syntax--function {
+            color:#56b6c2 !important;
+        }
+    }
+    .syntax--variable {
+        color:#e06c75 !important;
+    }
+
+    // Custom; i.e. not part of Atom dark-one-ui
+
+    .syntax--unknown {
+        color:#999 !important;
+        border-bottom:1px dotted #f22 !important;
+    }
+}

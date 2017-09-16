@@ -1,0 +1,182 @@
+.Kafoso_Tools_Debug_Dumper {
+    div.optionsButton {
+        display:block !important;
+        position:absolute !important;
+        z-index:4 !important;
+        top:14px !important;
+        right:12px !important;
+        width:16px !important;
+        height:16px !important;
+        background:#1e2127 !important;
+        overflow:hidden !important;
+        border:1px solid #abb2bf !important;
+        -webkit-border-radius:3px !important;
+        -moz-border-radius:3px !important;
+        border-radius:3px !important;
+        cursor:pointer !important;
+        box-shadow:0 0 10px #000 !important;
+    }
+    div.optionsButton::before {
+        content: '___' !important;
+        display: block !important;
+        position: absolute !important;
+        top: -7px !important;
+        right: -4px !important;
+        width: 16px !important;
+        height: 16px !important;
+        font-size: 17px !important;
+        color: #abb2bf !important;
+        font-weight: bold !important;
+        word-break: break-all !important;
+        line-height: 4px !important;
+    }
+    div.options {
+        display:none !important;
+        position:relative !important;
+        z-index:3 !important;
+        background-color:#21252b !important;
+        margin:0 0 10px 0 !important;
+        padding:4px 6px !important;
+        overflow:hidden !important;
+        list-style:none !important;
+        -webkit-border-radius:3px !important;
+        -moz-border-radius:3px !important;
+        border-radius:3px !important;
+        font-family:Verdana,sans-serif !important;
+        font-size:12px !important;
+        line-height:25px !important;
+
+        &.shown {
+            display:block !important;
+        }
+
+        div.option {
+            margin:2px 0 !important;
+            padding:4px !important;
+            font-size:0 !important;
+
+            &:hover {
+                background-color:#39414c !important;
+            }
+
+            div.label,
+            div.value {
+                display:inline-block !important;
+                *display:inline !important;
+                zoom:1 !important;
+                vertical-align:top !important;
+                font-size:12px !important;
+                line-height:20px !important;
+            }
+            div.label {
+                width:340px !important;
+            }
+        }
+        input,
+        select {
+            background-color:#1e2127 !important;
+            border:none !important;
+            -webkit-border-radius:2px !important;
+            -moz-border-radius:2px !important;
+            border-radius:2px !important;
+            color:#abb2bf !important;
+            padding:0 7px !important;
+            height:20px !important;
+        }
+        input {
+            &::-webkit-input-placeholder {
+                color:#525761 !important;
+                opacity:1 !important;
+            }
+        }
+        select {
+            &.reaction {
+                &.positive {
+                    color:#b8ffb1 !important;
+                }
+                &.negative {
+                    color:#ea7373 !important;
+                }
+            }
+        }
+    }
+    div.origin {
+        background-color:#1e2127 !important;
+        border:none !important;
+        -webkit-border-radius:2px !important;
+        -moz-border-radius:2px !important;
+        border-radius:2px !important;
+        min-height:18px !important;
+        line-height:18px !important;
+        color:#abb2bf !important;
+        padding:4px 24px 4px 7px !important;
+        margin:0 0 10px !important;
+        font-size:13px !important;
+        word-break:break-all !important;
+    }
+    div.output {
+        position:relative !important;
+
+        &.isHidingParentClass {
+            .section--extends {
+                display:none !important;
+            }
+        }
+        &.isHidingInterfaces {
+            .section--implements {
+                display:none !important;
+            }
+        }
+        &.isHidingTraits {
+            .section--traits {
+                display:none !important;
+            }
+        }
+        &.isHidingConstants {
+            .section--constants {
+                display:none !important;
+            }
+        }
+        &.isHidingVariables {
+            .section--properties {
+                display:none !important;
+            }
+        }
+        &.isHidingMethods {
+            .section--methods {
+                display:none !important;
+            }
+        }
+        &.isHidingMethodParameters {
+            .section--method-parameters {
+                display:none !important;
+            }
+        }
+        &.isHidingMethodParameterTypeHints {
+            .section--method-parameter-type-hints {
+                display:none !important;
+            }
+        }
+
+        div.wrap-guide {
+            border-right: 1px solid rgba(171, 178, 191, 0.15) !important;
+            color: transparent !important;
+            margin: 0 0 0 -1px !important;
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            z-index: 1 !important;
+        }
+        span.goto {
+            cursor:pointer !important;
+        }
+
+        .collapsible {
+            display:none !important;
+
+            &.expanded {
+                display:inline !important;
+            }
+        }
+    }
+}

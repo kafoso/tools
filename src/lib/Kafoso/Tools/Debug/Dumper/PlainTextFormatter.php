@@ -3,7 +3,7 @@ namespace Kafoso\Tools\Debug\Dumper;
 
 class PlainTextFormatter extends AbstractFormatter
 {
-    const INDENTATION_CHARACTER_COUNT = 2;
+    const INDENTATION_CHARACTERS = "  ";
 
     private $isTruncatingRecursion;
 
@@ -65,7 +65,7 @@ class PlainTextFormatter extends AbstractFormatter
         } elseif (is_null($var)) {
             $var = "null";
         }
-        return str_repeat($this->getIndentationCharacters(), $level) . $var;
+        return str_repeat(self::getIndentationCharacters(), $level) . $var;
     }
 
     private function renderArray(
@@ -87,14 +87,14 @@ class PlainTextFormatter extends AbstractFormatter
             if (is_int($k)) {
                 $sprintfPattern = "[%s] => %s,";
             }
-            $arrayAsString .= str_repeat($this->getIndentationCharacters(), ($level+1)) . sprintf(
+            $arrayAsString .= str_repeat(self::getIndentationCharacters(), ($level+1)) . sprintf(
                 $sprintfPattern,
                 $k,
                 trim($replacementValue)
             ) . PHP_EOL;
         }
         $arraySize = count($array);
-        $indentation = str_repeat($this->getIndentationCharacters(), $level);
+        $indentation = str_repeat(self::getIndentationCharacters(), $level);
         return $indentation . "array({$arraySize}) {" . PHP_EOL
             . $arrayAsString
             . $indentation . "}";
@@ -137,7 +137,7 @@ class PlainTextFormatter extends AbstractFormatter
             if ($property->isStatic()) {
                 $exposure .= " static";
             }
-            $objectValuesString .= str_repeat($this->getIndentationCharacters(), ($level+1)) . str_replace(
+            $objectValuesString .= str_repeat(self::getIndentationCharacters(), ($level+1)) . str_replace(
                 [
                     "%PROPERTY_EXPOSURE%",
                     "%PROPERTY_NAME%",
@@ -156,7 +156,7 @@ class PlainTextFormatter extends AbstractFormatter
             $objectValuesString .= PHP_EOL;
         }
         $hash = spl_object_hash($object);
-        $indentation = str_repeat($this->getIndentationCharacters(), $level);
+        $indentation = str_repeat(self::getIndentationCharacters(), $level);
         return $indentation . get_class($object) . " Object &{$hash}" . PHP_EOL
             . $indentation
             . "{"
@@ -169,8 +169,8 @@ class PlainTextFormatter extends AbstractFormatter
     private function renderObjectOmitted($object, $level = 0)
     {
         $hash = spl_object_hash($object);
-        $indentation = str_repeat($this->getIndentationCharacters(), $level);
-        $indentationInner = str_repeat($this->getIndentationCharacters(), ($level+1));
+        $indentation = str_repeat(self::getIndentationCharacters(), $level);
+        $indentationInner = str_repeat(self::getIndentationCharacters(), ($level+1));
         return $indentation
             . get_class($object)
             . " Object &{$hash}"
@@ -189,8 +189,8 @@ class PlainTextFormatter extends AbstractFormatter
     private function renderArrayOmitted(array $array, $level = 0)
     {
         $arraySize = count($array);
-        $indentation = str_repeat($this->getIndentationCharacters(), $level);
-        $indentationInner = str_repeat($this->getIndentationCharacters(), ($level+1));
+        $indentation = str_repeat(self::getIndentationCharacters(), $level);
+        $indentationInner = str_repeat(self::getIndentationCharacters(), ($level+1));
         return $indentation
             . "array({$arraySize}) {"
             . PHP_EOL
@@ -205,8 +205,8 @@ class PlainTextFormatter extends AbstractFormatter
     private function renderObjectRecursion($object, $level = 0)
     {
         $hash = spl_object_hash($object);
-        $indentation = str_repeat($this->getIndentationCharacters(), $level);
-        $indentationInner = str_repeat($this->getIndentationCharacters(), ($level+1));
+        $indentation = str_repeat(self::getIndentationCharacters(), $level);
+        $indentationInner = str_repeat(self::getIndentationCharacters(), ($level+1));
         return $indentation
             . get_class($object)
             . " Object &{$hash}"
@@ -257,5 +257,13 @@ class PlainTextFormatter extends AbstractFormatter
             intval($resource),
             get_resource_type($resource)
         );
+    }
+
+    /**
+     * @override
+     */
+    public static function getIndentationCharacters()
+    {
+        return self::INDENTATION_CHARACTERS;
     }
 }

@@ -1,4 +1,7 @@
-<div class="Kafoso_Tools_Debug_Dumper_1a83b742_c5ce_11e6_9c64_842b2bb76d27">
+<?php
+use Kafoso\Tools\Generic\HTML;
+?>
+<div class="Kafoso_Tools_Debug_Dumper" id="<?=HTML::encode($this->uuid)?>">
     <style type="text/css"><?=$this->css?></style>
     <div class="optionsButton"></div>
     <?=$this->render("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render/origin.phtml")?>

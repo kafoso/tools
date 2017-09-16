@@ -1,6 +1,99 @@
+<?php
+use Kafoso\Tools\Generic\HTML;
+
+$truncatedGenericClasses = array_map(function($className){
+    return '\\' . $className;
+}, $this->truncatedGenericClasses);
+$textTruncatedGenericClasses = ", and " . array_pop($truncatedGenericClasses);
+$textTruncatedGenericClasses = implode(", ", $truncatedGenericClasses) . $textTruncatedGenericClasses;
+?>
 <div class="options">
     <div class="option">
-        <label>Collapse level:</label>
-        <input type="number" placeholder="Default: None" class="collapseLevel">
+        <div class="label">Collapse level:</div>
+        <div class="value">
+            <input type="number" placeholder="2" data-option="collapseLevel" style="width:60px;">
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Show parent class:</div>
+        <div class="value">
+            <select data-option="isShowingParentClass" class="reaction positive">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Show implemented interfaces:</div>
+        <div class="value">
+            <select data-option="isShowingInterfaces" class="reaction positive">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Show traits:</div>
+        <div class="value">
+            <select data-option="isShowingTraits" class="reaction positive">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Show constants:</div>
+        <div class="value">
+            <select data-option="isShowingConstants" class="reaction positive">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Show class variables:</div>
+        <div class="value">
+            <select data-option="isShowingVariables" class="reaction positive">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Show methods:</div>
+        <div class="value">
+            <select data-option="isShowingMethods" class="reaction positive">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Show method parameters:</div>
+        <div class="value">
+            <select data-option="isShowingMethodParameters" class="reaction positive">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Show method type hints (<span class="hint" title="Type hints include: array, boolean, callable, \Closure, float, integer, null, string, and any object."><span class="syntax--support syntax--class">string</span>, <span class="syntax--support syntax--class">int</span>, etc.</span>):</div>
+        <div class="value">
+            <select data-option="isShowingMethodParameterTypeHints" class="reaction positive">
+                <option value="1" selected>Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <div class="option">
+        <div class="label">Truncate generic objects (<span class="hint" title="<?=HTML::encode("Objects being truncated are: {$textTruncatedGenericClasses}.")?>">like <span class="syntax--entity syntax--name syntax--class">\DateTime</span></span>):</div>
+        <div class="value">
+            <select data-option="isTruncatingGenericObjects" class="reaction negative">
+                <option value="1">Yes</option>
+                <option value="0" selected>No</option>
+            </select>
+            <span class="text-muted">This operation is performed server-side. Requires cookies.</span>
+        </div>
     </div>
 </div>
