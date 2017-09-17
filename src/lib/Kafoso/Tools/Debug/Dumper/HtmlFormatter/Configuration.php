@@ -2,15 +2,17 @@
 namespace Kafoso\Tools\Debug\Dumper\HtmlFormatter;
 
 use Kafoso\Tools\Debug\Dumper\HtmlFormatter;
+use Kafoso\Tools\Exception\Formatter;
 
 class Configuration
 {
     const DEFAULT_COLLAPSE_LEVEL = 2;
+    const DEFAULT_DEPTH_LEVEL = 3;
     const MAXIMUM_LEVEL = 8;
 
     private $collapseLevel = self::DEFAULT_COLLAPSE_LEVEL;
     private $areOptionsShown = true;
-    private $isShowingConstants = true;
+    private $isShowingConstants = false;
     private $isShowingInterfaces = true;
     private $isShowingMethodParameters = true;
     private $isShowingMethodParameterTypeHints = true;
@@ -19,12 +21,11 @@ class Configuration
     private $isShowingTraits = true;
     private $isShowingVariables = true;
     private $isTruncatingGenericObjects = true;
+
     private $suppressedClassNames = [];
+    private $depth = self::DEFAULT_DEPTH_LEVEL;
 
-    protected function __construct()
-    {
-
-    }
+    protected function __construct(){}
 
     /**
      * @param string $className
@@ -53,11 +54,37 @@ class Configuration
     }
 
     /**
-     * @return array
+     * @param int $depth
+     * @throws \InvalidArgumentException
+     * @throws \UnexpectedValueException
+     * @return $this
      */
-    public function getSuppressedClassNames()
+    public function setDepth($depth)
     {
-        return $this->suppressedClassNames;
+        if (false == is_int($depth)) {
+            throw new \InvalidArgumentException(sprintf(
+                "Expects argument \$depth to be in integer. Found: %s",
+                Formatter::found($depth)
+            ));
+        }
+        if ($depth < 1 || $depth > self::MAXIMUM_LEVEL) {
+            throw new \UnexpectedValueException(sprintf(
+                "Expects argument \$depth to be in integer between %d and %d. Found: %s",
+                1,
+                self::MAXIMUM_LEVEL,
+                Formatter::found($depth)
+            ));
+        }
+        $this->depth = $depth;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDepth()
+    {
+        return $this->collapseLevel;
     }
 
     /**
@@ -66,6 +93,14 @@ class Configuration
     public function getCollapseLevel()
     {
         return $this->collapseLevel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSuppressedClassNames()
+    {
+        return $this->suppressedClassNames;
     }
 
     /**

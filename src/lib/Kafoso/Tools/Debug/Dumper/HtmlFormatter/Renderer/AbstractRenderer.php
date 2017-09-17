@@ -24,12 +24,12 @@ abstract class AbstractRenderer
         } elseif (is_scalar($value)) {
             return new Type\ScalarRenderer($this->configuration, $endingCharacter, $value);
         } elseif (is_array($value)) {
-            if (count($value) > 0 && is_int($level) && $level >= $this->configuration->getCollapseLevel()) {
+            if (count($value) > 0 && is_int($level) && $level >= $this->configuration->getDepth()) {
                 return new Type\ArrayRenderer\OmittedRenderer(
                     $this->configuration,
-                    $endingCharacter,
+                    ",",
                     $value,
-                    $parentValue,
+                    $this->parentValue,
                     $level,
                     ($this->previousSplObjectHashes ?: [])
                 );
@@ -38,8 +38,8 @@ abstract class AbstractRenderer
                 $this->configuration,
                 $endingCharacter,
                 $value,
-                $parentValue,
-                ($level+1),
+                $this->parentValue,
+                $level,
                 ($this->previousSplObjectHashes ?: [])
             );
         } elseif (is_object($value)) {
@@ -62,7 +62,7 @@ abstract class AbstractRenderer
                     $level,
                     $previousSplObjectHashes
                 );
-            } elseif (is_int($level) && $level >= $this->configuration->getCollapseLevel()) {
+            } elseif (is_int($level) && $level >= $this->configuration->getDepth()) {
                 $previousSplObjectHashes[] = $hash;
                 return new Type\ObjectRenderer\OmittedRenderer(
                     $this->configuration,

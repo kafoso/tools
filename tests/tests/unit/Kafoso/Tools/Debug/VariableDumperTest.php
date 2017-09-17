@@ -1,4 +1,6 @@
 <?php
+namespace Kafoso\Tools\Tests\Unit\Debug;
+
 use Kafoso\Tools\Debug\VariableDumper;
 
 class VariableDumperTest extends \PHPUnit_Framework_TestCase
@@ -27,7 +29,7 @@ class VariableDumperTest extends \PHPUnit_Framework_TestCase
     public function testCastResource()
     {
         $resource = curl_init('foo');
-        $expected = "/\(resource #\d+ \(type: curl\)\)/";
+        $expected = "/^\(resource #\d+ \(type: curl\)\)$/";
         $this->assertRegExp($expected, VariableDumper::cast($resource));
     }
 
@@ -55,7 +57,7 @@ class VariableDumperTest extends \PHPUnit_Framework_TestCase
     public function testFoundResource()
     {
         $resource = curl_init('foo');
-        $expected = "/\(resource\) #\d+ \(type: curl\)/";
+        $expected = "/^\(resource\) #\d+ \(type: curl\)$/";
         $this->assertRegExp($expected, VariableDumper::found($resource));
     }
 }

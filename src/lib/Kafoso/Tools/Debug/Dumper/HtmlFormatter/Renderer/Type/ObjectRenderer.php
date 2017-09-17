@@ -96,16 +96,16 @@ class ObjectRenderer extends AbstractRenderer
                     $property->setAccessible(true);
                     if ($property->isDefault()) {
                         if (get_class($this->object) == $property->getDeclaringClass()->getName()) {
-                            $propertiesDeclaredInClass[] = $property;
+                            $propertiesDeclaredInClass[$property->getName()] = $property;
                         } else {
                             if ($property->isPrivate()) {
-                                $propertiesPrivateInParentClasses[] = $property;
+                                $propertiesPrivateInParentClasses[$property->getName()] = $property;
                             } else {
-                                $propertiesInherited[] = $property;
+                                $propertiesInherited[$property->getName()] = $property;
                             }
                         }
                     } else {
-                        $propertiesDeclaredAtRuntime[] = $property;
+                        $propertiesDeclaredAtRuntime[$property->getName()] = $property;
                     }
                 }
             }
@@ -251,7 +251,7 @@ class ObjectRenderer extends AbstractRenderer
                 $intermediary->addSegment(new Segment('use'));
                 $intermediary->addSegment(new Segment('</span>', true));
                 $intermediary->addSegment(new Segment(' '));
-                $intermediary->addSegment(new Segment('<span class="syntax--support syntax--other syntax--namespace syntax--use">', true));
+                $intermediary->addSegment(new Segment('<span class="syntax--support syntax--class">', true));
                 $intermediary->addSegment(new Segment('\\' . $trait->getName()));
                 $intermediary->addSegment(new Segment('</span>', true));
                 $intermediary->addSegment(new Segment(';'));
@@ -275,7 +275,11 @@ class ObjectRenderer extends AbstractRenderer
             $intermediary->addSegment(new Segment(PHP_EOL));
             foreach ($reflectionObject->getConstants() as $name => $value) {
                 $this->indentIntermediary($intermediary, ($this->level+1));
-                $intermediary->addSegment(new Segment('<span class="syntax--storage">const</span> <span class="syntax--constant">', true));
+                $intermediary->addSegment(new Segment('<span class="syntax--storage">', true));
+                $intermediary->addSegment(new Segment('const'));
+                $intermediary->addSegment(new Segment('</span>', true));
+                $intermediary->addSegment(new Segment(' '));
+                $intermediary->addSegment(new Segment('<span class="syntax--constant">', true));
                 $intermediary->addSegment(new Segment($name));
                 $intermediary->addSegment(new Segment('</span>', true));
                 $intermediary->addSegment(new Segment(' = '));
@@ -295,9 +299,11 @@ class ObjectRenderer extends AbstractRenderer
             if ($propertiesDeclaredInClass) {
                 $intermediary->addSegment(new Segment('<span class="section--properties">', true));
                 $this->_handleProperties(
+                    $reflectionObject,
                     $intermediary,
                     "Variables - Declared in class",
-                    $propertiesDeclaredInClass
+                    $propertiesDeclaredInClass,
+                    true
                 );
 
                 $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
@@ -309,6 +315,7 @@ class ObjectRenderer extends AbstractRenderer
             if ($propertiesInherited) {
                 $intermediary->addSegment(new Segment('<span class="section--properties">', true));
                 $this->_handleProperties(
+                    $reflectionObject,
                     $intermediary,
                     "Variables - Inherited",
                     $propertiesInherited
@@ -322,6 +329,7 @@ class ObjectRenderer extends AbstractRenderer
             if ($propertiesPrivateInParentClasses) {
                 $intermediary->addSegment(new Segment('<span class="section--properties">', true));
                 $this->_handleProperties(
+                    $reflectionObject,
                     $intermediary,
                     "Variables - Private in parent class(es)",
                     $propertiesPrivateInParentClasses
@@ -335,6 +343,7 @@ class ObjectRenderer extends AbstractRenderer
             if ($propertiesDeclaredAtRuntime) {
                 $intermediary->addSegment(new Segment('<span class="section--properties">', true));
                 $this->_handleProperties(
+                    $reflectionObject,
                     $intermediary,
                     "Variables - Declared at runtime (injected)",
                     $propertiesDeclaredAtRuntime
@@ -455,12 +464,15 @@ class ObjectRenderer extends AbstractRenderer
     /**
      * @param string $commentText
      * @param array $properties                 An array of \ReflectionProperty.
+     * @param bool $isRenderingOverrideComment
      * @return void
      */
     private function _handleProperties(
+        \ReflectionObject $reflectionObject,
         Intermediary $intermediary,
         $commentText,
-        array $properties
+        array $properties,
+        $isRenderingOverrideComment = false
     )
     {
         $this->indentIntermediary($intermediary, ($this->level+1));
@@ -473,10 +485,12 @@ class ObjectRenderer extends AbstractRenderer
             $intermediary->merge((new ObjectRenderer\PropertyRenderer(
                 $this->configuration,
                 ";",
+                $reflectionObject,
                 $property,
                 $property->getValue($this->object),
                 ($this->level+1),
-                $this->previousSplObjectHashes
+                $this->previousSplObjectHashes,
+                $isRenderingOverrideComment
             ))->getIntermediary());
             $intermediary->addSegment(new Segment(PHP_EOL));
         }

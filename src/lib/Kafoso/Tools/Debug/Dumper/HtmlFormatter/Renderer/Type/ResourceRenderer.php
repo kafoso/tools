@@ -28,10 +28,11 @@ class ResourceRenderer extends AbstractRenderer
     public function getIntermediary()
     {
         $intermediary = new Intermediary;
-        $subIntermediary->addSegment(new Segment("Resource #" . intval($this->resource));
-        $subIntermediary->addSegment(new Segment('<span class="syntax--comment syntax--line syntax--double-slash">', true));
-        $subIntermediary->addSegment(new Segment("// Type: " . get_resource_type($this->resource)));
-        $subIntermediary->addSegment(new Segment('</span>', true));
+        $intermediary->addSegment(new Segment("Resource #" . intval($this->resource)));
+        $intermediary->addSegment(new Segment("; "));
+        $intermediary->addSegment(new Segment('<span class="syntax--comment syntax--line syntax--double-slash">', true));
+        $intermediary->addSegment(new Segment("// Type: " . get_resource_type($this->resource)));
+        $intermediary->addSegment(new Segment('</span>', true));
         return $intermediary;
     }
 }

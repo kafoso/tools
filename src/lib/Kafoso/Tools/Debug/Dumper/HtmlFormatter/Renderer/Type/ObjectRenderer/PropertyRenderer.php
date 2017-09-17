@@ -10,29 +10,36 @@ use Kafoso\Tools\Exception\Formatter;
 
 class PropertyRenderer extends AbstractMultiLevelRenderer
 {
+    private $owningReflectionObject;
     private $reflectionProperty;
     private $value;
+    private $isRenderingOverrideComment;
 
     /**
      * @param null|string $endingCharacter
      * @param mixed $value
      * @param int $level
+     * @param bool $isRenderingOverrideComment
      */
     public function __construct(
         Configuration $configuration,
         $endingCharacter,
+        \ReflectionObject $owningReflectionObject,
         \ReflectionProperty $reflectionProperty,
         $value,
         $level,
-        array $previousSplObjectHashes
+        array $previousSplObjectHashes,
+        $isRenderingOverrideComment = false
     )
     {
         $this->configuration = $configuration;
         $this->endingCharacter = $endingCharacter;
+        $this->owningReflectionObject = $owningReflectionObject;
         $this->reflectionProperty = $reflectionProperty;
         $this->value = $value;
         $this->level = $level;
         $this->previousSplObjectHashes = $previousSplObjectHashes;
+        $this->isRenderingOverrideComment = $isRenderingOverrideComment;
     }
 
     /**
@@ -63,14 +70,56 @@ class PropertyRenderer extends AbstractMultiLevelRenderer
         $intermediary->addSegment(new Segment('</span>', true));
         $intermediary->addSegment(new Segment(" = "));
 
-        $subIntermediary = $this->generateIntermediaryBasedOnDataType($this->value, ($this->level-1));
+        $subIntermediary = $this->generateIntermediaryBasedOnDataType($this->value, $this->level);
+
+        $commentIntermediaries = [];
         if (is_string($this->value)) {
             $length = mb_strlen($this->value);
-            $subIntermediary->addSegment(new Segment(" "));
-            $subIntermediary->addSegment(new Segment('<span class="syntax--comment syntax--line syntax--double-slash">', true));
-            $subIntermediary->addSegment(new Segment("// Length: {$length}"));
-            $subIntermediary->addSegment(new Segment('</span>', true));
+            $commentIntermediary = new Intermediary;
+            $commentIntermediary->addSegment(new Segment("Length: {$length}"));
+            $commentIntermediaries[] = $commentIntermediary;
         }
+        if ($this->isRenderingOverrideComment) {
+            $currentReflectionObject = $this->owningReflectionObject->getParentClass();
+            $isFirst = true;
+            while ($currentReflectionObject) {
+                if (false == $isFirst && $currentReflectionObject->getName() == $this->owningReflectionObject->getName()) {
+                    break;
+                }
+                if ($currentReflectionObject->hasProperty($this->reflectionProperty->getName())) {
+                    $commentIntermediary = new Intermediary;
+                    $commentIntermediary->addSegment(new Segment('<span class="syntax--keyword syntax--other syntax--phpdoc">', true));
+                    $commentIntermediary->addSegment(new Segment("@override"));
+                    $commentIntermediary->addSegment(new Segment('</span>', true));
+                    $commentIntermediary->addSegment(new Segment(" "));
+                    $commentIntermediary->addSegment(new Segment('\\' . $currentReflectionObject->getName()));
+                    $commentIntermediary->addSegment(new Segment("->"));
+                    $commentIntermediary->addSegment(new Segment('$' . $this->reflectionProperty->getName()));
+                    $commentIntermediaries[] = $commentIntermediary;
+                    break;
+                }
+                $isFirst = false;
+                $currentReflectionObject = $currentReflectionObject->getParentClass();
+            }
+        }
+        if ($commentIntermediaries) {
+            $commentIntermediary = new Intermediary;
+            $commentIntermediary->addSegment(new Segment(' '));
+            $commentIntermediary->addSegment(new Segment('<span class="syntax--comment syntax--line syntax--double-slash">', true));
+            $commentIntermediary->addSegment(new Segment("// "));
+            $isFirst = true;
+            foreach ($commentIntermediaries as $ci) {
+                if (false == $isFirst) {
+                    $commentIntermediary->addSegment(new Segment(' // '));
+                }
+                $commentIntermediary->merge($ci);
+                $isFirst = false;
+            }
+            $commentIntermediary->addSegment(new Segment('</span>', true));
+            $subIntermediary->merge($commentIntermediary);
+        }
+
+
         $intermediary->merge($subIntermediary);
 
         return $intermediary;

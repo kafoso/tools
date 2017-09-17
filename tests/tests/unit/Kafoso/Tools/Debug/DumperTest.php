@@ -1,22 +1,23 @@
 <?php
-use Kafoso\Tools\Debug\Dumper;
+namespace Kafoso\Tools\Tests\Unit\Debug;
 
-class DebugTest extends \PHPUnit_Framework_TestCase
+use Kafoso\Tools\Debug\Dumper;
+use Kafoso\Tools\Traits\File\EOLNormalizer;
+
+class DumperTest extends \PHPUnit_Framework_TestCase
 {
+    use EOLNormalizer;
+
     protected $dumperTestResourceDirectory;
 
     public function setUp()
     {
-        $this->dumperTestResourceDirectory = realpath(
-            __DIR__
-            . str_repeat('/..', 4)
-            . "/resources/unit/Kafoso/Tools/Debug/DumperTest"
-        );
+        $this->dumperTestResourceDirectory = TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/DumperTest";
     }
 
     public function testEmptyObjectIsPreparable()
     {
-        $classA = new stdClass;
+        $classA = new \stdClass;
         $expected = $this->normalizeEOL(trim($this->getResource("testEmptyObjectIsPreparable.txt")));
         $prepared = $this->normalizeEOL($this->replaceSplHashesWithGenericIdentifier(Dumper::prepare($classA)));
         $this->assertSame($expected, $prepared);
@@ -24,7 +25,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 
     public function testScalarTypesAndNullAreFormattedNicely()
     {
-        $classA = new stdClass;
+        $classA = new \stdClass;
         $classA->aBoolean = true;
         $classA->aFloat = 42.2;
         $classA->anInteger = 42;
@@ -49,7 +50,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 
     public function testAssociativeArraysAreFormattedNicely()
     {
-        $classA = new stdClass;
+        $classA = new \stdClass;
         $classA->anArray = [
             "foo",
             "subArray" => [
@@ -65,8 +66,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 
     public function testDepthRestrictionWorks()
     {
-        $classA = new stdClass;
-        $classB = new stdClass;
+        $classA = new \stdClass;
+        $classB = new \stdClass;
         $classA->classB = $classB;
         $expected = $this->normalizeEOL(trim($this->getResource("testDepthRestrictionWorks.txt")));
         $prepared = $this->normalizeEOL($this->replaceSplHashesWithGenericIdentifier(Dumper::prepare($classA, 1)));
@@ -75,8 +76,8 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 
     public function testRecursionIndicatorIsApplied()
     {
-        $classA = new stdClass;
-        $classB = new stdClass;
+        $classA = new \stdClass;
+        $classB = new \stdClass;
         $classA->classB = $classB;
         $classB->classA = $classA;
         $expected = $this->normalizeEOL(trim($this->getResource("testRecursionIndicatorIsApplied.txt")));
@@ -86,14 +87,14 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 
     public function testALargeAndComplexObjectIsFormattedCorrectly()
     {
-        $classA = new stdClass;
-        $classA_1 = new stdClass;
-        $classA_2 = new stdClass;
-        $classA_2_1 = new stdClass;
-        $classA_2_1_1 = new stdClass;
+        $classA = new \stdClass;
+        $classA_1 = new \stdClass;
+        $classA_2 = new \stdClass;
+        $classA_2_1 = new \stdClass;
+        $classA_2_1_1 = new \stdClass;
         $classA->anArray = [
-            new stdClass,
-            new stdClass
+            new \stdClass,
+            new \stdClass
         ];
         $classA_1->classA_1 = $classA_1; // Recursion
         $classA_2_1->aBoolean = true;
@@ -117,7 +118,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
             "foo" => "bar",
         ];
         $expected = $this->normalizeEOL(trim($this->getResource("testJsonCanDumpSimpleArray.json")));
-        $prepared = trim(Dumper::prepareJson($array));
+        $prepared = $this->normalizeEOL(trim(Dumper::prepareJson($array)));
         $this->assertSame($expected, $prepared);
     }
 
@@ -125,7 +126,7 @@ class DebugTest extends \PHPUnit_Framework_TestCase
     {
         require_once("{$this->dumperTestResourceDirectory}/testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected.php");
         $array = [
-            "foo" => new testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected,
+            "foo" => new \testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected,
         ];
         $expected = $this->normalizeEOL(trim($this->getResource("testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected.json")));
         $prepared = $this->normalizeEOL($this->replaceSplHashesWithGenericIdentifier(Dumper::prepareJson($array)));
@@ -134,12 +135,12 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 
     public function testJsonObjectRecursionIsTruncated()
     {
-        $classA = new stdClass;
-        $classB = new stdClass;
+        $classA = new \stdClass;
+        $classB = new \stdClass;
         $classA->classB = $classB;
         $classB->classA = $classA;
         $expected = $this->normalizeEOL(trim($this->getResource("testJsonObjectRecursionIsTruncated.json")));
-        $prepared = $this->replaceSplHashesWithGenericIdentifier(trim(Dumper::prepareJson($classA)));
+        $prepared = $this->normalizeEOL($this->replaceSplHashesWithGenericIdentifier(trim(Dumper::prepareJson($classA))));
         $this->assertSame($expected, $prepared);
     }
 
@@ -155,13 +156,6 @@ class DebugTest extends \PHPUnit_Framework_TestCase
         $expected = $this->normalizeEOL(trim($this->getResource("testJsonDepthExceededWillOmitArrayAndObjectValues.json")));
         $prepared = $this->normalizeEOL($this->replaceSplHashesWithGenericIdentifier(Dumper::prepareJson($classA, 2)));
         $this->assertSame($expected, $prepared);
-    }
-
-    protected function normalizeEOL($str)
-    {
-        $str = str_replace("\r\n", "\n", $str);
-        $str = str_replace("\r", "\n", $str);
-        return $str;
     }
 
     /**

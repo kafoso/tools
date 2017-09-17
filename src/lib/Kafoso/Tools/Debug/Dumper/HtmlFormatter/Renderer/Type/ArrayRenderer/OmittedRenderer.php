@@ -14,15 +14,14 @@ class OmittedRenderer extends ArrayRenderer
     {
         $intermediary = new Intermediary;
         $intermediary->addSegment(new Segment("[ ... ]"));
-        if (is_array($this->parentValue)) {
-            $intermediary->addSegment(new Segment(","));
-        } else {
-            $intermediary->addSegment(new Segment(";"));
-        }
+        $intermediary->addSegment(new Segment($this->endingCharacter));
         $intermediary->addSegment(new Segment(" "));
         $intermediary->addSegment(new Segment('<span class="syntax--comment syntax--line syntax--double-slash">', true));
         $intermediary->addSegment(new Segment("// Size: " . count($this->array)));
-        $intermediary->addSegment(new Segment(" / Omitted; collapse level reached"));
+        $intermediary->addSegment(new Segment(sprintf(
+            " // Omitted; depth level of %d reached",
+            $this->configuration->getDepth()
+        )));
         $intermediary->addSegment(new Segment('</span>', true));
         return $intermediary;
     }

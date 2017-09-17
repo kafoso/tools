@@ -89,10 +89,12 @@ class ArrayRenderer extends AbstractMultiLevelRenderer
                 $intermediary->merge((new ScalarRenderer($this->configuration, null, $k))->getIntermediary());
                 $intermediary->addSegment(new Segment(" => "));
 
-                $subIntermediary = $this->generateIntermediaryBasedOnDataType($v, $this->level, "");
-                $intermediary->merge($subIntermediary);
+                $subRenderer = $this->generateRendererBasedOnDataType($v, ($this->level+1), "");
+                $intermediary->merge($subRenderer->getIntermediary());
                 if ($this->isMultiline) {
-                    $intermediary->addSegment(new Segment(","));
+                    if (false == ($subRenderer instanceof ArrayRenderer\OmittedRenderer)) {
+                        $intermediary->addSegment(new Segment(","));
+                    }
                     $intermediary->addSegment(new Segment(PHP_EOL));
                 }
                 $isFirst = false;

@@ -20,10 +20,16 @@ class HtmlFormatter extends AbstractFormatter
      * @param mixed $var
      * @param null|int $depth
      */
-    public function __construct($var, $depth = null)
+    public function __construct($var, $depth = null, HtmlFormatter\Configuration $configuration = null)
     {
         parent::__construct($var, $depth);
-        $this->configuration = HtmlFormatter\Configuration::createFromSuperglobalCookie(); // Add to constructor
+        if (!$configuration) {
+            $configuration = HtmlFormatter\Configuration::createFromSuperglobalCookie();
+        }
+        $this->configuration = $configuration;
+        if (is_int($depth)) {
+            $this->configuration->setDepth($depth);
+        }
     }
 
     /**
@@ -86,7 +92,6 @@ class HtmlFormatter extends AbstractFormatter
                 ))->getIntermediary();
                 break;
             case "null":
-                $previousSplObjectHashes = [spl_object_hash($this->var)];
                 $intermediary = (new Renderer\Type\NullRenderer(
                     ";"
                 ))->getIntermediary();
