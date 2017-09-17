@@ -177,34 +177,44 @@ class Configuration
         return $this->isTruncatingGenericObjects;
     }
 
+    /**
+     * @return Configuration
+     */
+    public static function createFromOptionsArray(array $options)
+    {
+        $configuration = new self(self::DEFAULT_COLLAPSE_LEVEL);
+        foreach (self::getIntegerVariables() as $integerVariable) {
+            if (isset($options[$integerVariable])) {
+                $configuration->$integerVariable = intval($options[$integerVariable]);
+            }
+            switch ($integerVariable) {
+                case "collapseLevel":
+                    $configuration->$integerVariable = min(self::MAXIMUM_LEVEL, $configuration->$integerVariable);
+                    break;
+            }
+        }
+        foreach (self::getBooleanVariables() as $booleanVariable) {
+            if (isset($options[$booleanVariable])
+                && in_array(strval($options[$booleanVariable]), ["0", "1"])) {
+                $configuration->$booleanVariable = boolval(intval($options[$booleanVariable]));
+            }
+        }
+        return $configuration;
+    }
 
     /**
      * @return Configuration
      */
     public static function createFromSuperglobalCookie()
     {
-        $configuration = new self(self::DEFAULT_COLLAPSE_LEVEL);
         $options = [];
         if (isset($_COOKIE, $_COOKIE[HtmlFormatter::COOKIE_NAME])) {
             $options = @json_decode($_COOKIE[HtmlFormatter::COOKIE_NAME], true) ?: null;
         }
-        if ($options) {
-            foreach (self::getIntegerVariables() as $integerVariable) {
-                if (isset($options[$integerVariable])) {
-                    $configuration->$integerVariable = intval($options[$integerVariable]);
-                }
-                switch ($integerVariable) {
-                    case "collapseLevel":
-                        $configuration->$integerVariable = min(self::MAXIMUM_LEVEL, $configuration->$integerVariable);
-                        break;
-                }
-            }
-            foreach (self::getBooleanVariables() as $booleanVariable) {
-                if (isset($options[$booleanVariable])
-                    && in_array(strval($options[$booleanVariable]), ["0", "1"])) {
-                    $configuration->$booleanVariable = boolval(intval($options[$booleanVariable]));
-                }
-            }
+        if ($options && is_array($options)) {
+            $configuration = self::createFromOptionsArray($options);
+        } else {
+            $configuration = new self(self::DEFAULT_COLLAPSE_LEVEL);
         }
         return $configuration;
     }
