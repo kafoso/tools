@@ -51,6 +51,7 @@ class Intermediary
 
     /**
      * @param bool $isRenderingHtml
+     * @return string
      */
     public function render($isRenderingHtml = false)
     {
@@ -61,6 +62,9 @@ class Intermediary
         return $html;
     }
 
+    /**
+     * @return bool
+     */
     public function hasSegments()
     {
         return count($this->getSegments()) > 0;

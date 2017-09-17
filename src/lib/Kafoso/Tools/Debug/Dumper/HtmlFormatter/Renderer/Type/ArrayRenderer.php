@@ -16,6 +16,7 @@ class ArrayRenderer extends AbstractMultiLevelRenderer
     protected $isShowingSizeComment = true;
 
     /**
+     * @param null|string $endingCharacter
      * @param mixed $parentValue
      * @param int $level
      * @param array $previousSplObjectHashes
@@ -61,6 +62,9 @@ class ArrayRenderer extends AbstractMultiLevelRenderer
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = new Intermediary;

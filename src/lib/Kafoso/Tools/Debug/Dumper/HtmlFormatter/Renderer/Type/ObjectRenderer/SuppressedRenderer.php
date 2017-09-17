@@ -7,6 +7,9 @@ use Kafoso\Tools\Debug\Dumper\HtmlFormatter\Renderer\Type\ObjectRenderer;
 
 class SuppressedRenderer extends ObjectRenderer
 {
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = $this->getIntermediaryWithClassDeclaration();

@@ -106,20 +106,6 @@ class Configuration
     }
 
     /**
-     * @return array
-     */
-    public function getTruncatedGenericClasses()
-    {
-        return [
-            "Closure",
-            "DateInterval",
-            "DatePeriod",
-            "DateTime",
-            "DateTimeImmutable",
-        ];
-    }
-
-    /**
      * @return bool
      */
     public function isShowingConstants()
@@ -191,6 +177,10 @@ class Configuration
         return $this->isTruncatingGenericObjects;
     }
 
+
+    /**
+     * @return Configuration
+     */
     public static function createFromSuperglobalCookie()
     {
         $configuration = new self(self::DEFAULT_COLLAPSE_LEVEL);
@@ -219,6 +209,9 @@ class Configuration
         return $configuration;
     }
 
+    /**
+     * @return array
+     */
     public static function getBooleanVariables()
     {
         return [
@@ -234,10 +227,27 @@ class Configuration
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function getIntegerVariables()
     {
         return [
             "collapseLevel",
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTruncatedGenericClasses()
+    {
+        return [
+            "Closure",
+            "DateInterval",
+            "DatePeriod",
+            "DateTime",
+            "DateTimeImmutable",
         ];
     }
 }

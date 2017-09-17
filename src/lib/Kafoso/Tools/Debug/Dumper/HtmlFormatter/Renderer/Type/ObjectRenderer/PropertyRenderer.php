@@ -14,6 +14,7 @@ class PropertyRenderer extends AbstractMultiLevelRenderer
     private $value;
 
     /**
+     * @param null|string $endingCharacter
      * @param mixed $value
      * @param int $level
      */
@@ -34,6 +35,9 @@ class PropertyRenderer extends AbstractMultiLevelRenderer
         $this->previousSplObjectHashes = $previousSplObjectHashes;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = new Intermediary;

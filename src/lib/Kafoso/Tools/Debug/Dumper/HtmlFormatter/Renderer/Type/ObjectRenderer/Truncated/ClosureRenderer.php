@@ -7,6 +7,9 @@ use Kafoso\Tools\Debug\Dumper\HtmlFormatter\Renderer\Type\ObjectRenderer;
 
 class ClosureRenderer extends ObjectRenderer
 {
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = new Intermediary;

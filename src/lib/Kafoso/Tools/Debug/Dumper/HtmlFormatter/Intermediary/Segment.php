@@ -31,11 +31,17 @@ class Segment
         return $this->string;
     }
 
+    /**
+     * @return string
+     */
     public function getString()
     {
         return $this->string;
     }
 
+    /**
+     * @return bool
+     */
     public function isHtml()
     {
         return $this->isHtml;

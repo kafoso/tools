@@ -16,12 +16,19 @@ class HtmlFormatter extends AbstractFormatter
 
     protected $configuration; // Move to AbstractFormatter
 
+    /**
+     * @param mixed $var
+     * @param null|int $depth
+     */
     public function __construct($var, $depth = null)
     {
         parent::__construct($var, $depth);
         $this->configuration = HtmlFormatter\Configuration::createFromSuperglobalCookie(); // Add to constructor
     }
 
+    /**
+     * @return string
+     */
     public function render()
     {
         $origin = $this->getOrigin();
@@ -32,13 +39,16 @@ class HtmlFormatter extends AbstractFormatter
             'innerHtml' => $this->renderInner(),
             'javascript' => $this->getJavascript(),
             'origin' => $origin,
-            'truncatedGenericClasses' => $this->configuration->getTruncatedGenericClasses(),
+            'truncatedGenericClasses' => HtmlFormatter\Configuration::getTruncatedGenericClasses(),
             'uuid' => $this->getUuid(),
         ]);
         $viewRenderer->setBaseDirectory(realpath(__DIR__ . str_repeat("/..", 5)) . "/view");
         return $viewRenderer->render();
     }
 
+    /**
+     * @return null|string
+     */
     public function renderInner()
     {
         $intermediary = null;
@@ -95,6 +105,9 @@ class HtmlFormatter extends AbstractFormatter
         return "";
     }
 
+    /**
+     * @return string
+     */
     public function getCss()
     {
         $baseDirectory = realpath(__DIR__ . str_repeat("/..", 6));
@@ -102,6 +115,9 @@ class HtmlFormatter extends AbstractFormatter
         return $css;
     }
 
+    /**
+     * @return string
+     */
     public function getJavascript()
     {
         $baseDirectory = realpath(__DIR__ . str_repeat("/..", 6));
@@ -117,7 +133,7 @@ class HtmlFormatter extends AbstractFormatter
 
     /**
      * Looks back through the debug_backtrace to determine from where the output originated.
-     * @return ?array
+     * @return null|array
      */
     public function getOrigin()
     {

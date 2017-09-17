@@ -16,6 +16,7 @@ class ObjectRenderer extends AbstractRenderer
     protected $previousSplObjectHashes;
 
     /**
+     * @param null|string $endingCharacter
      * @param object $object
      * @param int $level
      * @param array $previousSplObjectHashes
@@ -29,12 +30,15 @@ class ObjectRenderer extends AbstractRenderer
         $this->previousSplObjectHashes = $previousSplObjectHashes;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = $this->getIntermediaryWithClassDeclaration();
 
         if ($this->configuration->isTruncatingGenericObjects()) {
-            if (in_array(get_class($this->object), $this->configuration->getTruncatedGenericClasses())) {
+            if (in_array(get_class($this->object), $this->configuration::getTruncatedGenericClasses())) {
                 switch (get_class($this->object)) {
                     case "Closure":
                         return $intermediary->merge((new ObjectRenderer\Truncated\ClosureRenderer(
@@ -391,6 +395,9 @@ class ObjectRenderer extends AbstractRenderer
         return $intermediary;
     }
 
+    /**
+     * @return Intermediary
+     */
     protected function getIntermediaryWithClassDeclaration()
     {
         $intermediary = new Intermediary;
@@ -424,9 +431,14 @@ class ObjectRenderer extends AbstractRenderer
         return $intermediary;
     }
 
+    /**
+     * @param string $commentText
+     * @param array $methods                    An array of \ReflectionMethod.
+     * @return void
+     */
     private function _handleMethods(
         Intermediary $intermediary,
-        $reflectionObject,
+        \ReflectionObject $reflectionObject,
         $commentText,
         array $methods
     )
@@ -448,6 +460,11 @@ class ObjectRenderer extends AbstractRenderer
         }
     }
 
+    /**
+     * @param string $commentText
+     * @param array $properties                 An array of \ReflectionProperty.
+     * @return void
+     */
     private function _handleProperties(
         Intermediary $intermediary,
         $commentText,

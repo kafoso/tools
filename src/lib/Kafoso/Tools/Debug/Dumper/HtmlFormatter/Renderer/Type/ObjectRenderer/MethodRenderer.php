@@ -16,6 +16,7 @@ class MethodRenderer extends AbstractRenderer
     private $level;
 
     /**
+     * @param null|string $endingCharacter
      * @param int $level
      */
     public function __construct(
@@ -33,6 +34,9 @@ class MethodRenderer extends AbstractRenderer
         $this->level = $level;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = new Intermediary;
@@ -165,6 +169,9 @@ class MethodRenderer extends AbstractRenderer
         return $intermediary;
     }
 
+    /**
+     * @return array
+     */
     public static function getMagicMethodNames()
     {
         return [
@@ -188,6 +195,7 @@ class MethodRenderer extends AbstractRenderer
 
     /**
      * @param string $methodName
+     * @return bool
      */
     public static function isMethodNameMagic($methodName)
     {

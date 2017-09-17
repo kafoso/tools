@@ -14,6 +14,10 @@ class ScalarRenderer extends AbstractRenderer
 
     private $value;
 
+    /**
+     * @param null|string $endingCharacter
+     * @param bool|double|float|int|string
+     */
     public function __construct(Configuration $configuration, $endingCharacter, $value)
     {
         $this->configuration = $configuration;
@@ -21,6 +25,9 @@ class ScalarRenderer extends AbstractRenderer
         $this->value = $value;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $value = null;

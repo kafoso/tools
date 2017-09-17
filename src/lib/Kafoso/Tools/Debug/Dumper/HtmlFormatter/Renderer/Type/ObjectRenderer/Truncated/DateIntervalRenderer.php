@@ -7,6 +7,9 @@ use Kafoso\Tools\Debug\Dumper\HtmlFormatter\Renderer\Type\ObjectRenderer;
 
 class DateIntervalRenderer extends ObjectRenderer
 {
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $str = self::objectToString($this->object);
@@ -20,6 +23,9 @@ class DateIntervalRenderer extends ObjectRenderer
         return $intermediary;
     }
 
+    /**
+     * @return string
+     */
     public static function objectToString(\DateInterval $dateInterval)
     {
         $segments = [];

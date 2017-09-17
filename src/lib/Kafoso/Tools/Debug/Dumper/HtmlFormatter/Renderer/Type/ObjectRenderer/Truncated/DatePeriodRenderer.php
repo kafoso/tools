@@ -7,6 +7,9 @@ use Kafoso\Tools\Debug\Dumper\HtmlFormatter\Renderer\Type\ObjectRenderer;
 
 class DatePeriodRenderer extends ObjectRenderer
 {
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $str = "Start: " . $this->object->getStartDate()->format("c");

@@ -9,11 +9,17 @@ use Kafoso\Tools\Exception\Formatter;
 
 class UnknownRenderer extends AbstractRenderer
 {
+    /**
+     * @param null|string $endingCharacter
+     */
     public function __construct($endingCharacter)
     {
         $this->endingCharacter = $endingCharacter;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = new Intermediary;

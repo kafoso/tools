@@ -14,9 +14,6 @@ class ParameterRenderer extends AbstractRenderer
 {
     private $reflectionParameter;
 
-    /**
-     * @param int $level
-     */
     public function __construct(
         Configuration $configuration,
         \ReflectionParameter $reflectionParameter
@@ -26,6 +23,9 @@ class ParameterRenderer extends AbstractRenderer
         $this->reflectionParameter = $reflectionParameter;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = new Intermediary;

@@ -8,6 +8,9 @@ use Kafoso\Tools\Generic\HTML;
 
 class RecursionRenderer extends ObjectRenderer
 {
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = $this->getIntermediaryWithClassDeclaration();

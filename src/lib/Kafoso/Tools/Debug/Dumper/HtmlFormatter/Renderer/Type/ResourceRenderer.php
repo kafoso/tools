@@ -11,6 +11,10 @@ class ResourceRenderer extends AbstractRenderer
 {
     private $resource;
 
+    /**
+     * @param null|string $endingCharacter
+     * @param resource $resource
+     */
     public function __construct(Configuration $configuration, $endingCharacter, $resource)
     {
         $this->configuration = $configuration;
@@ -18,6 +22,9 @@ class ResourceRenderer extends AbstractRenderer
         $this->resource = $resource;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIntermediary()
     {
         $intermediary = new Intermediary;
