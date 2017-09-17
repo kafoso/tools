@@ -84,7 +84,7 @@ class Configuration
      */
     public function getDepth()
     {
-        return $this->collapseLevel;
+        return $this->depth;
     }
 
     /**
