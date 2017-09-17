@@ -214,8 +214,11 @@ each(mainNodes, function(main){
 divNode.getElementsByClassName('optionsButton')[0].onclick = function(){
     var options = this.parentNode.getElementsByClassName('options')[0];
     if (null === options.offsetParent) {
-        options.setAttribute('class', 'options shown');
+        cookieData["areOptionsShown"] = "1";
+        options.setAttribute('class', 'options isShown');
     } else {
+        cookieData["areOptionsShown"] = "0";
         options.setAttribute('class', 'options');
     }
+    Cookie.write(cookieName, JSON.stringify(cookieData), 999);
 };

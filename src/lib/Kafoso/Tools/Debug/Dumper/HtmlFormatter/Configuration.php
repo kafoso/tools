@@ -9,6 +9,7 @@ class Configuration
     const MAXIMUM_LEVEL = 8;
 
     private $collapseLevel = self::DEFAULT_COLLAPSE_LEVEL;
+    private $areOptionsShown = true;
     private $isShowingConstants = true;
     private $isShowingInterfaces = true;
     private $isShowingMethodParameters = true;
@@ -20,47 +21,9 @@ class Configuration
     private $isTruncatingGenericObjects = true;
     private $suppressedClassNames = [];
 
-    /**
-     * @param null|int $collapseLevel           An unsigned integer.
-     * @param null|bool $isShowingConstants
-     * @param null|bool $isShowingInterfaces
-     * @param null|bool $isShowingMethodParameters
-     * @param null|bool $isShowingMethodParameterTypeHints
-     * @param null|bool $isShowingMethods
-     * @param null|bool $isShowingParentClass
-     * @param null|bool $isShowingTraits
-     * @param null|bool $isShowingVariables
-     * @param null|bool $isTruncatingGenericObjects
-     */
-    public function __construct(
-        $collapseLevel = null,
-        $isShowingConstants = null,
-        $isShowingInterfaces = null,
-        $isShowingMethodParameters = null,
-        $isShowingMethodParameterTypeHints = null,
-        $isShowingMethods = null,
-        $isShowingParentClass = null,
-        $isShowingTraits = null,
-        $isShowingVariables = null,
-        $isTruncatingGenericObjects = null
-    )
+    protected function __construct()
     {
-        $args = func_get_args();
-        foreach (self::getIntegerVariables() as $integerVariable) {
-            if (in_array($integerVariable, $args) && is_int($args[$integerVariable])) {
-                $this->$integerVariable = $args[$integerVariable];
-            }
-            switch ($integerVariable) {
-                case "collapseLevel":
-                    $configuration->$integerVariable = min(self::MAXIMUM_LEVEL, $configuration->$integerVariable);
-                    break;
-            }
-        }
-        foreach (self::getBooleanVariables() as $booleanVariable) {
-            if (in_array($booleanVariable, $args) && is_int($args[$booleanVariable])) {
-                $this->$booleanVariable = $args[$booleanVariable];
-            }
-        }
+
     }
 
     /**
@@ -103,6 +66,14 @@ class Configuration
     public function getCollapseLevel()
     {
         return $this->collapseLevel;
+    }
+
+    /**
+     * @return bool
+     */
+    public function areOptionsShown()
+    {
+        return $this->areOptionsShown;
     }
 
     /**
@@ -225,6 +196,7 @@ class Configuration
     public static function getBooleanVariables()
     {
         return [
+            "areOptionsShown",
             "isShowingConstants",
             "isShowingInterfaces",
             "isShowingMethodParameters",

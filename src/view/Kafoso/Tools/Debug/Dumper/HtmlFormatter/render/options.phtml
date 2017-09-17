@@ -1,13 +1,19 @@
 <?php
 use Kafoso\Tools\Generic\HTML;
 
+$classes = ["options"];
+if ($this->configuration->areOptionsShown()) {
+    $classes[] = "isShown";
+}
+$classes = implode(" ", $classes);
+
 $truncatedGenericClasses = array_map(function($className){
     return '\\' . $className;
 }, $this->truncatedGenericClasses);
 $textTruncatedGenericClasses = ", and " . array_pop($truncatedGenericClasses);
 $textTruncatedGenericClasses = implode(", ", $truncatedGenericClasses) . $textTruncatedGenericClasses;
 ?>
-<div class="options">
+<div class="<?=$classes?>">
     <div class="option">
         <div class="label">Collapse level:</div>
         <div class="value">

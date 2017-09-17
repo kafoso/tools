@@ -30,7 +30,7 @@ $outputClasses = implode(" ", $outputClasses);
 ?>
 <div class="Kafoso_Tools_Debug_Dumper" id="<?=HTML::encode($this->uuid)?>">
     <style type="text/css"><?=$this->css?></style>
-    <div class="optionsButton"></div>
+    <div class="optionsButton" title="Click to toggle options menu."></div>
     <?=$this->render("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render/origin.phtml")?>
     <?=$this->render("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render/options.phtml")?>
     <div class="<?=$outputClasses?>"><pre><div style="position:relative;z-index:2;"><?=$this->innerHtml?></div><div class="wrap-guide"><?=str_repeat(" ", $this->PSR_2_SOFT_CHARACTER_LIMIT)?></div></pre></div>
