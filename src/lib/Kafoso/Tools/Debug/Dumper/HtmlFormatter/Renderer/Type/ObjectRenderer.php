@@ -258,14 +258,9 @@ class ObjectRenderer extends AbstractRenderer
                 $intermediary->addSegment(new Segment(PHP_EOL));
             }
 
-            $isPrintingAdditionalEOL = (
-                $reflectionObject->getConstants()
-                || $hasProperties
-                || $hasMethods
-            );
-            if ($isPrintingAdditionalEOL) {
-                $intermediary->addSegment(new Segment(PHP_EOL));
-            }
+            $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
+            $intermediary->addSegment(new Segment(PHP_EOL));
+            $intermediary->addSegment(new Segment('</span>', true));
 
             $intermediary->addSegment(new Segment('</span>', true));
         }
@@ -288,77 +283,68 @@ class ObjectRenderer extends AbstractRenderer
                 $intermediary->addSegment(new Segment(PHP_EOL));
             }
 
-            $isPrintingAdditionalEOL = (
-                $hasProperties
-                || $hasMethods
-            );
-            if ($isPrintingAdditionalEOL) {
-                $intermediary->addSegment(new Segment(PHP_EOL));
-            }
+            $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
+            $intermediary->addSegment(new Segment(PHP_EOL));
+            $intermediary->addSegment(new Segment('</span>', true));
 
             $intermediary->addSegment(new Segment('</span>', true));
         }
 
         // Variables
         if ($hasProperties) {
-            $intermediary->addSegment(new Segment('<span class="section--properties">', true));
             if ($propertiesDeclaredInClass) {
+                $intermediary->addSegment(new Segment('<span class="section--properties">', true));
                 $this->_handleProperties(
                     $intermediary,
                     "Variables - Declared in class",
                     $propertiesDeclaredInClass
                 );
-                $isPrintingAdditionalEOL = (
-                    $propertiesInherited
-                    || $propertiesPrivateInParentClasses
-                    || $propertiesDeclaredAtRuntime
-                    || $hasMethods
-                );
-                if ($isPrintingAdditionalEOL) {
-                    $intermediary->addSegment(new Segment(PHP_EOL));
-                }
+
+                $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
+                $intermediary->addSegment(new Segment(PHP_EOL));
+                $intermediary->addSegment(new Segment('</span>', true));
+
+                $intermediary->addSegment(new Segment('</span>', true));
             }
             if ($propertiesInherited) {
+                $intermediary->addSegment(new Segment('<span class="section--properties">', true));
                 $this->_handleProperties(
                     $intermediary,
                     "Variables - Inherited",
                     $propertiesInherited
                 );
-                $isPrintingAdditionalEOL = (
-                    $propertiesPrivateInParentClasses
-                    || $propertiesDeclaredAtRuntime
-                    || $hasMethods
-                );
-                if ($isPrintingAdditionalEOL) {
-                    $intermediary->addSegment(new Segment(PHP_EOL));
-                }
+                $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
+                $intermediary->addSegment(new Segment(PHP_EOL));
+                $intermediary->addSegment(new Segment('</span>', true));
+
+                $intermediary->addSegment(new Segment('</span>', true));
             }
             if ($propertiesPrivateInParentClasses) {
+                $intermediary->addSegment(new Segment('<span class="section--properties">', true));
                 $this->_handleProperties(
                     $intermediary,
                     "Variables - Private in parent class(es)",
                     $propertiesPrivateInParentClasses
                 );
-                $isPrintingAdditionalEOL = (
-                    $propertiesDeclaredAtRuntime
-                    || $hasMethods
-                );
-                if ($isPrintingAdditionalEOL) {
-                    $intermediary->addSegment(new Segment(PHP_EOL));
-                }
+                $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
+                $intermediary->addSegment(new Segment(PHP_EOL));
+                $intermediary->addSegment(new Segment('</span>', true));
+
+                $intermediary->addSegment(new Segment('</span>', true));
             }
             if ($propertiesDeclaredAtRuntime) {
+                $intermediary->addSegment(new Segment('<span class="section--properties">', true));
                 $this->_handleProperties(
                     $intermediary,
                     "Variables - Declared at runtime (injected)",
                     $propertiesDeclaredAtRuntime
                 );
-                $isPrintingAdditionalEOL = $hasMethods;
-                if ($isPrintingAdditionalEOL) {
-                    $intermediary->addSegment(new Segment(PHP_EOL));
-                }
+                $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
+                $intermediary->addSegment(new Segment(PHP_EOL));
+                $intermediary->addSegment(new Segment('</span>', true));
+
+                $intermediary->addSegment(new Segment('</span>', true));
             }
-            $intermediary->addSegment(new Segment('</span>', true));
         }
 
         // Methods
@@ -371,10 +357,11 @@ class ObjectRenderer extends AbstractRenderer
                     "// Methods - Declared in class",
                     $methodsDeclaredInClass
                 );
-                $isPrintingAdditionalEOL = boolval($methodsInherited);
-                if ($isPrintingAdditionalEOL) {
-                    $intermediary->addSegment(new Segment(PHP_EOL));
-                }
+
+                $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
+                $intermediary->addSegment(new Segment(PHP_EOL));
+                $intermediary->addSegment(new Segment('</span>', true));
+
                 $intermediary->addSegment(new Segment('</span>', true));
             }
             if ($methodsInherited) {
@@ -385,6 +372,11 @@ class ObjectRenderer extends AbstractRenderer
                     "// Methods - Inherited",
                     $methodsInherited
                 );
+
+                $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
+                $intermediary->addSegment(new Segment(PHP_EOL));
+                $intermediary->addSegment(new Segment('</span>', true));
+
                 $intermediary->addSegment(new Segment('</span>', true));
             }
         }
