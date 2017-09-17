@@ -52,17 +52,16 @@ abstract class AbstractRenderer
                     $level,
                     []
                 );
-            } elseif ($this->configuration->getSuppressedClassNames()) {
-                if (in_array(get_class($value), $this->configuration->getSuppressedClassNames())) {
-                    $previousSplObjectHashes[] = $hash;
-                    return new Type\ObjectRenderer\SuppressedRenderer(
-                        $this->configuration,
-                        $endingCharacter,
-                        $value,
-                        $level,
-                        $previousSplObjectHashes
-                    );
-                }
+            } elseif ($this->configuration->getSuppressedClassNames()
+                && in_array(get_class($value), $this->configuration->getSuppressedClassNames())) {
+                $previousSplObjectHashes[] = $hash;
+                return new Type\ObjectRenderer\SuppressedRenderer(
+                    $this->configuration,
+                    $endingCharacter,
+                    $value,
+                    $level,
+                    $previousSplObjectHashes
+                );
             } elseif (is_int($level) && $level >= $this->configuration->getCollapseLevel()) {
                 $previousSplObjectHashes[] = $hash;
                 return new Type\ObjectRenderer\OmittedRenderer(
