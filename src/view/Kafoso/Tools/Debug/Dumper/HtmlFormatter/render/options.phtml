@@ -99,7 +99,7 @@ $textTruncatedGenericClasses = implode(", ", $truncatedGenericClasses) . $textTr
                 <option value="1" <?=($this->configuration->isTruncatingGenericObjects() ? "selected" : "")?>>Yes</option>
                 <option value="0" <?=(false == $this->configuration->isTruncatingGenericObjects() ? "selected" : "")?>>No</option>
             </select>
-            <span class="text-muted">This operation is performed server-side. Requires cookies.</span>
+            <span class="text-muted">This operation is performed server-side. Requires reload.</span>
         </div>
     </div>
 </div>
