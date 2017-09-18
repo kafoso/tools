@@ -1,0 +1,11 @@
+Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7 Object #
+{
+  private static $aNull = null;
+  protected $aBoolean = bool(false);
+  private $aString = string(5) "lorem";
+  private $aResource = Resource #1 (Type: curl)
+  protected $anOverriddenVariable = string(3) "foo";
+  protected $anInheritedVariable = null;
+  protected $aTraitVariable = null;
+  public $foo = string(3) "bar";
+}

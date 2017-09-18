@@ -1,3 +1,0 @@
-stdClass Object &SPL_OBJECT_HASH
-{
-}

@@ -76,7 +76,7 @@ abstract class AbstractRenderer
                 $this->configuration,
                 $endingCharacter,
                 $value,
-                ($level+1),
+                $level,
                 ($this->previousSplObjectHashes ?: [])
             );
         } elseif (is_resource($value)) {

@@ -41,7 +41,7 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
     public function testArrayOneDimension()
     {
         $jsonFormatter = new JsonFormatter(["foo" => "bar"], null, JSON_PRETTY_PRINT);
-        $expected = $this->normalizeEOL(trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testArrayOneDimension.expected.json")));
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
         $found = $jsonFormatter->render();
         $this->assertSame(
             $this->normalizeEOL($expected),
@@ -61,24 +61,6 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testObjectOneDimension()
-    {
-        require_once(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/PlainTextFormatterTest/testObjectOneDimension.source.php");
-        $class = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
-        $class->foo = "bar";
-        $jsonFormatter = new JsonFormatter($class, null, JSON_PRETTY_PRINT);
-        $expected = $this->normalizeEOL(trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectOneDimension.expected.json")));
-        $expected = preg_replace('/Object &[a-f0-9]+/', 'Object &', $expected);
-        $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
-        $found = $jsonFormatter->render();
-        $found = preg_replace('/Object &[a-f0-9]+/', 'Object &', $found);
-        $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
-        $this->assertSame(
-            $this->normalizeEOL($expected),
-            $this->normalizeEOL($found)
-        );
-    }
-
     public function testArrayMultipleDimensions()
     {
         $jsonFormatter = new JsonFormatter([
@@ -89,8 +71,24 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ], null, JSON_PRETTY_PRINT);
-        $expected = $this->normalizeEOL(trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testArrayMultipleDimensions.expected.json")));
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
         $found = $jsonFormatter->render();
+        $this->assertSame(
+            $this->normalizeEOL($expected),
+            $this->normalizeEOL($found)
+        );
+    }
+
+    public function testObjectOneDimension()
+    {
+        $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7.php");
+        $class = new \Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
+        $class->foo = "bar";
+        $jsonFormatter = new JsonFormatter($class, null, JSON_PRETTY_PRINT);
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
+        $found = $jsonFormatter->render();
+        $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
+        $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(
             $this->normalizeEOL($expected),
             $this->normalizeEOL($found)
@@ -99,18 +97,16 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testObjectMultipleLevelsWithoutRecursion()
     {
-        require_once(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/PlainTextFormatterTest/testObjectMultipleLevelsWithoutRecursion.source.php");
-        $classA = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
-        $classB = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
-        $classC = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
+        $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730.php");
+        $classA = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
+        $classB = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
+        $classC = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
         $classB->setParent($classA);
         $classC->setParent($classB);
         $jsonFormatter = new JsonFormatter($classC, null, JSON_PRETTY_PRINT);
-        $expected = $this->normalizeEOL(trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectMultipleLevelsWithoutRecursion.expected.json")));
-        $expected = preg_replace('/Object &[a-f0-9]+/', 'Object &', $expected);
-        $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
         $found = $jsonFormatter->render();
-        $found = preg_replace('/Object &[a-f0-9]+/', 'Object &', $found);
+        $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(
             $this->normalizeEOL($expected),
@@ -120,21 +116,29 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testObjectWithRecursion()
     {
-        require_once(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/PlainTextFormatterTest/testObjectWithRecursion.source.php");
-        $classA = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
-        $classB = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
+        $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d.php");
+        $classA = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
+        $classB = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
         $classB->setParent($classA);
         $classA->setParent($classB);
         $jsonFormatter = new JsonFormatter($classA, null, JSON_PRETTY_PRINT);
-        $expected = $this->normalizeEOL(trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/testObjectWithRecursion.expected.json")));
-        $expected = preg_replace('/Object &[a-f0-9]+/', 'Object &', $expected);
-        $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
         $found = $jsonFormatter->render();
-        $found = preg_replace('/Object &[a-f0-9]+/', 'Object &', $found);
+        $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(
             $this->normalizeEOL($expected),
             $this->normalizeEOL($found)
         );
+    }
+
+    private function _requireResource($name)
+    {
+        require_once(TESTS_RESOURCES_DIRECTORY . "/classes/" . $name);
+    }
+
+    private function _getResourceContents($name)
+    {
+        return file_get_contents(TESTS_RESOURCES_DIRECTORY. "/tests/unit/Kafoso/Tools/Debug/Dumper/JsonFormatterTest/" . $name);
     }
 }

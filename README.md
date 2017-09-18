@@ -28,15 +28,15 @@ Try it: `php examples/DebugDumperExample.php`
 The following is produced using `Kafoso\Tools\Debug\Dumper::dump($myLittleClass)`, which presents the contents as plain text (using the `Kafoso\Tools\Debug\Dumper\PlainTextFormatter`).
 
 ```
-My\Little_Class Object &000000005e85475000007fd972cdb06b
+My\Little_Class Object #
 {
   private $id = int(42);
-  protected $parent = My\Little_Class Object &000000005e8546e100007fd972cdb06b
+  protected $parent = My\Little_Class Object #
   {
     private $id = int(41);
     protected $parent = NULL;
     protected $children = array(1) {
-      [0] => My\Little_Class Object &000000005e85475000007fd972cdb06b
+      [0] => My\Little_Class Object #
       {
         *RECURSION*
       },
@@ -78,15 +78,15 @@ However, the `Dumper` is for debugging purposes, after all, and should be used a
 
 ```json
 {
-    "Kafoso\\Tools\\Debug\\Dumper|CLASS": "My\\Little_Class Object &000000005e85475000007fd972cdb06b",
+    "Kafoso\\Tools\\Debug\\Dumper|CLASS": "My\\Little_Class Object #",
     "id": 42,
     "parent": {
-        "Kafoso\\Tools\\Debug\\Dumper|CLASS": "My\\Little_Class Object &000000005e8546e100007fd972cdb06b",
+        "Kafoso\\Tools\\Debug\\Dumper|CLASS": "My\\Little_Class Object #",
         "id": 41,
         "parent": null,
         "children": [
             {
-                "Kafoso\\Tools\\Debug\\Dumper|CLASS": "My\\Little_Class Object &000000005e85475000007fd972cdb06b",
+                "Kafoso\\Tools\\Debug\\Dumper|CLASS": "My\\Little_Class Object #",
                 "Kafoso\\Tools\\Debug\\Dumper|RECURSION": "*RECURSION*"
             }
         ],

@@ -1,0 +1,10 @@
+stdClass Object #
+{
+  public $classB = stdClass Object #
+  {
+    public $classA = stdClass Object #
+    {
+      *RECURSION*
+    }
+  }
+}

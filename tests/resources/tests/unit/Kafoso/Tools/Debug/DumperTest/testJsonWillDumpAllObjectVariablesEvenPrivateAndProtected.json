@@ -1,0 +1,8 @@
+{
+    "foo": {
+        "Kafoso\\Tools\\Debug\\Dumper|CLASS": "testJsonWillDumpAllObjectVariablesEvenPrivateAndProtected Object #",
+        "aPrivateVariable": 2,
+        "aProtectedVariable": 42.1,
+        "aPublicVariable": "bar"
+    }
+}

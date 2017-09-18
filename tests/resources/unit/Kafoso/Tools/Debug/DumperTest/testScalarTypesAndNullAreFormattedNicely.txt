@@ -1,8 +1,0 @@
-stdClass Object &SPL_OBJECT_HASH
-{
-  public $aBoolean = bool(true);
-  public $aFloat = float(42.2);
-  public $anInteger = int(42);
-  public $aString = string(3) "foo";
-  public $justNull = null;
-}

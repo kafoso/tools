@@ -54,7 +54,7 @@ class JsonFormatter extends AbstractFormatter
         $reflection = new \ReflectionObject($object);
         $properties = $reflection->getProperties();
         $array = [
-            __NAMESPACE__ . "|CLASS" => get_class($object) . " Object &{$hash}",
+            __NAMESPACE__ . "|CLASS" => get_class($object) . " Object #{$hash}",
         ];
         foreach ($properties as $property) {
             $property->setAccessible(true);
@@ -71,7 +71,7 @@ class JsonFormatter extends AbstractFormatter
     {
         $hash = spl_object_hash($object);
         return [
-            __NAMESPACE__ . "|CLASS" => get_class($object) . " Object &{$hash}",
+            __NAMESPACE__ . "|CLASS" => get_class($object) . " Object #{$hash}",
             __NAMESPACE__ . "|OBJECT_VALUE_OMITTED" => "(Object value omitted)",
         ];
     }
@@ -88,7 +88,7 @@ class JsonFormatter extends AbstractFormatter
     {
         $hash = spl_object_hash($object);
         return [
-            __NAMESPACE__ . "|CLASS" => get_class($object) . " Object &{$hash}",
+            __NAMESPACE__ . "|CLASS" => get_class($object) . " Object #{$hash}",
             __NAMESPACE__ . "|RECURSION" => "*RECURSION*",
         ];
     }

@@ -12,7 +12,7 @@ class DumperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->dumperTestResourceDirectory = TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/DumperTest";
+        $this->dumperTestResourceDirectory = TESTS_RESOURCES_DIRECTORY . "/tests/unit/Kafoso/Tools/Debug/DumperTest";
     }
 
     public function testEmptyObjectIsPreparable()
@@ -153,9 +153,13 @@ class DumperTest extends \PHPUnit_Framework_TestCase
                 "this should be omitted"
             ]
         ];
-        $expected = $this->normalizeEOL(trim($this->getResource("testJsonDepthExceededWillOmitArrayAndObjectValues.json")));
-        $prepared = $this->normalizeEOL($this->replaceSplHashesWithGenericIdentifier(Dumper::prepareJson($classA, 2)));
-        $this->assertSame($expected, $prepared);
+        $expected = trim($this->getResource("testJsonDepthExceededWillOmitArrayAndObjectValues.json"));
+        $found = $this->replaceSplHashesWithGenericIdentifier(Dumper::prepareJson($classA, 2));
+        $found = preg_replace('/Object \#[0-9a-f]{32}/', 'Object #', $found);
+        $this->assertSame(
+            $this->normalizeEOL($expected),
+            $this->normalizeEOL($found)
+        );
     }
 
     /**
@@ -164,7 +168,7 @@ class DumperTest extends \PHPUnit_Framework_TestCase
      */
     protected function replaceSplHashesWithGenericIdentifier($prepared)
     {
-        return preg_replace("/ Object \&[0-9a-f]{32}/", " Object &SPL_OBJECT_HASH", $prepared);
+        return preg_replace("/ Object \#[0-9a-f]{32}/", " Object #", $prepared);
     }
 
     protected function getResource($fileName)

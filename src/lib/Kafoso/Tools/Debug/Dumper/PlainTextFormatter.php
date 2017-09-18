@@ -157,7 +157,7 @@ class PlainTextFormatter extends AbstractFormatter
         }
         $hash = spl_object_hash($object);
         $indentation = str_repeat(self::getIndentationCharacters(), $level);
-        return $indentation . get_class($object) . " Object &{$hash}" . PHP_EOL
+        return $indentation . get_class($object) . " Object #{$hash}" . PHP_EOL
             . $indentation
             . "{"
             . PHP_EOL
@@ -173,7 +173,7 @@ class PlainTextFormatter extends AbstractFormatter
         $indentationInner = str_repeat(self::getIndentationCharacters(), ($level+1));
         return $indentation
             . get_class($object)
-            . " Object &{$hash}"
+            . " Object #{$hash}"
             . PHP_EOL
             . $indentation
             . "{"
@@ -209,7 +209,7 @@ class PlainTextFormatter extends AbstractFormatter
         $indentationInner = str_repeat(self::getIndentationCharacters(), ($level+1));
         return $indentation
             . get_class($object)
-            . " Object &{$hash}"
+            . " Object #{$hash}"
             . PHP_EOL
             . $indentation
             . "{"

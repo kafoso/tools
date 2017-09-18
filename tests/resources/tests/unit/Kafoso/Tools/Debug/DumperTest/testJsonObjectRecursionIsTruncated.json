@@ -1,0 +1,10 @@
+{
+    "Kafoso\\Tools\\Debug\\Dumper|CLASS": "stdClass Object #",
+    "classB": {
+        "Kafoso\\Tools\\Debug\\Dumper|CLASS": "stdClass Object #",
+        "classA": {
+            "Kafoso\\Tools\\Debug\\Dumper|CLASS": "stdClass Object #",
+            "Kafoso\\Tools\\Debug\\Dumper|RECURSION": "*RECURSION*"
+        }
+    }
+}

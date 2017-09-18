@@ -131,14 +131,14 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testCanRenderWhenTemplateFileExists()
     {
-        $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testCanRenderWhenTemplateFileExists.phtml");
+        $viewRenderer = new ViewRenderer("tests/unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testCanRenderWhenTemplateFileExists.phtml");
         $viewRenderer->setBaseDirectory(TESTS_RESOURCES_DIRECTORY);
         $this->assertSame("bar", $this->normalizeEOL(trim($viewRenderer->render())));
     }
 
     public function testCanRenderOtherViewFilesInternally()
     {
-        $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testCanRenderOtherViewFilesInternally.phtml");
+        $viewRenderer = new ViewRenderer("tests/unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testCanRenderOtherViewFilesInternally.phtml");
         $viewRenderer->setBaseDirectory(TESTS_RESOURCES_DIRECTORY);
         $this->assertSame("parent\r\nchild", $this->normalizeEOL(trim($viewRenderer->render())));
     }
@@ -149,7 +149,7 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase
      */
     public function testRenderThrowsExceptionWhenTryingToRenderItself()
     {
-        $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testRenderThrowsExceptionWhenTryingToRenderItself.phtml");
+        $viewRenderer = new ViewRenderer("tests/unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testRenderThrowsExceptionWhenTryingToRenderItself.phtml");
         $viewRenderer->setBaseDirectory(TESTS_RESOURCES_DIRECTORY);
         $viewRenderer->setIsPrintingOutputBufferOnShutdown(false);
         $viewRenderer->render();
@@ -161,7 +161,7 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase
      */
     public function testRenderThrowsExceptionWhenTryingToRenderAPreviouslyRenderedParent()
     {
-        $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testRenderThrowsExceptionWhenTryingToRenderAPreviouslyRenderedParent.phtml");
+        $viewRenderer = new ViewRenderer("tests/unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testRenderThrowsExceptionWhenTryingToRenderAPreviouslyRenderedParent.phtml");
         $viewRenderer->setBaseDirectory(TESTS_RESOURCES_DIRECTORY);
         $viewRenderer->setIsPrintingOutputBufferOnShutdown(false);
         $viewRenderer->render();
@@ -169,7 +169,7 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testViewClassVariablesAreAvailableInViewFile()
     {
-        $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testViewClassVariablesAreAvailableInViewFile.phtml");
+        $viewRenderer = new ViewRenderer("tests/unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testViewClassVariablesAreAvailableInViewFile.phtml");
         $viewRenderer->setBaseDirectory(TESTS_RESOURCES_DIRECTORY);
         $viewRenderer->foo = "bar";
         $this->assertSame("What: bar", $this->normalizeEOL(trim($viewRenderer->render())));
@@ -177,7 +177,7 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testInternallyRenderedViewsCanReceiveAdditionalVars()
     {
-        $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testInternallyRenderedViewsCanReceiveAdditionalVars.phtml");
+        $viewRenderer = new ViewRenderer("tests/unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testInternallyRenderedViewsCanReceiveAdditionalVars.phtml");
         $viewRenderer->setBaseDirectory(TESTS_RESOURCES_DIRECTORY);
         $viewRenderer->number = 1;
         $this->assertSame("Number: 3", $this->normalizeEOL(trim($viewRenderer->render())));
@@ -185,7 +185,7 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testInternallyRenderedViewsCanPassOnItselfToUseAsAdditionalVars()
     {
-        $viewRenderer = new ViewRenderer("unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testInternallyRenderedViewsCanPassOnItselfToUseAsAdditionalVars.phtml");
+        $viewRenderer = new ViewRenderer("tests/unit/Kafoso/Tools/Generic/HTML/ViewRendererTest/testInternallyRenderedViewsCanPassOnItselfToUseAsAdditionalVars.phtml");
         $viewRenderer->setBaseDirectory(TESTS_RESOURCES_DIRECTORY);
         $viewRenderer->foo = "bar";
         $this->assertSame("bar", $this->normalizeEOL(trim($viewRenderer->render())));

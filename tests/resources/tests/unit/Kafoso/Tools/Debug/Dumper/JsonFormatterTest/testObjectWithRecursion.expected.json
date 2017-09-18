@@ -1,0 +1,10 @@
+{
+    "Kafoso\\Tools\\Debug\\Dumper|CLASS": "Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d Object #",
+    "parent": {
+        "Kafoso\\Tools\\Debug\\Dumper|CLASS": "Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d Object #",
+        "parent": {
+            "Kafoso\\Tools\\Debug\\Dumper|CLASS": "Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d Object #",
+            "Kafoso\\Tools\\Debug\\Dumper|RECURSION": "*RECURSION*"
+        }
+    }
+}

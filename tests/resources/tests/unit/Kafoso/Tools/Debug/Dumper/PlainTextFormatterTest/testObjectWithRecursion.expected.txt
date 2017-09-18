@@ -1,0 +1,10 @@
+Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d Object #
+{
+  private $parent = Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d Object #
+  {
+    private $parent = Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d Object #
+    {
+      *RECURSION*
+    }
+  }
+}

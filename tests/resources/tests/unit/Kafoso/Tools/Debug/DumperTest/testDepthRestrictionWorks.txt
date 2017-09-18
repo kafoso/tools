@@ -1,0 +1,7 @@
+stdClass Object #
+{
+  public $classB = stdClass Object #
+  {
+    (Object value omitted)
+  }
+}

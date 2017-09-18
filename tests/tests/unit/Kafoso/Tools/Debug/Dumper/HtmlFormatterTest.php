@@ -74,38 +74,10 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
     public function testArrayOneDimension()
     {
         $htmlFormatter = new HtmlFormatter(["foo" => "bar"]);
-        $expected = trim(file_get_contents(TESTS_RESOURCES_DIRECTORY. "/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testArrayOneDimension.expected.html"));
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
         $this->assertSame(
             $this->normalizeEOL($expected),
             $this->normalizeEOL($htmlFormatter->renderInner())
-        );
-    }
-
-    public function testResource()
-    {
-        $resource = curl_init('foo');
-        $htmlFormatter = new HtmlFormatter($resource);
-        $expected = '/^Resource \#\d+; ' . preg_quote('<span class="syntax--comment syntax--line syntax--double-slash">// Type: curl</span>', '/') . '$/';
-        $this->assertRegExp(
-            $expected,
-            $this->normalizeEOL($htmlFormatter->renderInner())
-        );
-    }
-
-    public function testObjectOneDimension()
-    {
-        require_once(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/PlainTextFormatterTest/testObjectOneDimension.source.php");
-        $class = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
-        $class->foo = "bar";
-        $htmlFormatter = new HtmlFormatter($class);
-        $expected = trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testObjectOneDimension.expected.html"));
-        $found = trim($htmlFormatter->renderInner());
-        $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
-        $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
-        $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
-        $this->assertStringStartsWith( // XXX
-            $this->normalizeEOL($expected),
-            $this->normalizeEOL($found)
         );
     }
 
@@ -118,8 +90,8 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
                     "bim" => null
                 ],
             ],
-        ]);
-        $expected = trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testArrayMultipleDimensions.expected.html"));
+        ], 3);
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
         $found = $htmlFormatter->renderInner();
         $this->assertSame(
             $this->normalizeEOL($expected),
@@ -137,8 +109,25 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ], 2);
-        $expected = trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testArrayMultipleDimensionsOmitted.expected.html"));
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
         $found = $htmlFormatter->renderInner();
+        $this->assertSame(
+            $this->normalizeEOL($expected),
+            $this->normalizeEOL($found)
+        );
+    }
+
+    public function testObjectOneDimension()
+    {
+        $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7.php");
+        $class = new \Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
+        $class->foo = "bar";
+        $htmlFormatter = new HtmlFormatter($class);
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
+        $found = trim($htmlFormatter->renderInner());
+        $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
+        $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
+        $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(
             $this->normalizeEOL($expected),
             $this->normalizeEOL($found)
@@ -147,60 +136,81 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testObjectMultipleLevelsWithoutRecursion()
     {
-        require_once(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/PlainTextFormatterTest/testObjectMultipleLevelsWithoutRecursion.source.php");
-        $classA = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
-        $classB = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
-        $classC = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
+        $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730.php");
+        $classA = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
+        $classB = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
+        $classC = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
         $classB->setParent($classA);
         $classC->setParent($classB);
-        $htmlFormatter = new HtmlFormatter($classC);
-        $expected = trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testObjectMultipleLevelsWithoutRecursion.expected.html"));
-        $expected = preg_replace('/Object #[a-f0-9]+/', 'Object #', $expected);
-        $expected = preg_replace('/Object_[a-f0-9]+/', 'Object_', $expected);
-        $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
+        $htmlFormatter = new HtmlFormatter($classC, 2);
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
         $found = $htmlFormatter->renderInner();
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
-        $found = preg_replace('/Object_[a-f0-9]+/', 'Object_', $found);
+        $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
-        $this->assertSame($expected, $found);
+        $this->assertSame(
+            $this->normalizeEOL($expected),
+            $this->normalizeEOL($found)
+        );
     }
 
     public function testObjectWithRecursion()
     {
-        require_once(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/PlainTextFormatterTest/testObjectWithRecursion.source.php");
-        $classA = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
-        $classB = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
+        $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d.php");
+        $classA = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
+        $classB = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
         $classB->setParent($classA);
         $classA->setParent($classB);
         $htmlFormatter = new HtmlFormatter($classA);
-        $expected = trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testObjectWithRecursion.expected.html"));
-        $expected = preg_replace('/Object #[a-f0-9]+/', 'Object #', $expected);
-        $expected = preg_replace('/Object_[a-f0-9]+/', 'Object_', $expected);
-        $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
         $found = $htmlFormatter->renderInner();
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
-        $found = preg_replace('/Object_[a-f0-9]+/', 'Object_', $found);
+        $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
-        $this->assertSame($expected, $found);
+        $this->assertSame(
+            $this->normalizeEOL($expected),
+            $this->normalizeEOL($found)
+        );
     }
 
-    public function testObjectOmitted()
+    public function testObjectOmittedDueToDepthReached()
     {
-        require_once(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/PlainTextFormatterTest/testObjectWithRecursion.source.php");
-        $classA = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
-        $classB = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
-        $classC = new \Kafoso_Tools_Debug_Dumper_PlainTextFormatterTest_testObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
+        $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d.php");
+        $classA = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
+        $classB = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
+        $classC = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
         $classB->setParent($classA);
         $classC->setParent($classB);
         $htmlFormatter = new HtmlFormatter($classC, 2);
-        $expected = trim(file_get_contents(TESTS_RESOURCES_DIRECTORY . "/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/testObjectOmitted.expected.html"));
-        $expected = preg_replace('/Object #[a-f0-9]+/', 'Object #', $expected);
-        $expected = preg_replace('/Object_[a-f0-9]+/', 'Object_', $expected);
-        $expected = preg_replace('/Resource #\d+/', 'Resource #1', $expected);
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
         $found = $htmlFormatter->renderInner();
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
-        $found = preg_replace('/Object_[a-f0-9]+/', 'Object_', $found);
+        $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
-        $this->assertSame($expected, $found);
+        $this->assertSame(
+            $this->normalizeEOL($expected),
+            $this->normalizeEOL($found)
+        );
+    }
+
+    public function testResource()
+    {
+        $resource = curl_init('foo');
+        $htmlFormatter = new HtmlFormatter($resource);
+        $expected = '/^Resource \#\d+; ' . preg_quote('<span class="syntax--comment syntax--line syntax--double-slash">// Type: curl</span>', '/') . '$/';
+        $this->assertRegExp(
+            $expected,
+            $this->normalizeEOL($htmlFormatter->renderInner())
+        );
+    }
+
+    private function _requireResource($name)
+    {
+        require_once(TESTS_RESOURCES_DIRECTORY . "/classes/" . $name);
+    }
+
+    private function _getResourceContents($name)
+    {
+        return file_get_contents(TESTS_RESOURCES_DIRECTORY. "/tests/unit/Kafoso/Tools/Debug/Dumper/HtmlFormatterTest/" . $name);
     }
 }

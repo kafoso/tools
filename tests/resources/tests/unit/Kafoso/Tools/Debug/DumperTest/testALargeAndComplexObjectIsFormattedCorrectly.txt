@@ -1,0 +1,36 @@
+stdClass Object #
+{
+  public $anArray = array(2) {
+    [0] => stdClass Object #
+    {
+    },
+    [1] => stdClass Object #
+    {
+    },
+  }
+  public $classA = stdClass Object #
+  {
+    *RECURSION*
+  }
+  public $classA_1 = stdClass Object #
+  {
+    public $classA_1 = stdClass Object #
+    {
+      *RECURSION*
+    }
+  }
+  public $classA_2 = stdClass Object #
+  {
+    public $classA_2_1 = stdClass Object #
+    {
+      public $aBoolean = bool(true);
+      public $anArray = array(1) {
+        (Array value omitted)
+      }
+      public $classA_2_1_1 = stdClass Object #
+      {
+        (Object value omitted)
+      }
+    }
+  }
+}
