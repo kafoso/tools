@@ -22,14 +22,13 @@ class HtmlFormatter extends AbstractFormatter
         if (is_int($depth)) {
             $this->configuration->setDepth($depth);
         }
-        $origin = $this->getOrigin();
         $viewRenderer = new ViewRenderer("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render.phtml", [
             'configuration' => $this->configuration,
             'PSR_2_SOFT_CHARACTER_LIMIT' => static::PSR_2_SOFT_CHARACTER_LIMIT,
             'css' => $this->getCss(),
             'innerHtml' => $this->renderInner($var),
             'javascript' => $this->getJavascript(),
-            'origin' => $origin,
+            'origin' => $this->getOrigin(),
             'truncatedGenericClasses' => HtmlFormatter\Configuration::getTruncatedGenericClasses(),
             'uuid' => $this->getUuid(),
         ]);
