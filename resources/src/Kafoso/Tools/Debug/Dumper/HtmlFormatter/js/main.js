@@ -158,59 +158,6 @@ try {
     Cookie.write(cookieName, "", -1);
 }
 
-/*
-XXX fix
-var mainNodes = document.getElementsByClassName('Kafoso_Tools_Debug_Dumper');
-each(mainNodes, function(main){
-    var foldMarkSpan = document.createElement('span');
-    foldMarkSpan.innerHTML = '&hellip;';
-    foldMarkSpan.setAttribute('class', 'fold-marker');
-    var clone;
-    var collapsibleNodes = main.getElementsByClassName('collapsible');
-    var collapseLevel = 2;
-    /*
-    var collapseLevel = Cookie.read("Kafoso_Tools_Debug_Dumper_options_collapseLevel");
-    if (collapseLevel) {
-        collapseLevel = parseInt(collapseLevel, 10);
-    } else {
-        collapseLevel = 2;
-        Cookie.write("Kafoso_Tools_Debug_Dumper_options_collapseLevel", collapseLevel, 9999);
-    }
-    var inputNode = main.getElementsByClassName('options')[0].getElementsByClassName('collapseLevel')[0];
-    inputNode.value = collapseLevel;
-    var onchangeCallback = function(){
-        setTimeout(function(){
-            var newCollapseLevel = parseInt(inputNode.value, 10);
-            Cookie.write("Kafoso_Tools_Debug_Dumper_options_collapseLevel", newCollapseLevel, 9999);
-        }, 0);
-    };
-    inputNode.onkeydown = onchangeCallback;
-    inputNode.onpaste = onchangeCallback;
-    inputNode.onchange = onchangeCallback;
-    * /
-    each(collapsibleNodes, function(collapsibleNode){
-        if (collapsibleNode.parentNode) {
-            clone = foldMarkSpan.cloneNode(true);
-            collapsibleNode.parentNode.insertBefore(clone, collapsibleNode);
-            if (collapseLevel <= 0 || getCountOfAllExpandedParents(collapsibleNode) > collapseLevel) {
-                collapsibleNode.setAttribute('class', 'collapsible collapsed');
-            } else {
-                clone.setAttribute("class", "fold-marker isHidden");
-            }
-            clone.onclick = function(){
-                var classes = this.nextSibling.getAttribute('class');
-                if (classes && classes.length && classes.match(/(^|\s)expanded(\s|$)/)) {
-                    this.nextSibling.setAttribute("class", "collapsible collapsed");
-                    this.setAttribute("class", "fold-marker");
-                } else {
-                    this.nextSibling.setAttribute("class", "collapsible expanded");
-                    this.setAttribute("class", "fold-marker isHidden");
-                }
-            };
-        }
-    });
-});
-*/
 divNode.getElementsByClassName('optionsButton')[0].onclick = function(){
     var options = this.parentNode.getElementsByClassName('options')[0];
     if (null === options.offsetParent) {
