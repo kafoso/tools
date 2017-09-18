@@ -258,6 +258,9 @@ class ObjectRenderer extends AbstractRenderer
                 $intermediary->addSegment(new Segment(PHP_EOL));
             }
 
+            for ($i=1; $i<=$this->level+1; $i++) {
+                $intermediary->addSegment(new Segment('<span class="invisible-character indent-guide">' . HtmlFormatter::PSR_2_INDENTATION_CHARACTERS . '</span>', true));
+            }
             $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
             $intermediary->addSegment(new Segment(PHP_EOL));
             $intermediary->addSegment(new Segment('</span>', true));
@@ -306,6 +309,9 @@ class ObjectRenderer extends AbstractRenderer
                     true
                 );
 
+                for ($i=1; $i<=$this->level+1; $i++) {
+                    $intermediary->addSegment(new Segment('<span class="invisible-character indent-guide">' . HtmlFormatter::PSR_2_INDENTATION_CHARACTERS . '</span>', true));
+                }
                 $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
                 $intermediary->addSegment(new Segment(PHP_EOL));
                 $intermediary->addSegment(new Segment('</span>', true));
@@ -320,6 +326,10 @@ class ObjectRenderer extends AbstractRenderer
                     "Variables - Inherited",
                     $propertiesInherited
                 );
+
+                for ($i=1; $i<=$this->level+1; $i++) {
+                    $intermediary->addSegment(new Segment('<span class="invisible-character indent-guide">' . HtmlFormatter::PSR_2_INDENTATION_CHARACTERS . '</span>', true));
+                }
                 $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
                 $intermediary->addSegment(new Segment(PHP_EOL));
                 $intermediary->addSegment(new Segment('</span>', true));
@@ -334,6 +344,10 @@ class ObjectRenderer extends AbstractRenderer
                     "Variables - Private in parent class(es)",
                     $propertiesPrivateInParentClasses
                 );
+
+                for ($i=1; $i<=$this->level+1; $i++) {
+                    $intermediary->addSegment(new Segment('<span class="invisible-character indent-guide">' . HtmlFormatter::PSR_2_INDENTATION_CHARACTERS . '</span>', true));
+                }
                 $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
                 $intermediary->addSegment(new Segment(PHP_EOL));
                 $intermediary->addSegment(new Segment('</span>', true));
@@ -348,6 +362,10 @@ class ObjectRenderer extends AbstractRenderer
                     "Variables - Declared at runtime (injected)",
                     $propertiesDeclaredAtRuntime
                 );
+
+                for ($i=1; $i<=$this->level+1; $i++) {
+                    $intermediary->addSegment(new Segment('<span class="invisible-character indent-guide">' . HtmlFormatter::PSR_2_INDENTATION_CHARACTERS . '</span>', true));
+                }
                 $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
                 $intermediary->addSegment(new Segment(PHP_EOL));
                 $intermediary->addSegment(new Segment('</span>', true));
@@ -367,6 +385,9 @@ class ObjectRenderer extends AbstractRenderer
                     $methodsDeclaredInClass
                 );
 
+                for ($i=1; $i<=$this->level+1; $i++) {
+                    $intermediary->addSegment(new Segment('<span class="invisible-character indent-guide">' . HtmlFormatter::PSR_2_INDENTATION_CHARACTERS . '</span>', true));
+                }
                 $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
                 $intermediary->addSegment(new Segment(PHP_EOL));
                 $intermediary->addSegment(new Segment('</span>', true));
@@ -382,6 +403,9 @@ class ObjectRenderer extends AbstractRenderer
                     $methodsInherited
                 );
 
+                for ($i=1; $i<=$this->level+1; $i++) {
+                    $intermediary->addSegment(new Segment('<span class="invisible-character indent-guide">' . HtmlFormatter::PSR_2_INDENTATION_CHARACTERS . '</span>', true));
+                }
                 $intermediary->addSegment(new Segment('<span class="super-section--spacing">', true));
                 $intermediary->addSegment(new Segment(PHP_EOL));
                 $intermediary->addSegment(new Segment('</span>', true));
