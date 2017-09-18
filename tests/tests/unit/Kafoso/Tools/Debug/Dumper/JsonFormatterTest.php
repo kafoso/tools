@@ -10,39 +10,40 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testNull()
     {
-        $jsonFormatter = new JsonFormatter(null, null, JSON_PRETTY_PRINT);
-        $this->assertSame("null", $jsonFormatter->render());
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
+        $this->assertSame("null", $jsonFormatter->render(null));
     }
 
     public function testBoolean()
     {
-        $jsonFormatter = new JsonFormatter(true, null, JSON_PRETTY_PRINT);
-        $this->assertSame("true", $jsonFormatter->render());
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
+        $this->assertSame("true", $jsonFormatter->render(true));
     }
 
     public function testFloat()
     {
-        $jsonFormatter = new JsonFormatter(3.14, null, JSON_PRETTY_PRINT);
-        $this->assertSame("3.14", number_format($jsonFormatter->render(), 2));
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
+        $found = $jsonFormatter->render(3.14, 2);
+        $this->assertSame("3.14", number_format($found, 2));
     }
 
     public function testInteger()
     {
-        $jsonFormatter = new JsonFormatter(42, null, JSON_PRETTY_PRINT);
-        $this->assertSame("42", $jsonFormatter->render());
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
+        $this->assertSame("42", $jsonFormatter->render(42));
     }
 
     public function testString()
     {
-        $jsonFormatter = new JsonFormatter("foo", null, JSON_PRETTY_PRINT);
-        $this->assertSame("\"foo\"", $jsonFormatter->render());
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
+        $this->assertSame("\"foo\"", $jsonFormatter->render("foo"));
     }
 
     public function testArrayOneDimension()
     {
-        $jsonFormatter = new JsonFormatter(["foo" => "bar"], null, JSON_PRETTY_PRINT);
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
-        $found = $jsonFormatter->render();
+        $found = $jsonFormatter->render(["foo" => "bar"]);
         $this->assertSame(
             $this->normalizeEOL($expected),
             $this->normalizeEOL($found)
@@ -52,9 +53,9 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
     public function testResource()
     {
         $resource = curl_init('foo');
-        $jsonFormatter = new JsonFormatter($resource, null, JSON_PRETTY_PRINT);
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
         $expected = '/^"Resource \#\d+ ' . preg_quote('(Type: curl)', '/') . '"$/';
-        $found = $jsonFormatter->render();
+        $found = $jsonFormatter->render($resource);
         $this->assertRegExp(
             $expected,
             $this->normalizeEOL($found)
@@ -63,16 +64,16 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayMultipleDimensions()
     {
-        $jsonFormatter = new JsonFormatter([
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
+        $found = $jsonFormatter->render([
             "foo" => [
                 "bar" => [
                     "baz" => 1,
                     "bim" => null
                 ],
             ],
-        ], null, JSON_PRETTY_PRINT);
-        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
-        $found = $jsonFormatter->render();
+        ]);
         $this->assertSame(
             $this->normalizeEOL($expected),
             $this->normalizeEOL($found)
@@ -84,9 +85,9 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
         $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7.php");
         $class = new \Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
         $class->foo = "bar";
-        $jsonFormatter = new JsonFormatter($class, null, JSON_PRETTY_PRINT);
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
-        $found = $jsonFormatter->render();
+        $found = $jsonFormatter->render($class);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(
@@ -103,9 +104,9 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
         $classC = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
         $classB->setParent($classA);
         $classC->setParent($classB);
-        $jsonFormatter = new JsonFormatter($classC, null, JSON_PRETTY_PRINT);
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
-        $found = $jsonFormatter->render();
+        $found = $jsonFormatter->render($classC);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(
@@ -121,9 +122,9 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
         $classB = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
         $classB->setParent($classA);
         $classA->setParent($classB);
-        $jsonFormatter = new JsonFormatter($classA, null, JSON_PRETTY_PRINT);
+        $jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.json"));
-        $found = $jsonFormatter->render();
+        $found = $jsonFormatter->render($classA);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(

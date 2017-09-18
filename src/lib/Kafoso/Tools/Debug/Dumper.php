@@ -14,9 +14,9 @@ class Dumper
     /**
      * Dumps a plain text representation of all varies (Objects included) in the input variable.
      */
-    public static function dump($var, $depth = 3, $isTruncatingRecursion = true)
+    public static function dump($var, $depth = 3)
     {
-        echo(self::prepare($var, $depth, $isTruncatingRecursion));
+        echo(self::prepare($var, $depth));
     }
 
     /**
@@ -37,21 +37,21 @@ class Dumper
         echo(self::prepareJson($var, $depth, $prettyPrint));
     }
 
-    public static function dumpPre($var, $depth = 3, $isTruncatingRecursion = true)
+    public static function dumpPre($var, $depth = 3)
     {
-        echo("<pre>" . self::prepare($var, $depth, $isTruncatingRecursion) . "</pre>");
+        echo("<pre>" . self::prepare($var, $depth) . "</pre>");
     }
 
-    public static function prepare($var, $depth = 3, $isTruncatingRecursion = true)
+    public static function prepare($var, $depth = 3)
     {
-        $plainTextFormatter = new PlainTextFormatter($var, $depth, $isTruncatingRecursion);
-        return $plainTextFormatter->render();
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
+        return $plainTextFormatter->render($var, $depth);
     }
 
     public static function prepareHtml($var, $depth = 3)
     {
-        $htmlFormatter = new HtmlFormatter($var, $depth);
-        return $htmlFormatter->render();
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createFromSuperglobalCookie());
+        return $htmlFormatter->render($var, $depth);
     }
 
     public static function prepareJson($var, $depth = 3, $prettyPrint = true)
@@ -60,7 +60,9 @@ class Dumper
         if ($prettyPrint) {
             $options |= JSON_PRETTY_PRINT;
         }
-        $jsonFormatter = new JsonFormatter($var, $depth, $options);
-        return $jsonFormatter->render();
+        $configuration = JsonFormatter\Configuration::createDefault();
+        $configuration->setJsonOptions($options);
+        $jsonFormatter = new JsonFormatter($configuration);
+        return $jsonFormatter->render($var, $depth);
     }
 }

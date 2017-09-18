@@ -12,37 +12,22 @@ class HtmlFormatter extends AbstractFormatter
 {
     const LEVEL_MAX = 10;
     const COLLAPSELEVEL_MAX = 40;
-    const COOKIE_NAME = "Kafoso_Tools_Debug_Dumper";
-
-    protected $configuration; // Move to AbstractFormatter
-
-    /**
-     * @param mixed $var
-     * @param null|int $depth
-     */
-    public function __construct($var, $depth = null, HtmlFormatter\Configuration $configuration = null)
-    {
-        parent::__construct($var, $depth);
-        if (!$configuration) {
-            $configuration = HtmlFormatter\Configuration::createFromSuperglobalCookie();
-        }
-        $this->configuration = $configuration;
-        if (is_int($depth)) {
-            $this->configuration->setDepth($depth);
-        }
-    }
+    const COOKIE_NAME = "Kafoso_Tools_Debug_Dumper_HtmlFormatter";
 
     /**
      * @return string
      */
-    public function render()
+    public function render($var, $depth = null)
     {
+        if (is_int($depth)) {
+            $this->configuration->setDepth($depth);
+        }
         $origin = $this->getOrigin();
         $viewRenderer = new ViewRenderer("Kafoso/Tools/Debug/Dumper/HtmlFormatter/render.phtml", [
             'configuration' => $this->configuration,
             'PSR_2_SOFT_CHARACTER_LIMIT' => static::PSR_2_SOFT_CHARACTER_LIMIT,
             'css' => $this->getCss(),
-            'innerHtml' => $this->renderInner(),
+            'innerHtml' => $this->renderInner($var),
             'javascript' => $this->getJavascript(),
             'origin' => $origin,
             'truncatedGenericClasses' => HtmlFormatter\Configuration::getTruncatedGenericClasses(),
@@ -55,15 +40,18 @@ class HtmlFormatter extends AbstractFormatter
     /**
      * @return null|string
      */
-    public function renderInner()
+    public function renderInner($var, $depth = null)
     {
+        if (is_int($depth)) {
+            $this->configuration->setDepth($depth);
+        }
         $intermediary = null;
-        switch (strtolower(gettype($this->var))) {
+        switch (strtolower(gettype($var))) {
             case "array":
                 $intermediary = (new Renderer\Type\ArrayRenderer(
                     $this->configuration,
                     ";",
-                    $this->var,
+                    $var,
                     null,
                     0,
                     []
@@ -77,16 +65,16 @@ class HtmlFormatter extends AbstractFormatter
                 $intermediary = (new Renderer\Type\ScalarRenderer(
                     $this->configuration,
                     ";",
-                    $this->var
+                    $var
                 ))->getIntermediary();
                 break;
                 break;
             case "object":
-                $previousSplObjectHashes = [spl_object_hash($this->var)];
+                $previousSplObjectHashes = [spl_object_hash($var)];
                 $intermediary = (new Renderer\Type\ObjectRenderer(
                     $this->configuration,
                     ";",
-                    $this->var,
+                    $var,
                     0,
                     $previousSplObjectHashes
                 ))->getIntermediary();
@@ -100,7 +88,7 @@ class HtmlFormatter extends AbstractFormatter
                 $intermediary = (new Renderer\Type\ResourceRenderer(
                     $this->configuration,
                     ";",
-                    $this->var
+                    $var
                 ))->getIntermediary();
                 break;
         }
@@ -134,23 +122,5 @@ class HtmlFormatter extends AbstractFormatter
             self::COOKIE_NAME
         );
         return $js;
-    }
-
-    /**
-     * Looks back through the debug_backtrace to determine from where the output originated.
-     * @return null|array
-     */
-    public function getOrigin()
-    {
-        $calledFrom = null;
-        $rootDirectory = realpath(__DIR__ . str_repeat("/..", 5));
-        foreach (debug_backtrace() as $v) {
-            if (0 === stripos($v['file'], $rootDirectory)) {
-                continue;
-            }
-            $calledFrom = $v;
-            break;
-        }
-        return $calledFrom;
     }
 }

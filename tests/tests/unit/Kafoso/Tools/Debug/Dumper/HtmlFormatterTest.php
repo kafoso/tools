@@ -11,37 +11,37 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testNull()
     {
-        $htmlFormatter = new HtmlFormatter(null);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = '<span class="syntax--language syntax--constant">null</span>;';
-        $this->assertSame($expected, $htmlFormatter->renderInner());
+        $this->assertSame($expected, $htmlFormatter->renderInner(null));
     }
 
     public function testBoolean()
     {
-        $htmlFormatter = new HtmlFormatter(true);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = '<span class="syntax--language syntax--constant">true</span>;';
-        $this->assertSame($expected, $htmlFormatter->renderInner());
+        $this->assertSame($expected, $htmlFormatter->renderInner(true));
     }
 
     public function testFloat()
     {
-        $htmlFormatter = new HtmlFormatter(3.14);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = '<span class="syntax--language syntax--constant syntax--numeric">3.14</span>;';
-        $this->assertSame($expected, $htmlFormatter->renderInner());
+        $this->assertSame($expected, $htmlFormatter->renderInner(3.14));
     }
 
     public function testInteger()
     {
-        $htmlFormatter = new HtmlFormatter(42);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = '<span class="syntax--language syntax--constant syntax--numeric">42</span>;';
-        $this->assertSame($expected, $htmlFormatter->renderInner());
+        $this->assertSame($expected, $htmlFormatter->renderInner(42));
     }
 
     public function testString()
     {
-        $htmlFormatter = new HtmlFormatter("foo");
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = '<span class="syntax--language syntax--string">&quot;foo&quot;</span>;';
-        $this->assertSame($expected, $htmlFormatter->renderInner());
+        $this->assertSame($expected, $htmlFormatter->renderInner("foo"));
     }
 
     /**
@@ -49,10 +49,10 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testStringIsEscapedProperly($string, $expected)
     {
-        $htmlFormatter = new HtmlFormatter($string);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $stringEncoded = HTML::encode($string);
         $expected = '<span class="syntax--language syntax--string">&quot;' . $expected . '&quot;</span>;';
-        $this->assertSame($expected, trim($htmlFormatter->renderInner()));
+        $this->assertSame($expected, trim($htmlFormatter->renderInner($string)));
     }
 
     public function dataProvider_testStringIsEscapedProperly()
@@ -73,17 +73,19 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayOneDimension()
     {
-        $htmlFormatter = new HtmlFormatter(["foo" => "bar"]);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
         $this->assertSame(
             $this->normalizeEOL($expected),
-            $this->normalizeEOL($htmlFormatter->renderInner())
+            $this->normalizeEOL($htmlFormatter->renderInner(["foo" => "bar"]))
         );
     }
 
     public function testArrayMultipleDimensions()
     {
-        $htmlFormatter = new HtmlFormatter([
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
+        $found = $htmlFormatter->renderInner([
             "foo" => [
                 "bar" => [
                     "baz" => 1,
@@ -91,8 +93,6 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ], 3);
-        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
-        $found = $htmlFormatter->renderInner();
         $this->assertSame(
             $this->normalizeEOL($expected),
             $this->normalizeEOL($found)
@@ -101,7 +101,9 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayMultipleDimensionsOmitted()
     {
-        $htmlFormatter = new HtmlFormatter([
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
+        $found = $htmlFormatter->renderInner([
             "foo" => [
                 "bar" => [
                     "baz" => 1,
@@ -109,8 +111,6 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ], 2);
-        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
-        $found = $htmlFormatter->renderInner();
         $this->assertSame(
             $this->normalizeEOL($expected),
             $this->normalizeEOL($found)
@@ -122,9 +122,9 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
         $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7.php");
         $class = new \Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
         $class->foo = "bar";
-        $htmlFormatter = new HtmlFormatter($class);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
-        $found = trim($htmlFormatter->renderInner());
+        $found = trim($htmlFormatter->renderInner($class));
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
@@ -142,9 +142,9 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
         $classC = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
         $classB->setParent($classA);
         $classC->setParent($classB);
-        $htmlFormatter = new HtmlFormatter($classC, 2);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
-        $found = $htmlFormatter->renderInner();
+        $found = $htmlFormatter->renderInner($classC, 2);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
@@ -161,9 +161,9 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
         $classB = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
         $classB->setParent($classA);
         $classA->setParent($classB);
-        $htmlFormatter = new HtmlFormatter($classA);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
-        $found = $htmlFormatter->renderInner();
+        $found = $htmlFormatter->renderInner($classA);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
@@ -181,9 +181,9 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
         $classC = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
         $classB->setParent($classA);
         $classC->setParent($classB);
-        $htmlFormatter = new HtmlFormatter($classC, 2);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.html"));
-        $found = $htmlFormatter->renderInner();
+        $found = $htmlFormatter->renderInner($classC, 2);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/data-object="[a-f0-9]+"/', 'data-object=""', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
@@ -196,11 +196,11 @@ class HtmlFormatterTest extends \PHPUnit_Framework_TestCase
     public function testResource()
     {
         $resource = curl_init('foo');
-        $htmlFormatter = new HtmlFormatter($resource);
+        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createDefault());
         $expected = '/^Resource \#\d+; ' . preg_quote('<span class="syntax--comment syntax--line syntax--double-slash">// Type: curl</span>', '/') . '$/';
         $this->assertRegExp(
             $expected,
-            $this->normalizeEOL($htmlFormatter->renderInner())
+            $this->normalizeEOL($htmlFormatter->renderInner($resource))
         );
     }
 

@@ -10,63 +10,65 @@ class PlainTextFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testNull()
     {
-        $plainTextFormatter = new PlainTextFormatter(null);
-        $this->assertSame("null", $plainTextFormatter->render());
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
+        $this->assertSame("null", $plainTextFormatter->render(null));
     }
 
     public function testBoolean()
     {
-        $plainTextFormatter = new PlainTextFormatter(true);
-        $this->assertSame("bool(true)", $plainTextFormatter->render());
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
+        $this->assertSame("bool(true)", $plainTextFormatter->render(true));
     }
 
     public function testFloat()
     {
-        $plainTextFormatter = new PlainTextFormatter(3.14);
-        $this->assertSame("float(3.14)", $plainTextFormatter->render());
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
+        $this->assertSame("float(3.14)", $plainTextFormatter->render(3.14));
     }
 
     public function testInteger()
     {
-        $plainTextFormatter = new PlainTextFormatter(42);
-        $this->assertSame("int(42)", $plainTextFormatter->render());
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
+        $this->assertSame("int(42)", $plainTextFormatter->render(42));
     }
 
     public function testString()
     {
-        $plainTextFormatter = new PlainTextFormatter("foo");
-        $this->assertSame("string(3) \"foo\"", $plainTextFormatter->render());
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
+        $this->assertSame("string(3) \"foo\"", $plainTextFormatter->render("foo"));
     }
 
     public function testArrayOneDimension()
     {
-        $plainTextFormatter = new PlainTextFormatter(["foo" => "bar"]);
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
         $expected = 'array(1) {'
             . PHP_EOL
             . '  ["foo"] => string(3) "bar",'
             . PHP_EOL
             . '}';
-        $this->assertSame($expected, $plainTextFormatter->render());
+        $this->assertSame($expected, $plainTextFormatter->render(["foo" => "bar"]));
     }
 
     public function testResource()
     {
         $resource = curl_init('foo');
-        $plainTextFormatter = new PlainTextFormatter($resource);
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
         $expected = '/^Resource \#\d+ \(Type: curl\)$/';
-        $this->assertRegExp($expected, $plainTextFormatter->render());
+        $this->assertRegExp($expected, $plainTextFormatter->render($resource));
     }
 
     public function testRender()
     {
-        $plainTextFormatter = new PlainTextFormatter("foo");
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
         $expected = 'string(3) "foo"';
-        $this->assertSame($expected, $plainTextFormatter->render());
+        $this->assertSame($expected, $plainTextFormatter->render("foo"));
     }
 
     public function testArrayMultipleDimensions()
     {
-        $plainTextFormatter = new PlainTextFormatter([
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
+        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.txt"));
+        $found = $plainTextFormatter->render([
             "foo" => [
                 "bar" => [
                     "baz" => 1,
@@ -74,8 +76,7 @@ class PlainTextFormatterTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ]);
-        $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.txt"));
-        $this->assertSame($expected, $plainTextFormatter->render());
+        $this->assertSame($expected, $found);
     }
 
     public function testObjectOneDimension()
@@ -83,9 +84,9 @@ class PlainTextFormatterTest extends \PHPUnit_Framework_TestCase
         $this->_requireResource("Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7.php");
         $class = new \Kafoso_Tools_Debug_Dumper_ObjectOneDimension_b0559f888359b081714fdea9d26c65b7;
         $class->foo = "bar";
-        $plainTextFormatter = new PlainTextFormatter($class);
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.txt"));
-        $found = $plainTextFormatter->render();
+        $found = $plainTextFormatter->render($class);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(
@@ -102,9 +103,9 @@ class PlainTextFormatterTest extends \PHPUnit_Framework_TestCase
         $classC = new \Kafoso_Tools_Debug_Dumper_ObjectMultipleLevelsWithoutRecursion_e01540c6d67623eed60a8f0c3ceeb730;
         $classB->setParent($classA);
         $classC->setParent($classB);
-        $plainTextFormatter = new PlainTextFormatter($classC);
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.txt"));
-        $found = $plainTextFormatter->render();
+        $found = $plainTextFormatter->render($classC);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(
@@ -120,9 +121,9 @@ class PlainTextFormatterTest extends \PHPUnit_Framework_TestCase
         $classB = new \Kafoso_Tools_Debug_Dumper_ObjectWithRecursion_298813df09b29eda5ff52f85f788ed5d;
         $classB->setParent($classA);
         $classA->setParent($classB);
-        $plainTextFormatter = new PlainTextFormatter($classA);
+        $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
         $expected = trim($this->_getResourceContents(__FUNCTION__ . ".expected.txt"));
-        $found = $plainTextFormatter->render();
+        $found = $plainTextFormatter->render($classA);
         $found = preg_replace('/Object #[a-f0-9]+/', 'Object #', $found);
         $found = preg_replace('/Resource #\d+/', 'Resource #1', $found);
         $this->assertSame(

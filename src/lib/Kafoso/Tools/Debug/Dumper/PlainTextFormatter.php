@@ -5,22 +5,19 @@ class PlainTextFormatter extends AbstractFormatter
 {
     const INDENTATION_CHARACTERS = "  ";
 
-    private $isTruncatingRecursion;
-
-    public function __construct($var, $depth = null, $isTruncatingRecursion = true)
+    /**
+     * @inheritDoc
+     */
+    public function render($var, $depth = null)
     {
-        parent::__construct($var, $depth);
-        $this->isTruncatingRecursion = $isTruncatingRecursion;
-    }
-
-    public function render()
-    {
-        return $this->prepareRecursively($this->var, $this->depth, 0, []);
+        if (is_int($depth)) {
+            $this->configuration->setDepth($depth);
+        }
+        return $this->prepareRecursively($var, 0, []);
     }
 
     private function prepareRecursively(
         $var,
-        $depth,
         $level,
         array $previousSplObjectHashes
     )
@@ -28,14 +25,12 @@ class PlainTextFormatter extends AbstractFormatter
         if (is_array($var) || is_object($var)) {
             if (is_object($var)) {
                 $hash = spl_object_hash($var);
-                if ($this->isTruncatingRecursion) {
-                    if (in_array($hash, $previousSplObjectHashes)) {
-                        return $this->renderObjectRecursion($var, $level);
-                    }
-                    $previousSplObjectHashes[] = $hash;
+                if (in_array($hash, $previousSplObjectHashes)) {
+                    return $this->renderObjectRecursion($var, $level);
                 }
+                $previousSplObjectHashes[] = $hash;
             }
-            if ($depth <= 0) {
+            if ($level >= $this->getConfiguration()->getDepth()) {
                 if (is_object($var)) {
                     return $this->renderObjectOmitted($var, $level);
                 } else {
@@ -45,14 +40,12 @@ class PlainTextFormatter extends AbstractFormatter
                 if (is_object($var)) {
                     return $this->renderObject(
                         $var,
-                        $depth,
                         $level,
                         $previousSplObjectHashes
                     );
                 } else {
                     return $this->renderArray(
                         $var,
-                        $depth,
                         $level,
                         $previousSplObjectHashes
                     );
@@ -70,7 +63,6 @@ class PlainTextFormatter extends AbstractFormatter
 
     private function renderArray(
         array $array,
-        $depth,
         $level,
         array $previousSplObjectHashes
     )
@@ -79,7 +71,6 @@ class PlainTextFormatter extends AbstractFormatter
         foreach ($array as $k => $v) {
             $replacementValue = $this->prepareRecursively(
                 $v,
-                ($depth - 1),
                 ($level + 1),
                 $previousSplObjectHashes
             );
@@ -102,7 +93,6 @@ class PlainTextFormatter extends AbstractFormatter
 
     private function renderObject(
         $object,
-        $depth,
         $level,
         array $previousSplObjectHashes
     )
@@ -122,7 +112,6 @@ class PlainTextFormatter extends AbstractFormatter
             $propertyValue = $property->getValue($object);
             $replacementValue = $this->prepareRecursively(
                 $propertyValue,
-                ($depth - 1),
                 ($level + 1),
                 $previousSplObjectHashes
             );
@@ -260,6 +249,7 @@ class PlainTextFormatter extends AbstractFormatter
     }
 
     /**
+     * @inheritDoc
      * @override
      */
     public static function getIndentationCharacters()

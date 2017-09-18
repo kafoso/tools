@@ -3,20 +3,15 @@ namespace Kafoso\Tools\Debug\Dumper;
 
 class JsonFormatter extends AbstractFormatter
 {
-    private $options;
-
-    public function __construct($var, $depth = null, $options = 0)
+    public function render($var, $depth = null)
     {
-        parent::__construct($var, $depth);
-        $this->options = $options;
+        if (is_int($depth)) {
+            $this->configuration->setDepth($depth);
+        }
+        return json_encode($this->prepareRecursively($var, 0, []), $this->configuration->getJsonOptions());
     }
 
-    public function render()
-    {
-        return json_encode($this->prepareRecursively($this->var, $this->depth, []), $this->options);
-    }
-
-    private function prepareRecursively($var, $depth, array $previousSplObjectHashes)
+    private function prepareRecursively($var, $level, array $previousSplObjectHashes)
     {
         if (is_object($var)) {
             $hash = spl_object_hash($var);
@@ -24,31 +19,31 @@ class JsonFormatter extends AbstractFormatter
                 return $this->renderObjectRecursion($var);
             }
             $previousSplObjectHashes[] = $hash;
-            if ($depth <= 0) {
+            if ($level >= $this->getConfiguration()->getDepth()) {
                 return $this->renderObjectOmitted($var);
             } else {
-                return $this->renderObject($var, $depth, $previousSplObjectHashes);
+                return $this->renderObject($var, ($level+1), $previousSplObjectHashes);
             }
         } elseif (is_array($var)) {
-            if ($depth <= 0) {
+            if ($level >= $this->getConfiguration()->getDepth()) {
                 return $this->renderArrayOmitted($var);
             }
-            return $this->renderArray($var, $depth, $previousSplObjectHashes);
+            return $this->renderArray($var, ($level+1), $previousSplObjectHashes);
         } elseif (is_resource($var)) {
             return $this->renderResource($var);
         }
         return $var;
     }
 
-    private function renderArray(array $array, $depth, array $previousSplObjectHashes)
+    private function renderArray(array $array, $level, array $previousSplObjectHashes)
     {
         foreach ($array as $k => $v) {
-            $array[$k] = $this->prepareRecursively($v, ($depth-1), $previousSplObjectHashes);
+            $array[$k] = $this->prepareRecursively($v, $level, $previousSplObjectHashes);
         }
         return $array;
     }
 
-    private function renderObject($object, $depth, array $previousSplObjectHashes)
+    private function renderObject($object, $level, array $previousSplObjectHashes)
     {
         $hash = spl_object_hash($object);
         $reflection = new \ReflectionObject($object);
@@ -60,7 +55,7 @@ class JsonFormatter extends AbstractFormatter
             $property->setAccessible(true);
             $array[$property->getName()] = $this->prepareRecursively(
                 $property->getValue($object),
-                ($depth-1),
+                $level,
                 $previousSplObjectHashes
             );
         }

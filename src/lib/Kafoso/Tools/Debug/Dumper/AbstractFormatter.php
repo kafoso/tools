@@ -10,28 +10,52 @@ abstract class AbstractFormatter
     const PSR_2_SOFT_CHARACTER_LIMIT = 120;
     const PSR_2_INDENTATION_CHARACTERS = "    ";
 
-    protected $var;
-    protected $depth;
+    protected $configuration;
 
     private $uuid;
 
-    public function __construct($var, $depth = null)
+    /**
+     * @param mixed $var
+     * @param null|int $depth
+     */
+    public function __construct(AbstractConfiguration $configuration)
     {
-        $this->var = $var;
-        if (is_null($depth)) {
-            $depth = static::DEPTH_DEFAULT;
-        }
-        if (false == is_int($depth) || $depth <= 0 ) {
-            throw new \RuntimeException(sprintf(
-                "Expects parameter \"\$depth\" to be an integer [0;∞]. Found: %s",
-                VariableDumper::found($depth)
-            ));
-        }
-        $this->depth = $depth;
+        $this->configuration = $configuration;
         $this->uuid = (string)Uuid::uuid1();
     }
 
-    abstract public function render();
+    /**
+     * @param mixed $var
+     * @param null|int $depth
+     * @return string
+     */
+    abstract public function render($var, $depth = null);
+
+    /**
+     * @return AbstractConfiguration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * Looks back through the debug_backtrace to determine from where the output originated.
+     * @return null|array
+     */
+    public function getOrigin()
+    {
+        $calledFrom = null;
+        $rootDirectory = realpath(__DIR__ . str_repeat("/..", 5));
+        foreach (debug_backtrace() as $v) {
+            if (0 === stripos($v['file'], $rootDirectory)) {
+                continue;
+            }
+            $calledFrom = $v;
+            break;
+        }
+        return $calledFrom;
+    }
 
     /**
      * @return string
@@ -41,11 +65,9 @@ abstract class AbstractFormatter
         return $this->uuid;
     }
 
-    public static function generateTextIndentationForLevel($level)
-    {
-        return str_repeat(static::getIndentationCharacters(), $level);
-    }
-
+    /**
+     * @return string
+     */
     public static function getIndentationCharacters()
     {
         return static::PSR_2_INDENTATION_CHARACTERS;
