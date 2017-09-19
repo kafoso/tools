@@ -4,6 +4,7 @@ namespace My;
 class Little_Class
 {
     private $id;
+    private $timeInstantiated;
     protected $parent = null;
     protected $children = [];
     public static $list = [
@@ -14,6 +15,11 @@ class Little_Class
         ]
     ];
     public $html = "<b>foo \x4 \t</b>";
+
+    public function __construct()
+    {
+        $this->timeInstantiated = new \DateTimeImmutable;
+    }
 
     public function getId()
     {
