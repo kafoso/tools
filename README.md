@@ -122,7 +122,20 @@ The HTML dumper is great for showing variables in a nice, highlighted fashion.
 
 Classes are displayed as psudo-objects with interfaces to inheritance, traits, constants, variables, and methods; "pseudo-object" means the values are displayed with a snapshot of what the object currently contains.
 
-By default, child classes beyond 2 levels are hidden. This, however, may be changed in the options menu (three vertical bars at the top right corner). This value is stored in a cookie and will be remembered next time an object is rendered.
+Various options exist, which are stored in a cookie.
+
+Options for showing and hiding sections include:
+
+- Extended parent classes.
+- Interfaces.
+- Traits.
+- Constants.
+- Class variables.
+- Methods.
+- Method arguments.
+- Method argument type hints.
+
+One option, "Truncate generic objects", allows you to display objects like `\DateTime` as a string, providing a better overview and saving valuable space.
 
 Do notice, that a maximum depth restriction is enforced, which by default is 3. This number can be changed by passing it as the 2nd variable, e.g.:
 
