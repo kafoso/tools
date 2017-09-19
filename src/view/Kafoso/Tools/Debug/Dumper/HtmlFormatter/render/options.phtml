@@ -14,12 +14,16 @@ $textTruncatedGenericClasses = ", and " . array_pop($truncatedGenericClasses);
 $textTruncatedGenericClasses = implode(", ", $truncatedGenericClasses) . $textTruncatedGenericClasses;
 ?>
 <div class="<?=$classes?>">
+    <?php
+    /* XXX NYI
     <div class="option">
         <div class="label">Collapse level:</div>
         <div class="value">
             <input type="number" placeholder="2" data-option="collapseLevel" style="width:60px;" value="<?=HTML::encode($this->configuration->getCollapseLevel())?>">
         </div>
     </div>
+    */
+    ?>
     <div class="option">
         <div class="label">Show parent class:</div>
         <div class="value">
