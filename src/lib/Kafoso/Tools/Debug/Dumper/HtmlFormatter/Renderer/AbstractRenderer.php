@@ -29,7 +29,6 @@ abstract class AbstractRenderer
                     $this->configuration,
                     ",",
                     $value,
-                    $this->parentValue,
                     $level,
                     ($this->previousSplObjectHashes ?: [])
                 );
@@ -38,7 +37,6 @@ abstract class AbstractRenderer
                 $this->configuration,
                 $endingCharacter,
                 $value,
-                $this->parentValue,
                 $level,
                 ($this->previousSplObjectHashes ?: [])
             );

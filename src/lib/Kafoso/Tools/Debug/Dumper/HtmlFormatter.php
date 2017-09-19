@@ -51,7 +51,6 @@ class HtmlFormatter extends AbstractFormatter
                     $this->configuration,
                     ";",
                     $var,
-                    null,
                     0,
                     []
                 ))->getIntermediary();
