@@ -11,6 +11,10 @@ use Kafoso\Tools\Debug\Dumper\PlainTextFormatter;
  */
 class Dumper
 {
+    protected static $htmlFormatter = null;
+    protected static $jsonFormatter = null;
+    protected static $plainTextFormatter = null;
+
     /**
      * Dumps a plain text representation of all varies (Objects included) in the input variable.
      */
@@ -45,13 +49,12 @@ class Dumper
     public static function prepare($var, $depth = 3)
     {
         $plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
-        return $plainTextFormatter->render($var, $depth);
+        return self::getPlainTextformatter()->render($var, $depth);
     }
 
     public static function prepareHtml($var, $depth = 3)
     {
-        $htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createFromSuperglobalCookie());
-        return $htmlFormatter->render($var, $depth);
+        return self::getHtmlFormatter()->render($var, $depth);
     }
 
     public static function prepareJson($var, $depth = 3, $prettyPrint = true)
@@ -60,9 +63,32 @@ class Dumper
         if ($prettyPrint) {
             $options |= JSON_PRETTY_PRINT;
         }
-        $configuration = JsonFormatter\Configuration::createDefault();
-        $configuration->setJsonOptions($options);
-        $jsonFormatter = new JsonFormatter($configuration);
+        $jsonFormatter = self::getJsonFormatter();
+        $jsonFormatter->getConfiguration()->setJsonOptions($options);
         return $jsonFormatter->render($var, $depth);
+    }
+
+    public static function getHtmlFormatter()
+    {
+        if (null === self::$htmlFormatter) {
+            self::$htmlFormatter = new HtmlFormatter(HtmlFormatter\Configuration::createFromSuperglobalCookie());
+        }
+        return self::$htmlFormatter;
+    }
+
+    public static function getJsonFormatter()
+    {
+        if (null === self::$jsonFormatter) {
+            self::$jsonFormatter = new JsonFormatter(JsonFormatter\Configuration::createDefault());
+        }
+        return self::$jsonFormatter;
+    }
+
+    public static function getPlainTextFormatter()
+    {
+        if (null === self::$plainTextFormatter) {
+            self::$plainTextFormatter = new PlainTextFormatter(PlainTextFormatter\Configuration::createDefault());
+        }
+        return self::$plainTextFormatter;
     }
 }
